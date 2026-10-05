@@ -1,0 +1,3816 @@
+<!DOCTYPE html>
+
+
+
+<html lang="id">
+
+
+
+<head>
+
+
+
+<meta charset="UTF-8">
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<title>Operator | Sistem Presensi SMAN 6</title>
+
+
+
+<style>
+
+
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+
+
+:root{
+
+
+
+  --primary:#f97316;--primary-dark:#ea580c;--primary-soft:#fff7ed;
+
+
+
+  --text:#172033;--muted:#667085;--border:#e6eaf0;--bg:#f5f7fb;
+
+
+
+  --white:#fff;--success:#16a34a;--warning:#d97706;--danger:#dc2626;
+
+
+
+  --sidebar:#ea580c;
+
+
+
+}
+
+
+
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+
+
+button,input,select{font:inherit}
+
+
+
+.app{display:flex;min-height:100vh}
+
+
+
+.sidebar{width:255px;background:linear-gradient(180deg,#ed5a05,#ff7418);color:#fff;padding:24px 16px;position:fixed;inset:0 auto 0 0;z-index:20}
+
+
+
+.brand{display:flex;align-items:center;gap:12px;padding:4px 10px 28px}
+
+
+
+.logo{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+
+
+.logo img{width:100%;height:100%;object-fit:contain;padding:5px}
+
+
+
+.brand h1{font-size:17px;line-height:1.25}.brand span{display:block;font-size:11px;color:rgba(255,255,255,.72);margin-top:3px}
+
+
+
+.nav-title{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#8e9aae;padding:10px 12px}
+
+
+
+.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#d7deea;text-align:left;padding:12px 13px;border-radius:11px;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:600}
+
+
+
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.18);color:#fff}
+
+
+
+.nav-icon{width:21px;text-align:center;font-size:17px}
+
+
+
+.sidebar-footer{position:absolute;left:16px;right:16px;bottom:20px;border-top:1px solid rgba(255,255,255,.1);padding:16px 10px;color:#9ca8bb;font-size:11px}
+
+
+
+.main{margin-left:255px;width:calc(100% - 255px);min-width:0}
+
+
+
+.topbar{height:76px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:10}
+
+
+
+.page-title{font-size:22px;font-weight:750}.page-subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+
+
+
+.profile{display:flex;align-items:center;gap:11px}.avatar{width:40px;height:40px;border-radius:50%;background:#fff7ed;color:#f97316;display:grid;place-items:center;font-weight:800}.profile small{display:block;color:var(--muted);font-size:11px}.profile strong{font-size:13px}
+.profile{min-width:0}
+.profile > div:not(.avatar){min-width:0}
+.profile strong,.profile small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#btnLogout{margin-left:4px}
+@media(max-width:760px){#btnLogout{height:34px;padding:0 9px}}
+
+
+
+
+.content{padding:30px 34px 40px}.section{display:none}.section.active{display:block}
+
+
+
+.hero{background:linear-gradient(135deg,#f45b05,#f97316 58%,#ff9b3d);color:#fff;border-radius:20px;padding:28px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:0 16px 35px rgba(249,115,22,.18);overflow:hidden;position:relative}
+
+
+
+.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-90px;background:rgba(255,255,255,.08)}
+
+
+
+.hero h2{font-size:24px;margin-bottom:7px}.hero p{color:#fff1e8;font-size:13px;max-width:650px}.hero-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18);padding:10px 14px;border-radius:12px;font-size:12px;white-space:nowrap;z-index:1}
+
+
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+
+
+
+.stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 5px 18px rgba(15,23,42,.04)}
+
+
+
+.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.stat-icon{width:38px;height:38px;border-radius:11px;background:#fff7ed;color:#f97316;display:grid;place-items:center;font-size:18px}.stat strong{font-size:28px;display:block;margin-top:8px}.stat small{color:var(--muted);font-size:11px}
+
+
+
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 5px 18px rgba(15,23,42,.04);overflow:hidden}
+
+
+
+.card-head{padding:19px 21px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px}.card-title{font-weight:750}.card-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+
+
+.card-body{padding:20px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+
+
+
+input,select{height:40px;border:1px solid #d8dee8;border-radius:9px;padding:0 12px;outline:none;background:#fff;color:var(--text)}
+
+
+
+input:focus,select:focus{border-color:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+
+
+
+.search{min-width:230px}.btn{height:40px;padding:0 15px;border:0;border-radius:9px;cursor:pointer;font-weight:700;font-size:12px}.btn-primary{background:#f97316;color:#fff}.btn-primary:hover{background:#ea580c}.btn-light{background:#f3f5f8;color:#344054}.btn-success{background:#16a34a;color:#fff}.btn-danger{background:#fee2e2;color:#b91c1c}.btn-sm{height:34px;padding:0 10px;font-size:11px}
+
+
+
+table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #edf0f4;text-align:left;font-size:12px}th{background:#f8fafc;color:#667085;font-size:10px;text-transform:uppercase;letter-spacing:.5px}tbody tr:hover{background:#fafcff}
+
+
+
+.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:750}.badge-active{background:#dcfce7;color:#15803d}.badge-inactive{background:#fff7ed;color:#64748b}
+
+
+
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}.quick{padding:20px;border:1px solid var(--border);border-radius:15px;background:#fff;cursor:pointer}.quick:hover{border-color:#fed7aa;box-shadow:0 8px 22px rgba(249,115,22,.10)}.quick .qicon{font-size:25px;margin-bottom:12px}.quick h3{font-size:14px}.quick p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+
+
+
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form-group label{font-size:11px;font-weight:700;color:#475467;display:block;margin-bottom:6px}.form-group.full{grid-column:1/-1}
+
+
+
+.empty{text-align:center;padding:38px;color:var(--muted);font-size:12px}.empty:before{content:"";display:block;margin:0 auto 8px;width:26px;height:26px;border-radius:50%;background:#fff7ed}
+
+
+
+.mobile-menu{display:none;border:0;background:#fff7ed;width:38px;height:38px;border-radius:9px}
+
+
+
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.quick-grid{grid-template-columns:1fr 1fr}}
+
+
+
+@media(max-width:760px){
+
+
+
+ .sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.mobile-menu{display:block}.topbar{padding:0 18px}.content{padding:20px 16px}.hero{padding:22px;align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr 1fr}.quick-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}
+
+
+
+}
+
+
+
+@media(max-width:480px){.stats{grid-template-columns:1fr}.page-title{font-size:18px}.profile div:not(.avatar){display:none}.card-body{padding:14px}.table-wrap{overflow-x:auto}table{min-width:650px}}
+
+
+
+
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+
+.modal-backdrop.show{display:flex}
+
+.modal{width:100%;max-width:520px;background:#fff;border-radius:18px;box-shadow:0 25px 70px rgba(15,23,42,.22);overflow:hidden}
+
+.modal-head{padding:19px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+
+.modal-title{font-size:16px;font-weight:750}
+
+.modal-close{border:0;background:#f8fafc;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;color:#667085}
+
+.modal-body{padding:22px}
+
+.modal-footer{padding:15px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:9px}
+
+.form-control{width:100%}
+
+.form-error{display:none;margin-bottom:14px;padding:10px 12px;border-radius:9px;background:#fef2f2;color:#b91c1c;font-size:11px}
+
+.form-error.show{display:block}
+
+.toast{position:fixed;right:24px;bottom:24px;z-index:120;background:#172033;color:#fff;padding:13px 17px;border-radius:11px;box-shadow:0 12px 30px rgba(15,23,42,.2);font-size:12px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}
+
+.toast.show{opacity:1;transform:none}
+
+.toast.success{background:#15803d}
+
+.toast.error{background:#b91c1c}
+
+
+/* ===== Modern UI refinement ===== */
+:root{
+  --primary:#f97316;
+  --primary-dark:#ea580c;
+  --primary-soft:#fff7ed;
+  --primary-border:#fed7aa;
+  --text:#172033;
+  --muted:#667085;
+  --border:#e7ebf1;
+  --bg:#f4f6fa;
+  --white:#fff;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --sidebar:#172033;
+  --shadow-sm:0 4px 14px rgba(15,23,42,.05);
+  --shadow-md:0 12px 32px rgba(15,23,42,.08);
+}
+
+body{
+  background:
+    radial-gradient(circle at 88% -5%,rgba(249,115,22,.08),transparent 26%),
+    var(--bg);
+}
+
+.sidebar{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(255,255,255,.10),transparent 26%),
+    linear-gradient(180deg,#1d2939 0%,#172033 100%);
+  box-shadow:8px 0 30px rgba(15,23,42,.08);
+}
+
+.brand{
+  padding-bottom:24px;
+}
+
+.logo{
+  background:rgba(249,115,22,.16);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.nav-title{
+  color:#98a2b3;
+  margin-top:4px;
+}
+
+.nav button{
+  color:#cbd5e1;
+  transition:all .18s ease;
+}
+
+.nav button:hover{
+  background:rgba(255,255,255,.08);
+  transform:translateX(2px);
+}
+
+.nav button.active{
+  background:linear-gradient(90deg,rgba(249,115,22,.96),rgba(249,115,22,.78));
+  color:#fff;
+  box-shadow:0 8px 20px rgba(249,115,22,.18);
+}
+
+.nav-icon{
+  opacity:.95;
+}
+
+.sidebar-footer{
+  color:#98a2b3;
+  border-top-color:rgba(255,255,255,.08);
+}
+
+.main{
+  background:transparent;
+}
+
+.topbar{
+  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,.92);
+  box-shadow:0 1px 0 rgba(15,23,42,.03);
+}
+
+.page-title{
+  letter-spacing:-.3px;
+}
+
+.content{
+  max-width:1500px;
+  margin:0 auto;
+}
+
+.hero{
+  min-height:180px;
+  padding:30px 32px;
+  background:
+    radial-gradient(circle at 92% 10%,rgba(255,255,255,.18),transparent 22%),
+    linear-gradient(135deg,#ea580c 0%,#f97316 58%,#fb923c 100%);
+  box-shadow:0 18px 38px rgba(249,115,22,.18);
+}
+
+.hero h2{
+  font-size:26px;
+  letter-spacing:-.5px;
+}
+
+.hero p{
+  font-size:13px;
+  line-height:1.65;
+}
+
+.stats{
+  gap:18px;
+}
+
+.stat{
+  position:relative;
+  overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+.stat:after{
+  content:"";
+  position:absolute;
+  width:90px;
+  height:90px;
+  right:-35px;
+  bottom:-42px;
+  border-radius:50%;
+  background:rgba(249,115,22,.06);
+}
+
+.stat:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+  border-color:#fed7aa;
+}
+
+.stat-icon{
+  background:#fff7ed;
+  border:1px solid #ffedd5;
+}
+
+.quick{
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  box-shadow:var(--shadow-sm);
+}
+
+.quick:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+  border-color:#fed7aa;
+}
+
+.card{
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .18s ease;
+}
+
+.card:hover{
+  box-shadow:0 10px 28px rgba(15,23,42,.07);
+}
+
+.card-head{
+  padding:21px 22px;
+  background:linear-gradient(180deg,#fff,#fdfefe);
+}
+
+.card-title{
+  font-size:15px;
+}
+
+.card-sub{
+  line-height:1.5;
+}
+
+.toolbar{
+  align-items:center;
+}
+
+.search{
+  height:42px;
+  border-radius:11px;
+  background:#fbfcfe;
+}
+
+input,select{
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+
+input:hover,select:hover{
+  border-color:#cbd5e1;
+}
+
+input:focus,select:focus{
+  background:#fff;
+}
+
+.btn{
+  transition:all .18s ease;
+  white-space:nowrap;
+}
+
+.btn-primary{
+  box-shadow:0 5px 14px rgba(249,115,22,.18);
+}
+
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(249,115,22,.24);
+}
+
+.btn-light:hover{
+  background:#e9edf3;
+}
+
+table{
+  border-spacing:0;
+}
+
+th{
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:#f8fafc;
+}
+
+td{
+  vertical-align:middle;
+}
+
+tbody tr{
+  transition:background .15s ease;
+}
+
+.modal-backdrop{
+  backdrop-filter:blur(4px);
+}
+
+.modal{
+  border:1px solid rgba(255,255,255,.8);
+  animation:modalIn .18s ease;
+}
+
+.modal-head{
+  background:linear-gradient(180deg,#fff,#fdfefe);
+}
+
+.form-control{
+  height:42px;
+  border-radius:10px;
+}
+
+.toast{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:260px;
+}
+
+@keyframes modalIn{
+  from{opacity:0;transform:translateY(8px) scale(.985)}
+  to{opacity:1;transform:none}
+}
+
+@media(max-width:760px){
+  .topbar{
+    min-height:72px;
+    height:auto;
+    padding:14px 18px;
+  }
+  .hero{
+    min-height:auto;
+  }
+}
+
+
+
+
+/* ===== Attractive Student Modal ===== */
+
+.student-modal{
+  width:min(760px,calc(100vw - 40px));
+  max-width:760px;
+  max-height:calc(100vh - 40px);
+  display:flex;
+  flex-direction:column;
+  border:1px solid rgba(226,232,240,.95);
+  border-radius:20px;
+  box-shadow:
+    0 30px 80px rgba(15,23,42,.20),
+    0 8px 24px rgba(15,23,42,.08);
+}
+
+.student-modal-head{
+  padding:20px 24px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(249,115,22,.10),transparent 28%),
+    #fff;
+  flex:0 0 auto;
+}
+
+.student-head-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-width:0;
+}
+
+.student-head-icon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:13px;
+  background:linear-gradient(135deg,#fff7ed,#ffedd5);
+  border:1px solid #fed7aa;
+  font-size:19px;
+  box-shadow:0 5px 14px rgba(249,115,22,.10);
+}
+
+.student-modal .modal-title{
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:-.2px;
+  color:var(--text);
+}
+
+.student-modal .modal-subtitle{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+}
+
+.student-modal .modal-close{
+  width:34px;
+  height:34px;
+  border:1px solid #eef2f6;
+  background:#f8fafc;
+  transition:.18s ease;
+}
+
+.student-modal .modal-close:hover{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#ea580c;
+  transform:rotate(3deg);
+}
+
+.student-modal-body{
+  padding:22px 24px;
+  overflow-y:auto;
+  flex:1 1 auto;
+  background:#fbfcfe;
+}
+
+.student-section{
+  padding:18px;
+  background:#fff;
+  border:1px solid #e8edf3;
+  border-radius:15px;
+  box-shadow:0 3px 12px rgba(15,23,42,.035);
+}
+
+.student-section + .student-section{
+  margin-top:14px;
+}
+
+.student-section-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:17px;
+  padding-bottom:13px;
+  border-bottom:1px solid #eef2f6;
+}
+
+.student-section-icon{
+  width:29px;
+  height:29px;
+  flex:0 0 29px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#ea580c;
+  font-size:9px;
+  font-weight:800;
+}
+
+.student-section-title{
+  font-size:12px;
+  font-weight:800;
+  color:#253044;
+}
+
+.student-section-desc{
+  margin-top:2px;
+  font-size:10px;
+  color:#98a2b3;
+}
+
+.student-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+
+.student-grid .form-group{
+  min-width:0;
+}
+
+.student-grid .form-group.full{
+  grid-column:1/-1;
+}
+
+.student-grid .form-group label{
+  display:block;
+  margin-bottom:7px;
+  font-size:10px;
+  font-weight:750;
+  color:#344054;
+}
+
+.student-grid .required{
+  color:#f97316;
+  font-weight:800;
+}
+
+.student-grid .form-control{
+  width:100%;
+  min-width:0;
+  height:43px;
+  box-sizing:border-box;
+  border:1px solid #dce3eb;
+  border-radius:10px;
+  padding:0 12px;
+  background:#fff;
+  color:var(--text);
+  font-size:11px;
+  outline:none;
+  transition:
+    border-color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.student-grid .form-control::placeholder{
+  color:#a7b0bd;
+}
+
+.student-grid .form-control:hover{
+  border-color:#cbd5e1;
+}
+
+.student-grid .form-control:focus{
+  border-color:#fb923c;
+  box-shadow:0 0 0 3px rgba(249,115,22,.10);
+}
+
+.student-grid select.form-control{
+  cursor:pointer;
+}
+
+.student-required-note{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:13px;
+  color:#98a2b3;
+  font-size:10px;
+}
+
+.student-required-note span{
+  color:#f97316;
+  font-weight:800;
+}
+
+.student-modal-footer{
+  padding:15px 24px;
+  background:#fff;
+  border-top:1px solid #e9edf2;
+  flex:0 0 auto;
+}
+
+.student-save-btn{
+  min-width:135px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.student-save-btn span{
+  font-size:13px;
+  font-weight:800;
+}
+
+@media(max-width:700px){
+
+  .student-modal{
+    width:calc(100vw - 24px);
+    max-width:none;
+    max-height:calc(100vh - 24px);
+    border-radius:17px;
+  }
+
+  .student-modal-head{
+    padding:17px 18px;
+  }
+
+  .student-modal-body{
+    padding:16px;
+  }
+
+  .student-section{
+    padding:15px;
+  }
+
+  .student-grid{
+    grid-template-columns:1fr;
+    gap:13px;
+  }
+
+  .student-grid .form-group.full{
+    grid-column:auto;
+  }
+
+  .student-modal-footer{
+    padding:13px 16px;
+  }
+}
+
+@media(max-width:480px){
+
+  .student-head-icon{
+    width:38px;
+    height:38px;
+    flex-basis:38px;
+  }
+
+  .student-modal .modal-title{
+    font-size:15px;
+  }
+
+  .student-modal .modal-subtitle{
+    font-size:10px;
+  }
+
+  .student-modal-footer{
+    display:grid;
+    grid-template-columns:1fr 1.35fr;
+  }
+
+  .student-modal-footer .btn{
+    width:100%;
+    justify-content:center;
+  }
+}
+
+/* ===== Guru Modal refinement ===== */
+.guru-modal{
+  width:min(700px,100%);
+  max-width:700px;
+}
+
+.guru-modal .modal-head{
+  padding:18px 24px;
+}
+
+.guru-modal .modal-title{
+  font-size:17px;
+  color:var(--text);
+}
+
+.guru-modal .modal-subtitle{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.guru-modal .modal-body{
+  padding:22px 24px;
+  max-height:calc(100vh - 210px);
+  overflow-y:auto;
+}
+
+.guru-form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+
+.guru-modal .form-group{
+  min-width:0;
+}
+
+.guru-modal .form-group label{
+  margin-bottom:7px;
+  font-size:11px;
+  font-weight:700;
+  color:#344054;
+}
+
+.guru-modal .required{
+  color:var(--primary);
+}
+
+.guru-modal .form-control{
+  box-sizing:border-box;
+  min-width:0;
+  height:42px;
+  padding:0 12px;
+  border:1px solid #d9e0e8;
+  border-radius:10px;
+  background:#fff;
+  color:var(--text);
+  font-size:12px;
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+
+.guru-modal select.form-control{
+  padding-right:34px;
+}
+
+.guru-modal .form-control:focus{
+  border-color:#fb923c;
+  box-shadow:0 0 0 3px rgba(249,115,22,.10);
+}
+
+.guru-modal textarea.form-control{
+  height:auto;
+  min-height:82px;
+  padding:11px 12px;
+  resize:vertical;
+  line-height:1.5;
+}
+
+.guru-modal .modal-footer{
+  padding:15px 24px;
+  background:#fff;
+}
+
+@media(max-width:700px){
+  .guru-modal{
+    max-width:100%;
+  }
+
+  .guru-form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .guru-modal .modal-body{
+    padding:18px;
+    max-height:calc(100vh - 170px);
+  }
+
+  .guru-modal .modal-head,
+  .guru-modal .modal-footer{
+    padding-left:18px;
+    padding-right:18px;
+  }
+}
+
+
+/* Error message - Operator */
+.form-error.show{
+    display:block !important;
+    margin-bottom:14px;
+    padding:11px 13px;
+    border:1px solid #fecaca;
+    border-radius:10px;
+    background:#fff1f2;
+    color:#b42318;
+    font-size:12px;
+    line-height:1.5;
+}
+
+
+/* ===== Student Excel Import ===== */
+.student-mode-tabs{display:flex;gap:8px;padding:14px 24px 0;border-top:1px solid var(--border);background:#fff}
+.teacher-mode-tabs{display:flex;gap:8px;padding:14px 24px 0;border-top:1px solid var(--border);background:#fff}.teacher-mode-tab{border:0;background:transparent;padding:10px 14px;border-radius:10px 10px 0 0;font-size:11px;font-weight:800;color:#667085;cursor:pointer}.teacher-mode-tab.active{color:#ea580c;background:#fff7ed;border-bottom:2px solid #f97316}.teacher-excel-panel{padding:22px 24px 24px;max-height:calc(100vh - 180px);overflow:auto}.teacher-modal{max-width:760px}
+.mapel-modal{max-width:760px}.mapel-excel-panel{padding:22px 24px 24px;max-height:calc(100vh - 180px);overflow:auto}.mapel-excel-footer{display:flex;justify-content:flex-end;gap:9px;padding-top:17px}.teacher-excel-footer{display:flex;justify-content:flex-end;gap:9px;padding-top:17px}
+
+.student-mode-tab{border:0;background:#f6f7f9;color:#667085;border-radius:10px 10px 0 0;padding:10px 15px;font-size:11px;font-weight:800;cursor:pointer;transition:.15s ease}
+.student-mode-tab span{margin-right:5px}.student-mode-tab:hover{background:#fff3e8;color:#f97316}
+.student-mode-tab.active{background:#fff4e8;color:#ea580c;box-shadow:inset 0 -2px 0 #f97316}
+.student-excel-panel{padding:22px 24px 24px;max-height:calc(100vh - 180px);overflow:auto}
+.excel-import-intro{display:flex;gap:13px;align-items:center;padding:16px;border:1px solid #fed7aa;background:linear-gradient(135deg,#fff7ed,#fffaf5);border-radius:14px;margin-bottom:16px}
+.excel-import-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#fff;color:#ea580c;border:1px solid #fed7aa;font-size:20px;flex:none}
+.excel-import-title{font-size:13px;font-weight:800;color:#1f2937}.excel-import-desc{font-size:10px;color:#667085;margin-top:4px;line-height:1.5}
+.excel-step-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.excel-step-card{display:flex;gap:12px;padding:16px;border:1px solid #e5e7eb;border-radius:13px;background:#fff}
+.excel-step-number{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#fff1e6;color:#ea580c;font-weight:900;font-size:11px;flex:none}
+.excel-step-title{font-size:12px;font-weight:800;color:#344054}.excel-step-desc{font-size:10px;color:#98a2b3;margin-top:3px;margin-bottom:11px}.excel-action-btn{font-size:10px!important;padding:9px 12px!important}
+.excel-file-label{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:9px;border:1px dashed #f97316;color:#ea580c;background:#fff7ed;font-size:10px;font-weight:800;cursor:pointer}.excel-file-label input{display:none}
+.excel-file-name{font-size:10px;color:#667085;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.excel-import-status{margin-top:14px;padding:11px 13px;border-radius:10px;font-size:10px;font-weight:700}.excel-import-status.success{background:#ecfdf3;color:#027a48;border:1px solid #abefc6}.excel-import-status.error{background:#fef3f2;color:#b42318;border:1px solid #fecdca}.excel-import-status.info{background:#eff8ff;color:#175cd3;border:1px solid #b2ddff}
+.excel-preview-card{margin-top:14px;border:1px solid #e5e7eb;border-radius:13px;overflow:hidden;background:#fff}.excel-preview-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid #eef0f3}.excel-preview-title{font-size:12px;font-weight:800;color:#344054}.excel-preview-sub{font-size:10px;color:#98a2b3;margin-top:3px}.excel-preview-badge{font-size:9px;font-weight:800;padding:6px 9px;border-radius:999px;background:#f2f4f7;color:#667085}
+.excel-preview-table-wrap{overflow:auto;max-height:260px}.excel-preview-table{width:100%;border-collapse:collapse;min-width:760px;font-size:10px}.excel-preview-table th{position:sticky;top:0;background:#f8fafc;color:#667085;text-align:left;padding:9px;border-bottom:1px solid #e5e7eb;font-weight:800}.excel-preview-table td{padding:9px;border-bottom:1px solid #f0f2f5;color:#475467}.excel-row-ok{color:#027a48!important;font-weight:800}.excel-row-error{color:#b42318!important;font-weight:800}.excel-error-list{padding:12px 15px;background:#fff8f7;border-top:1px solid #fee4e2;color:#b42318;font-size:10px;line-height:1.6}.excel-import-note{margin-top:13px;padding:10px 12px;border-radius:9px;background:#f8fafc;color:#667085;font-size:9px;line-height:1.55}.student-excel-footer{display:flex;justify-content:flex-end;gap:9px;padding-top:17px}
+@media(max-width:700px){.student-mode-tabs,.teacher-mode-tabs{padding:12px 18px 0}.student-excel-panel,.teacher-excel-panel{padding:18px;max-height:calc(100vh - 155px)}.excel-step-grid{grid-template-columns:1fr}}
+</style>
+
+
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<style id="kelas-modal-layout-fix">
+#kelasModal .modal { max-width: 560px; }
+#kelasModal .modal-body { padding: 24px; }
+#kelasModal .kelas-form-grid { display:flex; flex-direction:column; gap:18px; width:100%; }
+#kelasModal .kelas-form-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; width:100%; }
+#kelasModal .kelas-form-field { width:100%; min-width:0; }
+#kelasModal .kelas-form-field label { display:block; margin:0 0 7px; font-size:11px; line-height:1.4; font-weight:700; color:#344054; }
+#kelasModal .kelas-form-field .form-control { display:block; width:100%; height:44px; min-height:44px; box-sizing:border-box; margin:0; padding:0 13px; border:1px solid #dce3eb; border-radius:11px; background:#fff; color:#172033; font-size:11px; outline:none; }
+#kelasModal .kelas-form-field .form-control:focus { border-color:#ff6b00; box-shadow:0 0 0 3px rgba(255,107,0,.12); }
+#kelasModal .modal-footer { padding:15px 24px; }
+@media(max-width:560px){ #kelasModal .modal{max-width:calc(100vw - 24px)} #kelasModal .modal-body{padding:20px} #kelasModal .kelas-form-row{grid-template-columns:1fr;gap:18px} }
+
+
+/* ===== SIDEBAR FINAL: semua menu terlihat dan mudah dipilih ===== */
+.sidebar{
+  width:230px;
+  height:100vh;
+  min-height:100vh;
+  padding:18px 12px 14px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(255,255,255,.10),transparent 26%),
+    linear-gradient(180deg,#1d2939 0%,#172033 100%);
+}
+
+.brand{
+  flex:0 0 auto;
+  padding:4px 10px 18px;
+  gap:11px;
+}
+
+.logo{
+  width:44px;
+  height:44px;
+  border-radius:13px;
+}
+
+.brand h1{font-size:16px}
+.brand span{font-size:10px}
+
+.nav-title{
+  flex:0 0 auto;
+  padding:9px 10px 7px;
+  margin-top:2px;
+  font-size:9px;
+}
+
+.nav{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:2px 0;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.18) transparent;
+}
+
+.nav::-webkit-scrollbar{width:4px}
+.nav::-webkit-scrollbar-track{background:transparent}
+.nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:10px}
+
+.nav button{
+  flex:0 0 auto;
+  min-height:42px;
+  padding:9px 11px;
+  border-radius:11px;
+  gap:11px;
+  font-size:13px;
+}
+
+.nav-icon{
+  width:21px;
+  min-width:21px;
+  font-size:16px;
+}
+
+.sidebar-footer{
+  position:static;
+  flex:0 0 auto;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  margin:8px 4px 0;
+  padding:11px 8px 2px;
+  border-top:1px solid rgba(255,255,255,.10);
+  font-size:10px;
+  line-height:1.45;
+}
+
+.main{
+  margin-left:230px;
+  width:calc(100% - 230px);
+}
+
+@media(max-width:760px){
+  .sidebar{
+    width:230px;
+    height:100vh;
+    padding:18px 12px 14px;
+  }
+  .main{margin-left:0;width:100%}
+}
+
+</style>
+</head>
+
+
+
+<body>
+
+
+
+<div class="app">
+
+
+
+<aside class="sidebar" id="sidebar">
+
+
+
+  <div class="brand">
+
+
+
+    <div class="logo"><img src="/sman6/logosman6m.png" alt="Logo SMAN 6"></div>
+
+
+
+    <div><h1>SMAN 6</h1><span>Sistem Presensi Siswa</span></div>
+
+
+
+  </div>
+
+
+
+  <div class="nav-title">MENU OPERATOR</div>
+
+
+
+  <nav class="nav">
+
+
+
+    <button class="active" data-section="dashboard"><span class="nav-icon">⌂</span>Dashboard</button>
+
+
+
+    <button data-section="kelas"><span class="nav-icon">▦</span>Data Kelas</button>
+
+
+
+    <button data-section="siswa"><span class="nav-icon">👥</span>Data Siswa</button>
+
+
+
+    <button data-section="guru"><span class="nav-icon">◉</span>Data Guru</button>
+
+
+
+    <button data-section="mapel"><span class="nav-icon">▤</span>Mata Pelajaran</button>
+
+
+
+    <button data-section="wali"><span class="nav-icon">★</span>Wali Kelas</button>
+
+
+
+    <button data-section="guru-mapel"><span class="nav-icon">◎</span>Guru Mapel</button>
+
+<button data-section="akun"><span class="nav-icon">⚿</span>Manajemen Akun</button>
+
+
+
+  </nav>
+
+
+
+  <div class="sidebar-footer">Operator Sekolah<br><strong style="color:#dce4ef">Sistem Informasi Akademik</strong></div>
+
+
+
+</aside>
+
+
+
+
+
+
+
+<main class="main">
+
+
+
+<header class="topbar">
+
+
+
+  <div style="display:flex;align-items:center;gap:12px">
+
+
+
+    <button class="mobile-menu" id="mobileMenu">☰</button>
+
+
+
+    <div><div class="page-title" id="pageTitle">Dashboard Operator</div><div class="page-subtitle" id="pageSubtitle">Pengelolaan data master sistem presensi</div></div>
+
+
+
+  </div>
+
+
+
+  <div class="profile">
+  <div class="avatar" id="profileAvatar">OP</div>
+  <div>
+    <strong id="profileName">Operator Sekolah</strong>
+    <small id="profileRole">Administrator</small>
+  </div>
+  <button class="btn btn-light btn-sm" id="btnLogout" type="button" onclick="logoutOperator()">Keluar</button>
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+<section class="content">
+
+
+
+
+<section class="section active" id="dashboard">
+  <div class="hero">
+    <div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;opacity:.78;margin-bottom:8px">
+        Sistem Presensi Siswa
+      </div>
+      <h2>Selamat Datang, Operator 👋</h2>
+      <p>
+        Kelola data master sekolah, penugasan wali kelas, dan guru mata pelajaran
+        dari satu dashboard terpusat.
+      </p>
+    </div>
+    <div class="hero-badge">
+      Tahun Ajaran<br>
+      <strong style="font-size:15px">2026/2027</strong>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-top">
+        <span>Total Kelas</span>
+        <div class="stat-icon">▦</div>
+      </div>
+      <strong id="statKelas">-</strong>
+      <small>Kelas aktif</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">
+        <span>Total Siswa</span>
+        <div class="stat-icon">👥</div>
+      </div>
+      <strong id="statSiswa">-</strong>
+      <small>Siswa aktif</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">
+        <span>Total Guru</span>
+        <div class="stat-icon">◉</div>
+      </div>
+      <strong id="statGuru">-</strong>
+      <small>Guru aktif</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">
+        <span>Mata Pelajaran</span>
+        <div class="stat-icon">▤</div>
+      </div>
+      <strong id="statMapel">-</strong>
+      <small>Mapel aktif</small>
+    </div>
+  </div>
+
+  <div class="quick-grid">
+    <div class="quick" data-go="kelas">
+      <div class="qicon">🏫</div>
+      <h3>Kelola Kelas</h3>
+      <p>Tambah dan atur data kelas serta tahun ajaran.</p>
+    </div>
+
+    <div class="quick" data-go="siswa">
+      <div class="qicon">👨‍🎓</div>
+      <h3>Kelola Siswa</h3>
+      <p>Daftarkan siswa dan tempatkan ke kelas yang sesuai.</p>
+    </div>
+
+    <div class="quick" data-go="guru-mapel">
+      <div class="qicon">📚</div>
+      <h3>Atur Guru Mapel</h3>
+      <p>Tentukan guru, mata pelajaran, dan kelas yang diampu.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Ringkasan Penugasan</div>
+        <div class="card-sub">Data konfigurasi yang sudah tersimpan di sistem</div>
+      </div>
+      <button class="btn btn-light btn-sm" type="button" onclick="refreshDashboard()">↻ Refresh</button>
+    </div>
+    <div class="card-body">
+      <div class="stats" style="margin:0;grid-template-columns:repeat(2,1fr)">
+        <div class="stat">
+          <div class="stat-top">
+            <span>Wali Kelas</span>
+            <div class="stat-icon">★</div>
+          </div>
+          <strong id="statWali">-</strong>
+          <small>Penugasan aktif</small>
+        </div>
+
+        <div class="stat">
+          <div class="stat-top">
+            <span>Guru Mapel</span>
+            <div class="stat-icon">◎</div>
+          </div>
+          <strong id="statGuruMapel">-</strong>
+          <small>Penugasan aktif</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<section class="section" id="kelas">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Data Kelas</div><div class="card-sub">Daftar kelas aktif tahun ajaran berjalan</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-light btn-sm" type="button" onclick="loadKelas()">↻ Refresh</button><button class="btn btn-primary" onclick="openForm('kelas')">＋ Tambah Kelas</button></div></div>
+
+
+
+  <div class="card-body"><div class="toolbar"><input class="search" id="searchKelas" placeholder="Cari kelas..." oninput="filterTable('tableKelas',this.value)"></div><div class="table-wrap"><table id="tableKelas"><thead><tr><th>No</th><th>Nama Kelas</th><th>Tingkat</th><th>Jurusan</th><th>Tahun Ajaran</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="kelasBody"><tr><td colspan="7" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="section" id="siswa">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Data Siswa</div><div class="card-sub">Data siswa dan kelasnya</div></div><button class="btn btn-primary" onclick="openForm('siswa')">＋ Tambah Siswa</button></div>
+
+
+
+  <div class="card-body"><div class="toolbar"><input class="search" placeholder="Cari nama / NIS..." oninput="filterTable('tableSiswa',this.value)"></div><div class="table-wrap"><table id="tableSiswa"><thead><tr><th>No</th><th>NIS</th><th>NISN</th><th>Nama Lengkap</th><th>Jenis Kelamin</th><th>Kelas</th><th>Status</th></tr></thead><tbody id="siswaBody"><tr><td colspan="7" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="section" id="guru">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Data Guru</div><div class="card-sub">Daftar guru yang terdaftar</div></div><button class="btn btn-primary" onclick="openForm('guru')">＋ Tambah Guru</button></div>
+
+
+
+  <div class="card-body"><div class="toolbar"><input class="search" placeholder="Cari nama / NIP..." oninput="filterTable('tableGuru',this.value)"></div><div class="table-wrap"><table id="tableGuru"><thead><tr><th>No</th><th>NIP</th><th>NUPTK</th><th>Nama Lengkap</th><th>Email</th><th>No. HP</th><th>Status</th></tr></thead><tbody id="guruBody"><tr><td colspan="7" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="section" id="mapel">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Mata Pelajaran</div><div class="card-sub">Master mata pelajaran sekolah</div></div><button class="btn btn-primary" onclick="openForm('mapel')">＋ Tambah Mapel</button></div>
+
+
+
+  <div class="card-body"><div class="toolbar"><input class="search" placeholder="Cari kode / nama mapel..." oninput="filterTable('tableMapel',this.value)"></div><div class="table-wrap"><table id="tableMapel"><thead><tr><th>No</th><th>Kode</th><th>Mata Pelajaran</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="mapelBody"><tr><td colspan="5" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="section" id="wali">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Wali Kelas</div><div class="card-sub">Penugasan guru sebagai wali kelas</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-light btn-sm" type="button" onclick="loadWaliKelas()">↻ Refresh</button><button class="btn btn-primary" onclick="openForm('wali')">＋ Atur Wali Kelas</button></div></div>
+
+
+
+  <div class="card-body"><div class="table-wrap"><table id="tableWali"><thead><tr><th>No</th><th>Guru</th><th>Kelas</th><th>Tahun Ajaran</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="waliBody"><tr><td colspan="6" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="section" id="guru-mapel">
+
+
+
+  <div class="card"><div class="card-head"><div><div class="card-title">Guru Mata Pelajaran</div><div class="card-sub">Penugasan guru, mata pelajaran, dan kelas</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-light btn-sm" type="button" onclick="loadGuruMapel()">↻ Refresh</button><button class="btn btn-primary" onclick="openForm('guru-mapel')">＋ Tambah Penugasan</button></div></div>
+
+
+
+  <div class="card-body"><div class="toolbar"><input class="search" placeholder="Cari guru / mapel / kelas..." oninput="filterTable('tableGuruMapel',this.value)"></div><div class="table-wrap"><table id="tableGuruMapel"><thead><tr><th>No</th><th>Guru</th><th>Mata Pelajaran</th><th>Kelas</th><th>Tahun Ajaran</th><th>Status</th></tr></thead><tbody id="guruMapelBody"><tr><td colspan="6" class="empty">Memuat data...</td></tr></tbody></table></div></div></div>
+
+
+
+</section>
+
+
+
+</section>
+
+
+
+
+
+<section class="section" id="akun">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Manajemen Akun</div>
+        <div class="card-sub">Kelola akun login guru dan wali kelas</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-light btn-sm" type="button" onclick="loadAccounts()">↻ Refresh</button>
+        <button class="btn btn-primary" type="button" onclick="openForm('akun')">＋ Buat Akun</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="toolbar">
+        <input id="akunSearch" class="search" placeholder="Cari username / nama / role..." oninput="renderAccounts()">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>USERNAME</th>
+              <th>NAMA LENGKAP</th>
+              <th>GURU</th>
+              <th>ROLE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="akunBody">
+            <tr><td colspan="6" class="empty">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal-backdrop" id="akunModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Buat Akun Guru</div>
+        <div class="card-sub">Buat akun login untuk guru yang belum memiliki akun.</div>
+      </div>
+      <button class="modal-close" type="button" onclick="closeAkunModal()">×</button>
+    </div>
+    <form id="akunForm">
+      <div class="modal-body">
+        <div class="form-error" id="akunError"></div>
+
+        <div class="form-group">
+          <label for="akunGuru">Guru</label>
+          <select id="akunGuru" required>
+            <option value="">Pilih guru...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="akunRole">Role</label>
+          <select id="akunRole" required>
+            <option value="">Pilih role...</option>
+            <option value="guru_mapel">Guru Mata Pelajaran</option>
+            <option value="wali_kelas">Wali Kelas</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="akunUsername">Username</label>
+          <input id="akunUsername" type="text" minlength="3" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="akunPassword">Password</label>
+          <input id="akunPassword" type="password" minlength="8" autocomplete="new-password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="akunPasswordConfirm">Konfirmasi Password</label>
+          <input id="akunPasswordConfirm" type="password" minlength="8" autocomplete="new-password" required>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" onclick="closeAkunModal()">Batal</button>
+        <button class="btn btn-primary" id="btnSimpanAkun" type="submit">Simpan Akun</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="kelasModal">
+
+  <div class="modal" role="dialog" aria-modal="true">
+
+    <div class="modal-head">
+
+      <div class="modal-title">Tambah Kelas</div>
+
+      <button class="modal-close" type="button" onclick="closeKelasModal()">×</button>
+
+    </div>
+
+    <form id="kelasForm">
+
+      <div class="modal-body">
+
+        <div class="form-error" id="kelasError"></div>
+
+        <div class="kelas-form-grid">
+
+          <div class="kelas-form-field">
+            <label for="namaKelas">Nama Kelas</label>
+            <input class="form-control" id="namaKelas" placeholder="Contoh: X-3" required>
+          </div>
+
+          <div class="kelas-form-row">
+            <div class="kelas-form-field">
+              <label for="tingkatKelas">Tingkat</label>
+              <select class="form-control" id="tingkatKelas" required>
+                <option value="">Pilih tingkat</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </div>
+
+            <div class="kelas-form-field">
+              <label for="jurusanKelas">Jurusan</label>
+              <input class="form-control" id="jurusanKelas" placeholder="Contoh: Umum">
+            </div>
+          </div>
+
+          <div class="kelas-form-field">
+            <label for="tahunKelas">Tahun Ajaran</label>
+            <input class="form-control" id="tahunKelas" value="2026/2027" required>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button class="btn btn-light" type="button" onclick="closeKelasModal()">Batal</button>
+
+        <button class="btn btn-primary" id="btnSimpanKelas" type="submit">Simpan Kelas</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+
+
+<div class="modal-backdrop" id="siswaModal">
+
+  <div class="modal student-modal" role="dialog" aria-modal="true" aria-labelledby="siswaModalTitle">
+
+    <div class="modal-head student-modal-head">
+
+      <div class="student-head-left">
+        <div class="student-head-icon">🎓</div>
+
+        <div>
+          <div class="modal-title" id="siswaModalTitle">Tambah Siswa</div>
+          <div class="modal-subtitle">
+            Lengkapi identitas siswa dan tentukan kelasnya.
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="modal-close"
+        type="button"
+        onclick="closeSiswaModal()"
+        aria-label="Tutup">
+        ×
+      </button>
+
+    </div>
+
+    <div class="student-mode-tabs" role="tablist" aria-label="Metode tambah siswa">
+      <button type="button" class="student-mode-tab active" id="tabSiswaManual" onclick="switchSiswaMode('manual')"><span>✎</span> Input Manual</button>
+      <button type="button" class="student-mode-tab" id="tabSiswaExcel" onclick="switchSiswaMode('excel')"><span>▦</span> Import Excel</button>
+    </div>
+
+    <form id="siswaForm" class="student-manual-panel">
+
+      <div class="modal-body student-modal-body">
+
+        <div class="form-error" id="siswaError"></div>
+
+        <div class="student-section">
+
+          <div class="student-section-head">
+            <div class="student-section-icon">01</div>
+            <div>
+              <div class="student-section-title">Identitas Siswa</div>
+              <div class="student-section-desc">
+                Data utama siswa yang digunakan dalam sistem.
+              </div>
+            </div>
+          </div>
+
+          <div class="student-grid">
+
+            <div class="form-group">
+              <label for="nisSiswa">NIS</label>
+              <input
+                class="form-control"
+                id="nisSiswa"
+                placeholder="Contoh: 10011">
+            </div>
+
+            <div class="form-group">
+              <label for="nisnSiswa">NISN</label>
+              <input
+                class="form-control"
+                id="nisnSiswa"
+                placeholder="Contoh: 0010000011">
+            </div>
+
+            <div class="form-group full">
+              <label for="namaSiswa">
+                Nama Lengkap <span class="required">*</span>
+              </label>
+              <input
+                class="form-control"
+                id="namaSiswa"
+                placeholder="Masukkan nama lengkap siswa"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="jkSiswa">
+                Jenis Kelamin <span class="required">*</span>
+              </label>
+
+              <select class="form-control" id="jkSiswa" required>
+                <option value="">Pilih jenis kelamin</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="kelasSiswa">
+                Kelas <span class="required">*</span>
+              </label>
+
+              <select class="form-control" id="kelasSiswa" required>
+                <option value="">Memuat kelas...</option>
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="student-section">
+
+          <div class="student-section-head">
+            <div class="student-section-icon">02</div>
+            <div>
+              <div class="student-section-title">Data Pribadi</div>
+              <div class="student-section-desc">
+                Informasi tambahan siswa.
+              </div>
+            </div>
+          </div>
+
+          <div class="student-grid">
+
+            <div class="form-group">
+              <label for="tempatLahirSiswa">Tempat Lahir</label>
+              <input
+                class="form-control"
+                id="tempatLahirSiswa"
+                placeholder="Contoh: Jakarta">
+            </div>
+
+            <div class="form-group">
+              <label for="tanggalLahirSiswa">Tanggal Lahir</label>
+              <input
+                class="form-control"
+                id="tanggalLahirSiswa"
+                type="date">
+            </div>
+
+            <div class="form-group">
+              <label for="nomorHpSiswa">Nomor HP</label>
+              <input
+                class="form-control"
+                id="nomorHpSiswa"
+                placeholder="08xxxxxxxxxx"
+                inputmode="tel">
+            </div>
+
+            <div class="form-group">
+              <label for="alamatSiswa">Alamat</label>
+              <input
+                class="form-control"
+                id="alamatSiswa"
+                placeholder="Alamat tempat tinggal siswa">
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="student-required-note">
+          <span>*</span>
+          Field bertanda bintang wajib diisi.
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer student-modal-footer">
+
+        <button
+          class="btn btn-light"
+          type="button"
+          onclick="closeSiswaModal()">
+          Batal
+        </button>
+
+        <button
+          class="btn btn-primary student-save-btn"
+          id="btnSimpanSiswa"
+          type="submit">
+          <span>✓</span>
+          Simpan Siswa
+        </button>
+
+      </div>
+
+    </form>
+
+
+    <div class="student-excel-panel" id="siswaExcelPanel" hidden>
+      <div class="excel-import-intro">
+        <div class="excel-import-icon">▦</div>
+        <div><div class="excel-import-title">Tambah banyak siswa sekaligus</div><div class="excel-import-desc">Download template, isi data siswa sesuai kolom yang tersedia, lalu upload kembali ke sistem.</div></div>
+      </div>
+      <div class="excel-step-grid">
+        <div class="excel-step-card"><div class="excel-step-number">1</div><div><div class="excel-step-title">Download Template</div><div class="excel-step-desc">Gunakan format Excel resmi dari sistem.</div><button type="button" class="btn btn-light excel-action-btn" onclick="downloadSiswaTemplate()">↓ Download Template Excel</button></div></div>
+        <div class="excel-step-card"><div class="excel-step-number">2</div><div><div class="excel-step-title">Upload File</div><div class="excel-step-desc">Format .xlsx, .xls, atau .csv.</div><label class="excel-file-label" for="siswaExcelFile"><span>↑ Pilih File Excel</span><input id="siswaExcelFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleSiswaExcel(event)"></label><div class="excel-file-name" id="siswaExcelFileName">Belum ada file dipilih.</div></div></div>
+      </div>
+      <div class="excel-import-status" id="siswaExcelStatus" hidden></div>
+      <div class="excel-preview-card" id="siswaExcelPreview" hidden>
+        <div class="excel-preview-head"><div><div class="excel-preview-title">Preview Data</div><div class="excel-preview-sub" id="siswaExcelPreviewInfo">-</div></div><span class="excel-preview-badge" id="siswaExcelPreviewBadge">0 baris</span></div>
+        <div class="excel-preview-table-wrap"><table class="excel-preview-table"><thead><tr><th>No</th><th>NIS</th><th>NISN</th><th>Nama Lengkap</th><th>JK</th><th>Kelas</th><th>Tahun Ajaran</th><th>Status</th></tr></thead><tbody id="siswaExcelPreviewBody"></tbody></table></div>
+        <div class="excel-error-list" id="siswaExcelErrors" hidden></div>
+      </div>
+      <div class="excel-import-note"><strong>Catatan:</strong> NIS, NISN, Nama Lengkap, Jenis Kelamin, Nama Kelas, dan Tahun Ajaran wajib diisi. Data yang sudah memiliki NIS/NISN di database akan ditolak agar tidak terjadi duplikasi.</div>
+      <div class="student-excel-footer"><button type="button" class="btn btn-light" onclick="switchSiswaMode('manual')">Kembali</button><button type="button" class="btn btn-primary" id="btnImportSiswaExcel" onclick="importSiswaExcel()" disabled>✓ Simpan ke Database</button></div>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+<div class="modal-backdrop" id="guruModal">
+  <div class="modal guru-modal teacher-modal" role="dialog" aria-modal="true" aria-labelledby="guruModalTitle">
+    <div class="modal-head">
+      <div><div class="modal-title" id="guruModalTitle">Tambah Guru</div><div class="modal-subtitle">Masukkan data identitas guru</div></div>
+      <button class="modal-close" type="button" onclick="closeGuruModal()" aria-label="Tutup">×</button>
+    </div>
+    <div class="teacher-mode-tabs" role="tablist" aria-label="Metode tambah guru">
+      <button type="button" class="teacher-mode-tab active" id="tabGuruManual" onclick="switchGuruMode('manual')"><span>✎</span> Input Manual</button>
+      <button type="button" class="teacher-mode-tab" id="tabGuruExcel" onclick="switchGuruMode('excel')"><span>▦</span> Import Excel</button>
+    </div>
+    <form id="guruForm">
+      <div class="modal-body">
+        <div class="form-error" id="guruError"></div>
+        <div class="form-grid guru-form-grid">
+          <div class="form-group"><label for="nipGuru">NIP</label><input class="form-control" id="nipGuru" placeholder="Masukkan NIP"></div>
+          <div class="form-group"><label for="nuptkGuru">NUPTK</label><input class="form-control" id="nuptkGuru" placeholder="Masukkan NUPTK"></div>
+          <div class="form-group full"><label for="namaGuru">Nama Lengkap <span class="required">*</span></label><input class="form-control" id="namaGuru" placeholder="Nama lengkap guru" required></div>
+          <div class="form-group"><label for="jkGuru">Jenis Kelamin <span class="required">*</span></label><select class="form-control" id="jkGuru" required><option value="">Pilih jenis kelamin</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+          <div class="form-group"><label for="emailGuru">Email</label><input class="form-control" id="emailGuru" type="email" placeholder="nama@sekolah.sch.id"></div>
+          <div class="form-group"><label for="tempatLahirGuru">Tempat Lahir</label><input class="form-control" id="tempatLahirGuru" placeholder="Contoh: Jakarta"></div>
+          <div class="form-group"><label for="tanggalLahirGuru">Tanggal Lahir</label><input class="form-control" id="tanggalLahirGuru" type="date"></div>
+          <div class="form-group full"><label for="nomorHpGuru">Nomor HP</label><input class="form-control" id="nomorHpGuru" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx"></div>
+          <div class="form-group full"><label for="alamatGuru">Alamat</label><textarea class="form-control guru-address" id="alamatGuru" rows="3" placeholder="Masukkan alamat lengkap"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-light" type="button" onclick="closeGuruModal()">Batal</button><button class="btn btn-primary" id="btnSimpanGuru" type="submit">Simpan Guru</button></div>
+    </form>
+    <div class="teacher-excel-panel" id="guruExcelPanel" hidden>
+      <div class="excel-import-intro"><div class="excel-import-icon">▦</div><div><div class="excel-import-title">Tambah banyak guru sekaligus</div><div class="excel-import-desc">Download template, isi data guru sesuai kolom yang tersedia, lalu upload kembali ke sistem.</div></div></div>
+      <div class="excel-step-grid">
+        <div class="excel-step-card"><div class="excel-step-number">1</div><div><div class="excel-step-title">Download Template</div><div class="excel-step-desc">Gunakan format Excel resmi dari sistem.</div><button type="button" class="btn btn-light excel-action-btn" onclick="downloadGuruTemplate()">↓ Download Template Excel</button></div></div>
+        <div class="excel-step-card"><div class="excel-step-number">2</div><div><div class="excel-step-title">Upload File</div><div class="excel-step-desc">Format .xlsx, .xls, atau .csv.</div><label class="excel-file-label" for="guruExcelFile"><span>↑ Pilih File Excel</span><input id="guruExcelFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleGuruExcel(event)"></label><div class="excel-file-name" id="guruExcelFileName">Belum ada file dipilih.</div></div></div>
+      </div>
+      <div class="excel-import-status" id="guruExcelStatus" hidden></div>
+      <div class="excel-preview-card" id="guruExcelPreview" hidden><div class="excel-preview-head"><div><div class="excel-preview-title">Preview Data</div><div class="excel-preview-sub" id="guruExcelPreviewInfo">-</div></div><span class="excel-preview-badge" id="guruExcelPreviewBadge">0 baris</span></div><div class="excel-preview-table-wrap"><table class="excel-preview-table"><thead><tr><th>No</th><th>NIP</th><th>NUPTK</th><th>Nama Lengkap</th><th>JK</th><th>Email</th><th>Tanggal Lahir</th><th>Status</th></tr></thead><tbody id="guruExcelPreviewBody"></tbody></table></div><div class="excel-error-list" id="guruExcelErrors" hidden></div></div>
+      <div class="excel-import-note"><strong>Catatan:</strong> Nama Lengkap dan Jenis Kelamin wajib diisi. NIP/NUPTK yang sudah terdaftar di database akan ditolak agar tidak terjadi duplikasi.</div>
+      <div class="teacher-excel-footer"><button type="button" class="btn btn-light" onclick="switchGuruMode('manual')">Kembali</button><button type="button" class="btn btn-primary" id="btnImportGuruExcel" onclick="importGuruExcel()" disabled>✓ Simpan ke Database</button></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-backdrop" id="mapelModal">
+  <div class="modal mapel-modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">Tambah Mata Pelajaran</div>
+      <button class="modal-close" type="button" onclick="closeMapelModal()">×</button>
+    </div>
+    <div class="teacher-mode-tabs" role="tablist" aria-label="Metode tambah mata pelajaran">
+      <button type="button" class="teacher-mode-tab active" id="tabMapelManual" onclick="switchMapelMode('manual')"><span>✎</span> Input Manual</button>
+      <button type="button" class="teacher-mode-tab" id="tabMapelExcel" onclick="switchMapelMode('excel')"><span>▦</span> Import Excel</button>
+    </div>
+    <form id="mapelForm">
+      <div class="modal-body">
+        <div class="form-error" id="mapelError"></div>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="kodeMapel">Kode Mapel <span class="required">*</span></label>
+            <input class="form-control" id="kodeMapel" placeholder="Contoh: MAT" required>
+          </div>
+          <div class="form-group full">
+            <label for="namaMapel">Nama Mata Pelajaran <span class="required">*</span></label>
+            <input class="form-control" id="namaMapel" placeholder="Contoh: Matematika" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" onclick="closeMapelModal()">Batal</button>
+        <button class="btn btn-primary" id="btnSimpanMapel" type="submit">Simpan Mapel</button>
+      </div>
+    </form>
+    <div class="mapel-excel-panel" id="mapelExcelPanel" hidden>
+      <div class="excel-import-intro"><div class="excel-import-icon">▦</div><div><div class="excel-import-title">Tambah banyak mata pelajaran sekaligus</div><div class="excel-import-desc">Download template, isi kode dan nama mata pelajaran, lalu upload kembali ke sistem.</div></div></div>
+      <div class="excel-step-grid">
+        <div class="excel-step-card"><div class="excel-step-number">1</div><div><div class="excel-step-title">Download Template</div><div class="excel-step-desc">Gunakan format Excel resmi dari sistem.</div><button type="button" class="btn btn-light excel-action-btn" onclick="downloadMapelTemplate()">↓ Download Template Excel</button></div></div>
+        <div class="excel-step-card"><div class="excel-step-number">2</div><div><div class="excel-step-title">Upload File</div><div class="excel-step-desc">Format .xlsx, .xls, atau .csv.</div><label class="excel-file-label" for="mapelExcelFile"><span>↑ Pilih File Excel</span><input id="mapelExcelFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleMapelExcel(event)"></label><div class="excel-file-name" id="mapelExcelFileName">Belum ada file dipilih.</div></div></div>
+      </div>
+      <div class="excel-import-status" id="mapelExcelStatus" hidden></div>
+      <div class="excel-preview-card" id="mapelExcelPreview" hidden>
+        <div class="excel-preview-head"><div><div class="excel-preview-title">Preview Data</div><div class="excel-preview-sub" id="mapelExcelPreviewInfo">-</div></div><span class="excel-preview-badge" id="mapelExcelPreviewBadge">0 baris</span></div>
+        <div class="excel-preview-table-wrap"><table class="excel-preview-table" style="min-width:520px"><thead><tr><th>No</th><th>Kode Mapel</th><th>Nama Mata Pelajaran</th><th>Status</th></tr></thead><tbody id="mapelExcelPreviewBody"></tbody></table></div>
+        <div class="excel-error-list" id="mapelExcelErrors" hidden></div>
+      </div>
+      <div class="excel-import-note"><strong>Catatan:</strong> Kode Mapel dan Nama Mata Pelajaran wajib diisi. Kode mapel yang sudah terdaftar di database akan ditolak agar tidak terjadi duplikasi.</div>
+      <div class="mapel-excel-footer"><button type="button" class="btn btn-light" onclick="switchMapelMode('manual')">Kembali</button><button type="button" class="btn btn-primary" id="btnImportMapelExcel" onclick="importMapelExcel()" disabled>✓ Simpan ke Database</button></div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal-backdrop" id="waliModal">
+
+  <div class="modal" role="dialog" aria-modal="true">
+
+    <div class="modal-head"><div class="modal-title">Tambah Wali Kelas</div><button class="modal-close" type="button" onclick="closeWaliModal()">×</button></div>
+
+    <form id="waliForm">
+
+      <div class="modal-body">
+
+        <div class="form-error" id="waliError"></div>
+
+        <div class="form-grid">
+
+          <div class="form-group full"><label for="waliGuru">Guru</label><select class="form-control" id="waliGuru" required><option value="">Memuat guru...</option></select></div>
+
+          <div class="form-group"><label for="waliKelas">Kelas</label><select class="form-control" id="waliKelas" required><option value="">Memuat kelas...</option></select></div>
+
+          <div class="form-group"><label for="waliTahun">Tahun Ajaran</label><input class="form-control" id="waliTahun" value="2026/2027" required></div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer"><button class="btn btn-light" type="button" onclick="closeWaliModal()">Batal</button><button class="btn btn-primary" id="btnSimpanWali" type="submit">Simpan Wali Kelas</button></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
+<div class="modal-backdrop" id="guruMapelModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">Tambah Guru Mapel</div>
+      <button class="modal-close" type="button" onclick="closeGuruMapelModal()">×</button>
+    </div>
+    <form id="guruMapelForm">
+      <div class="modal-body">
+        <div class="form-error" id="guruMapelError"></div>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="guruMapelGuru">Guru</label>
+            <select class="form-control" id="guruMapelGuru" required>
+              <option value="">Memuat guru...</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="guruMapelMapel">Mata Pelajaran</label>
+            <select class="form-control" id="guruMapelMapel" required>
+              <option value="">Memuat mata pelajaran...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="guruMapelKelas">Kelas</label>
+            <select class="form-control" id="guruMapelKelas" required>
+              <option value="">Memuat kelas...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="guruMapelTahun">Tahun Ajaran</label>
+            <input class="form-control" id="guruMapelTahun" value="2026/2027" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" onclick="closeGuruMapelModal()">Batal</button>
+        <button class="btn btn-primary" id="btnSimpanGuruMapel" type="submit">Simpan Penugasan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+
+
+
+const API="/sman6/api";
+
+
+
+function roleLabel(role){
+  const labels = {
+    operator_sekolah: "Operator Sekolah",
+    wali_kelas: "Wali Kelas",
+    guru_mapel: "Guru Mata Pelajaran"
+  };
+  return labels[role] || role || "Pengguna";
+}
+
+function getInitials(name){
+  const parts = String(name || "").trim().split(/\\s+/).filter(Boolean);
+  if(!parts.length) return "OP";
+  if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+
+async function loadOperatorSession(){
+  try{
+    const response = await fetch(API + "/session", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store"
+    });
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success || !data.data){
+      window.location.href = "/sman6/login.html";
+      return false;
+    }
+
+    if(data.data.role !== "operator_sekolah"){
+      alert("Akun ini bukan akun Operator Sekolah.");
+      window.location.href = "/sman6/login.html";
+      return false;
+    }
+
+    const name = data.data.nama_lengkap || data.data.username || "Operator Sekolah";
+    const profileName = document.getElementById("profileName");
+    const profileRole = document.getElementById("profileRole");
+    const profileAvatar = document.getElementById("profileAvatar");
+
+    if(profileName) profileName.textContent = name;
+    if(profileRole) profileRole.textContent = roleLabel(data.data.role);
+    if(profileAvatar) profileAvatar.textContent = getInitials(name);
+
+    return true;
+  }catch(error){
+    console.error("Session error:", error);
+    window.location.href = "/sman6/login.html";
+    return false;
+  }
+}
+
+async function logoutOperator(){
+  const btn = document.getElementById("btnLogout");
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Keluar...";
+  }
+
+  try{
+    await fetch(API + "/logout", {
+      method: "POST",
+      credentials: "same-origin"
+    });
+  }catch(error){
+    console.warn("Logout request failed:", error);
+  }finally{
+    window.location.href = "/sman6/login.html";
+  }
+}
+
+const sectionInfo={
+  akun:["Manajemen Akun","Kelola akun login guru dan wali kelas"],
+
+
+
+
+ dashboard:["Dashboard Operator","Pengelolaan data master sistem presensi"],
+
+
+
+ kelas:["Data Kelas","Kelola kelas dan tahun ajaran"],
+
+
+
+ siswa:["Data Siswa","Kelola data siswa dan kelas"],
+
+
+
+ guru:["Data Guru","Kelola data guru sekolah"],
+
+
+
+ mapel:["Mata Pelajaran","Kelola master mata pelajaran"],
+
+
+
+ wali:["Wali Kelas","Atur penugasan wali kelas"],
+
+
+
+ "guru-mapel":["Guru Mata Pelajaran","Atur guru, mata pelajaran, dan kelas"]
+
+
+
+};
+
+
+
+
+
+
+
+document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.section)));
+
+
+
+document.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click",()=>showSection(el.dataset.go)));
+
+
+
+document.getElementById("mobileMenu").addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+
+
+
+
+
+
+
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+
+  const target = document.getElementById(id);
+  if(!target) return;
+
+  target.classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.section===id);
+  });
+
+  if(sectionInfo[id]){
+    document.getElementById("pageTitle").textContent = sectionInfo[id][0];
+    document.getElementById("pageSubtitle").textContent = sectionInfo[id][1];
+  }
+
+  if(id === "dashboard") refreshDashboard();
+  if(id === "kelas") loadKelas();
+  if(id === "siswa") loadSiswa();
+  if(id === "guru") loadGuru();
+  if(id === "mapel") loadMapel();
+  if(id === "wali") loadWaliKelas();
+  if(id === "guru-mapel") loadGuruMapel();
+  if(id === "akun") loadAccounts();
+
+  document.getElementById("sidebar").classList.remove("open");
+}
+
+
+async function getJSON(url){
+  const r = await fetch(url, {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  if(!r.ok){
+    let message = "HTTP " + r.status;
+    try{
+      const data = await r.json();
+      message = data.message || message;
+    }catch(_){ }
+    throw new Error(message);
+  }
+
+  return await r.json();
+}
+
+
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function statusBadge(status){
+  const safeStatus = escapeHtml(status || "-");
+  return `<span class="badge ${status==="aktif"?"badge-active":"badge-inactive"}">${safeStatus}</span>`;
+}
+
+
+
+function filterTable(id,value){
+
+
+
+ const q=value.toLowerCase();
+
+
+
+ document.querySelectorAll(`#${id} tbody tr`).forEach(tr=>tr.style.display=tr.textContent.toLowerCase().includes(q)?"":"none");
+
+
+
+}
+
+
+
+function openForm(type){
+  if(type === "akun"){ openAkunModal(); return; }
+
+
+    if(type === "kelas"){
+
+        document.getElementById("kelasForm").reset();
+
+        document.getElementById("tahunKelas").value = "2026/2027";
+
+        document.getElementById("kelasError").classList.remove("show");
+
+        document.getElementById("kelasModal").classList.add("show");
+
+        setTimeout(() => document.getElementById("namaKelas").focus(), 80);
+
+        return;
+
+    }
+
+    if(type === "siswa"){
+
+        document.getElementById("siswaForm").reset();
+        document.getElementById("siswaError").classList.remove("show");
+        resetSiswaImport();
+        switchSiswaMode("manual");
+        document.getElementById("siswaModal").classList.add("show");
+        loadKelasDropdown();
+        setTimeout(() => document.getElementById("namaSiswa").focus(), 80);
+        return;
+    }
+
+    if(type === "guru"){
+        document.getElementById("guruForm").reset();
+        document.getElementById("guruError").classList.remove("show");
+        resetGuruImport();
+        switchGuruMode("manual");
+        document.getElementById("guruModal").classList.add("show");
+        setTimeout(() => document.getElementById("namaGuru").focus(), 80);
+        return;
+    }
+
+    if(type === "mapel"){
+        document.getElementById("mapelForm").reset();
+        document.getElementById("mapelError").classList.remove("show");
+        resetMapelImport();
+        switchMapelMode("manual");
+        document.getElementById("mapelModal").classList.add("show");
+        setTimeout(() => document.getElementById("kodeMapel").focus(), 80);
+        return;
+    }
+
+    if(type === "wali"){
+
+        document.getElementById("waliForm").reset();
+
+        document.getElementById("waliError").classList.remove("show");
+
+        document.getElementById("waliTahun").value = "2026/2027";
+
+        document.getElementById("waliModal").classList.add("show");
+
+        loadWaliDropdowns();
+
+        return;
+
+    }
+
+    if(type === "guru-mapel"){
+        document.getElementById("guruMapelForm").reset();
+        document.getElementById("guruMapelError").classList.remove("show");
+        document.getElementById("guruMapelTahun").value = "2026/2027";
+        document.getElementById("guruMapelModal").classList.add("show");
+        loadGuruMapelDropdowns();
+        return;
+    }
+
+    alert("Form "+type+" akan kita sambungkan pada langkah berikutnya.");
+
+}
+
+
+
+function closeKelasModal(){
+
+    document.getElementById("kelasModal").classList.remove("show");
+
+}
+
+
+
+function showToast(message,type="success"){
+
+    const el=document.getElementById("toast");
+
+    el.textContent=message;
+
+    el.className="toast show "+type;
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer=setTimeout(()=>el.className="toast",2800);
+
+}
+
+
+
+
+
+
+
+
+
+document.getElementById("kelasForm").addEventListener("submit",async function(e){
+
+    e.preventDefault();
+
+
+
+    const btn=document.getElementById("btnSimpanKelas");
+
+    const errorBox=document.getElementById("kelasError");
+
+
+
+    const payload={
+
+        nama_kelas:document.getElementById("namaKelas").value.trim(),
+
+        tingkat:Number(document.getElementById("tingkatKelas").value),
+
+        jurusan:document.getElementById("jurusanKelas").value.trim() || null,
+
+        tahun_ajaran:document.getElementById("tahunKelas").value.trim()
+
+    };
+
+
+
+    errorBox.classList.remove("show");
+
+    btn.disabled=true;
+
+    btn.textContent="Menyimpan...";
+
+
+
+    try{
+
+        const response=await fetch(API+"/kelas",{
+
+            method:"POST",
+
+            headers:{"Content-Type":"application/json"},
+              credentials: "same-origin",
+
+            body:JSON.stringify(payload)
+
+        });
+
+
+
+        const data=await response.json();
+
+
+
+        if(!response.ok || !data.success){
+
+            throw new Error(data.message || "Data kelas gagal disimpan.");
+
+        }
+
+
+
+        closeKelasModal();
+
+        showToast("Kelas berhasil ditambahkan.","success");
+
+        await loadKelas();
+
+    }catch(error){
+
+        errorBox.textContent=error.message;
+
+        errorBox.classList.add("show");
+
+    }finally{
+
+        btn.disabled=false;
+
+        btn.textContent="Simpan Kelas";
+
+    }
+
+});
+
+
+
+
+
+
+
+
+let siswaImportRows = [];
+let siswaImportErrors = [];
+function switchSiswaMode(mode){const manual=document.getElementById("siswaForm"),excel=document.getElementById("siswaExcelPanel"),mt=document.getElementById("tabSiswaManual"),et=document.getElementById("tabSiswaExcel");if(mode==="excel"){manual.style.display="none";excel.hidden=false;mt.classList.remove("active");et.classList.add("active")}else{manual.style.display="block";excel.hidden=true;mt.classList.add("active");et.classList.remove("active")}}
+function resetSiswaImport(){siswaImportRows=[];siswaImportErrors=[];const f=document.getElementById("siswaExcelFile");if(f)f.value="";const n=document.getElementById("siswaExcelFileName");if(n)n.textContent="Belum ada file dipilih.";const p=document.getElementById("siswaExcelPreview");if(p)p.hidden=true;const s=document.getElementById("siswaExcelStatus");if(s){s.hidden=true;s.className="excel-import-status";s.textContent=""}const e=document.getElementById("siswaExcelErrors");if(e){e.hidden=true;e.innerHTML=""}const b=document.getElementById("btnImportSiswaExcel");if(b){b.disabled=true;b.textContent="✓ Simpan ke Database"}}
+function showSiswaExcelStatus(message,type="info"){const e=document.getElementById("siswaExcelStatus");if(!e)return;e.hidden=false;e.className="excel-import-status "+type;e.textContent=message}
+function normalizeSiswaExcelHeader(v){return String(v||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"")}
+function normalizeSiswaGender(v){const x=String(v||"").trim().toLowerCase();if(["l","laki-laki","laki laki","laki","pria","male"].includes(x))return"L";if(["p","perempuan","wanita","female"].includes(x))return"P";return String(v||"").trim().toUpperCase()}
+function normalizeSiswaDate(v){if(v===null||v===undefined||v==="")return null;if(v instanceof Date&&!isNaN(v.getTime()))return `${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,"0")}-${String(v.getDate()).padStart(2,"0")}`;const x=String(v).trim();if(!x)return null;if(/^\d{4}-\d{2}-\d{2}$/.test(x))return x;const m=x.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);if(m)return `${m[3]}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`;const d=new Date(x);if(!isNaN(d.getTime()))return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;return x}
+function getSiswaExcelValue(row,names){const keys=Object.keys(row);for(const name of names){const wanted=normalizeSiswaExcelHeader(name);const key=keys.find(k=>normalizeSiswaExcelHeader(k)===wanted);if(key!==undefined)return row[key]}return""}
+function buildSiswaImportRow(row){return{nis:String(getSiswaExcelValue(row,["NIS"])||"").trim(),nisn:String(getSiswaExcelValue(row,["NISN"])||"").trim(),nama_lengkap:String(getSiswaExcelValue(row,["Nama Lengkap"])||"").trim(),jenis_kelamin:normalizeSiswaGender(getSiswaExcelValue(row,["Jenis Kelamin"])),tempat_lahir:String(getSiswaExcelValue(row,["Tempat Lahir"])||"").trim()||null,tanggal_lahir:normalizeSiswaDate(getSiswaExcelValue(row,["Tanggal Lahir"])),nomor_hp:String(getSiswaExcelValue(row,["Nomor HP"])||"").trim()||null,alamat:String(getSiswaExcelValue(row,["Alamat"])||"").trim()||null,nama_kelas:String(getSiswaExcelValue(row,["Nama Kelas"])||"").trim(),tahun_ajaran:String(getSiswaExcelValue(row,["Tahun Ajaran"])||"").trim()}}
+function validateSiswaImportRows(rows){const errors=[],nis=new Map(),nisn=new Map();rows.forEach((r,i)=>{const no=i+2,e=[];if(!r.nis)e.push("NIS wajib diisi");if(!r.nisn)e.push("NISN wajib diisi");if(!r.nama_lengkap)e.push("Nama lengkap wajib diisi");if(!["L","P"].includes(r.jenis_kelamin))e.push("Jenis kelamin harus L atau P");if(!r.nama_kelas)e.push("Nama kelas wajib diisi");if(!r.tahun_ajaran)e.push("Tahun ajaran wajib diisi");if(r.nis){if(nis.has(r.nis))e.push(`NIS duplikat dengan baris ${nis.get(r.nis)}`);else nis.set(r.nis,no)}if(r.nisn){if(nisn.has(r.nisn))e.push(`NISN duplikat dengan baris ${nisn.get(r.nisn)}`);else nisn.set(r.nisn,no)}if(r.tanggal_lahir&&!/^\d{4}-\d{2}-\d{2}$/.test(r.tanggal_lahir))e.push("Tanggal lahir tidak valid");if(e.length)errors.push({row:no,message:e.join("; ")})});return errors}
+function renderSiswaExcelPreview(){const p=document.getElementById("siswaExcelPreview"),b=document.getElementById("siswaExcelPreviewBody"),i=document.getElementById("siswaExcelPreviewInfo"),badge=document.getElementById("siswaExcelPreviewBadge"),el=document.getElementById("siswaExcelErrors");p.hidden=false;badge.textContent=`${siswaImportRows.length} baris`;i.textContent=`Menampilkan maksimal 30 baris pertama dari ${siswaImportRows.length} data.`;const em=new Map(siswaImportErrors.map(x=>[x.row,x.message]));b.innerHTML=siswaImportRows.slice(0,30).map((r,j)=>{const no=j+2,err=em.get(no);return `<tr><td>${no}</td><td>${escapeHtml(r.nis||"-")}</td><td>${escapeHtml(r.nisn||"-")}</td><td>${escapeHtml(r.nama_lengkap||"-")}</td><td>${escapeHtml(r.jenis_kelamin||"-")}</td><td>${escapeHtml(r.nama_kelas||"-")}</td><td>${escapeHtml(r.tahun_ajaran||"-")}</td><td class="${err?"excel-row-error":"excel-row-ok"}">${err?"✕ Error":"✓ Siap"}</td></tr>`}).join("");if(siswaImportErrors.length){el.hidden=false;el.innerHTML=`<strong>${siswaImportErrors.length} baris perlu diperbaiki:</strong><br>`+siswaImportErrors.slice(0,12).map(x=>`Baris ${x.row}: ${escapeHtml(x.message)}`).join("<br>")+(siswaImportErrors.length>12?`<br>... dan ${siswaImportErrors.length-12} error lainnya.`:"")}else{el.hidden=true;el.innerHTML=""}document.getElementById("btnImportSiswaExcel").disabled=siswaImportRows.length===0||siswaImportErrors.length>0}
+async function handleSiswaExcel(event){const file=event.target.files?.[0];resetSiswaImport();if(!file)return;document.getElementById("siswaExcelFileName").textContent=file.name;if(typeof XLSX==="undefined"){showSiswaExcelStatus("Komponen Excel belum termuat. Pastikan koneksi internet tersedia lalu refresh halaman.","error");return}if(!/\.(xlsx|xls|csv)$/i.test(file.name)){showSiswaExcelStatus("Format file tidak didukung. Gunakan .xlsx, .xls, atau .csv.","error");return}try{showSiswaExcelStatus("Membaca file Excel...","info");const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});if(!wb.SheetNames.length)throw new Error("File Excel tidak memiliki worksheet.");const ws=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});if(!raw.length)throw new Error("Tidak ditemukan data siswa pada worksheet pertama.");const required=["NIS","NISN","Nama Lengkap","Jenis Kelamin","Nama Kelas","Tahun Ajaran"],actual=Object.keys(raw[0]).map(normalizeSiswaExcelHeader),missing=required.filter(h=>!actual.includes(normalizeSiswaExcelHeader(h)));if(missing.length)throw new Error("Kolom template tidak lengkap: "+missing.join(", "));siswaImportRows=raw.filter(r=>Object.values(r).some(v=>String(v??"").trim()!=="")).map(buildSiswaImportRow);siswaImportErrors=validateSiswaImportRows(siswaImportRows);renderSiswaExcelPreview();showSiswaExcelStatus(siswaImportErrors.length?`File terbaca, tetapi ${siswaImportErrors.length} baris masih memiliki kesalahan. Perbaiki Excel lalu upload ulang.`:`✓ ${siswaImportRows.length} data siswa siap divalidasi dan disimpan ke database.`,siswaImportErrors.length?"error":"success")}catch(err){siswaImportRows=[];siswaImportErrors=[];document.getElementById("siswaExcelPreview").hidden=true;document.getElementById("btnImportSiswaExcel").disabled=true;showSiswaExcelStatus(err.message||"File Excel gagal dibaca.","error")}}
+function downloadSiswaTemplate(){if(typeof XLSX==="undefined"){alert("Komponen Excel belum termuat. Silakan refresh halaman.");return}const headers=["NIS","NISN","Nama Lengkap","Jenis Kelamin","Tempat Lahir","Tanggal Lahir","Nomor HP","Alamat","Nama Kelas","Tahun Ajaran"],blank=Array.from({length:30},()=>Array(headers.length).fill("")),ws=XLSX.utils.aoa_to_sheet([headers,...blank]);ws["!cols"]=[{wch:15},{wch:18},{wch:30},{wch:16},{wch:20},{wch:16},{wch:18},{wch:38},{wch:18},{wch:18}];ws["!freeze"]={xSplit:0,ySplit:1};ws["!autofilter"]={ref:`A1:J${blank.length+1}`};const guide=XLSX.utils.aoa_to_sheet([["PETUNJUK PENGISIAN DATA SISWA"],["Kolom","Keterangan"],["NIS","Wajib. Nomor induk siswa dan harus unik."],["NISN","Wajib. NISN siswa dan harus unik."],["Nama Lengkap","Wajib. Nama lengkap siswa."],["Jenis Kelamin","Wajib. Isi L untuk Laki-laki atau P untuk Perempuan."],["Tempat Lahir","Opsional."],["Tanggal Lahir","Opsional. Disarankan format tanggal Excel atau YYYY-MM-DD."],["Nomor HP","Opsional."],["Alamat","Opsional."],["Nama Kelas","Wajib. Harus sama dengan nama kelas aktif di sistem."],["Tahun Ajaran","Wajib. Contoh: 2026/2027."],[],["PENTING"],["Jangan mengubah nama header pada sheet DATA SISWA."],["Data NIS/NISN yang sudah ada di database akan ditolak."],["Gunakan sheet DATA SISWA untuk data yang akan diimport."]]);guide["!cols"]=[{wch:24},{wch:72}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DATA SISWA");XLSX.utils.book_append_sheet(wb,guide,"PETUNJUK");XLSX.writeFile(wb,"template_import_siswa_sman6.xlsx")}
+async function importSiswaExcel(){if(!siswaImportRows.length||siswaImportErrors.length)return;const btn=document.getElementById("btnImportSiswaExcel");btn.disabled=true;btn.textContent="Menyimpan...";try{showSiswaExcelStatus("Memvalidasi dan menyimpan data ke database...","info");const res=await fetch(API+"/siswa/import",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({rows:siswaImportRows})}),data=await res.json();if(!res.ok||!data.success){if(data.errors?.length)throw new Error((data.message||"Import ditolak.")+"\n"+data.errors.map(x=>`Baris ${x.row}: ${x.message}`).join("\n"));throw new Error(data.message||"Data siswa gagal diimport.")}showSiswaExcelStatus(`✓ Berhasil menyimpan ${data.jumlah} siswa ke database.`,"success");showToast(`${data.jumlah} siswa berhasil ditambahkan.`,"success");await loadSiswa();await refreshDashboard();setTimeout(()=>{closeSiswaModal();resetSiswaImport();switchSiswaMode("manual")},700)}catch(err){showSiswaExcelStatus(err.message||"Import gagal.","error");btn.disabled=false;btn.textContent="✓ Simpan ke Database"}}
+
+function closeSiswaModal(){
+
+    document.getElementById("siswaModal").classList.remove("show");
+
+}
+
+
+
+document.getElementById("siswaModal").addEventListener("click", function(e){
+
+    if(e.target === this) closeSiswaModal();
+
+});
+
+
+
+async function loadKelasDropdown(){
+
+    const select = document.getElementById("kelasSiswa");
+
+    select.innerHTML = '<option value="">Memuat kelas...</option>';
+
+
+
+    try{
+
+        const response = await fetch(API + "/kelas", {credentials:"same-origin", cache:"no-store"});
+
+        const data = await response.json();
+
+
+
+        if(!response.ok){
+
+            throw new Error(data.message || "Gagal mengambil data kelas.");
+
+        }
+
+
+
+        const rows = Array.isArray(data) ? data : (data.data || []);
+
+
+
+        select.innerHTML =
+
+            '<option value="">Pilih kelas</option>' +
+
+            rows.map(x =>
+
+                `<option value="${x.id}">${escapeHtml(x.nama_kelas)} — ${escapeHtml(x.tahun_ajaran)}</option>`
+
+            ).join("");
+
+
+
+        if(rows.length === 0){
+
+            select.innerHTML = '<option value="">Belum ada kelas</option>';
+
+        }
+
+
+
+    }catch(error){
+
+        select.innerHTML = '<option value="">Gagal memuat kelas</option>';
+
+        document.getElementById("siswaError").textContent = error.message;
+
+        document.getElementById("siswaError").classList.add("show");
+
+    }
+
+}
+
+
+
+document.getElementById("siswaForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+
+    const btn = document.getElementById("btnSimpanSiswa");
+
+    const errorBox = document.getElementById("siswaError");
+
+
+
+    const payload = {
+
+        nisn: document.getElementById("nisnSiswa").value.trim() || null,
+
+        nis: document.getElementById("nisSiswa").value.trim() || null,
+
+        nama_lengkap: document.getElementById("namaSiswa").value.trim(),
+
+        jenis_kelamin: document.getElementById("jkSiswa").value,
+
+        tempat_lahir: document.getElementById("tempatLahirSiswa").value.trim() || null,
+
+        tanggal_lahir: document.getElementById("tanggalLahirSiswa").value || null,
+
+        nomor_hp: document.getElementById("nomorHpSiswa").value.trim() || null,
+
+        alamat: document.getElementById("alamatSiswa").value.trim() || null,
+
+        kelas_id: Number(document.getElementById("kelasSiswa").value)
+
+    };
+
+
+
+    errorBox.classList.remove("show");
+
+
+
+    if(!payload.nama_lengkap || !payload.jenis_kelamin || !payload.kelas_id){
+
+        errorBox.textContent = "Nama, jenis kelamin, dan kelas wajib diisi.";
+
+        errorBox.classList.add("show");
+
+        return;
+
+    }
+
+
+
+    btn.disabled = true;
+
+    btn.textContent = "Menyimpan...";
+
+
+
+    try{
+
+        const response = await fetch(API + "/siswa", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+              credentials: "same-origin",
+
+            body: JSON.stringify(payload)
+
+        });
+
+
+
+        const data = await response.json();
+
+
+
+        if(!response.ok || !data.success){
+
+            throw new Error(data.message || "Data siswa gagal disimpan.");
+
+        }
+
+
+
+        closeSiswaModal();
+
+        showToast("Siswa berhasil ditambahkan.", "success");
+
+        await loadSiswa();
+
+
+
+    }catch(error){
+
+        errorBox.textContent = error.message;
+
+        errorBox.classList.add("show");
+
+    }finally{
+
+        btn.disabled = false;
+
+        btn.textContent = "Simpan Siswa";
+
+    }
+
+});
+
+
+
+let guruImportRows = [];
+let guruImportErrors = [];
+function switchGuruMode(mode){const manual=document.getElementById("guruForm"),excel=document.getElementById("guruExcelPanel"),mt=document.getElementById("tabGuruManual"),et=document.getElementById("tabGuruExcel");if(mode==="excel"){manual.style.display="none";excel.hidden=false;mt.classList.remove("active");et.classList.add("active")}else{manual.style.display="block";excel.hidden=true;mt.classList.add("active");et.classList.remove("active")}}
+function resetGuruImport(){guruImportRows=[];guruImportErrors=[];const f=document.getElementById("guruExcelFile");if(f)f.value="";const n=document.getElementById("guruExcelFileName");if(n)n.textContent="Belum ada file dipilih.";const p=document.getElementById("guruExcelPreview");if(p)p.hidden=true;const s=document.getElementById("guruExcelStatus");if(s){s.hidden=true;s.className="excel-import-status";s.textContent=""}const e=document.getElementById("guruExcelErrors");if(e){e.hidden=true;e.innerHTML=""}const b=document.getElementById("btnImportGuruExcel");if(b){b.disabled=true;b.textContent="✓ Simpan ke Database"}}
+function showGuruExcelStatus(message,type="info"){const e=document.getElementById("guruExcelStatus");if(!e)return;e.hidden=false;e.className="excel-import-status "+type;e.textContent=message}
+function normalizeGuruExcelHeader(v){return String(v||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"")}
+function normalizeGuruGender(v){const x=String(v||"").trim().toLowerCase();if(["l","laki-laki","laki laki","laki","pria","male"].includes(x))return"L";if(["p","perempuan","wanita","female"].includes(x))return"P";return String(v||"").trim().toUpperCase()}
+function normalizeGuruDate(v){if(v===null||v===undefined||v==="")return null;if(v instanceof Date&&!isNaN(v.getTime()))return `${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,"0")}-${String(v.getDate()).padStart(2,"0")}`;const x=String(v).trim();if(!x)return null;if(/^\d{4}-\d{2}-\d{2}$/.test(x))return x;const m=x.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);if(m)return `${m[3]}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`;const d=new Date(x);if(!isNaN(d.getTime()))return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;return x}
+function getGuruExcelValue(row,names){const keys=Object.keys(row);for(const name of names){const wanted=normalizeGuruExcelHeader(name);const key=keys.find(k=>normalizeGuruExcelHeader(k)===wanted);if(key!==undefined)return row[key]}return""}
+function buildGuruImportRow(row){return{nip:String(getGuruExcelValue(row,["NIP"])||"").trim()||null,nuptk:String(getGuruExcelValue(row,["NUPTK"])||"").trim()||null,nama_lengkap:String(getGuruExcelValue(row,["Nama Lengkap"])||"").trim(),jenis_kelamin:normalizeGuruGender(getGuruExcelValue(row,["Jenis Kelamin"])),tempat_lahir:String(getGuruExcelValue(row,["Tempat Lahir"])||"").trim()||null,tanggal_lahir:normalizeGuruDate(getGuruExcelValue(row,["Tanggal Lahir"])),nomor_hp:String(getGuruExcelValue(row,["Nomor HP"])||"").trim()||null,email:String(getGuruExcelValue(row,["Email"])||"").trim()||null,alamat:String(getGuruExcelValue(row,["Alamat"])||"").trim()||null}}
+function validateGuruImportRows(rows){const errors=[],nip=new Map(),nuptk=new Map();rows.forEach((r,i)=>{const no=i+2,e=[];if(!r.nama_lengkap)e.push("Nama lengkap wajib diisi");if(!["L","P"].includes(r.jenis_kelamin))e.push("Jenis kelamin harus L atau P");if(r.nip){if(nip.has(r.nip))e.push(`NIP duplikat dengan baris ${nip.get(r.nip)}`);else nip.set(r.nip,no)}if(r.nuptk){if(nuptk.has(r.nuptk))e.push(`NUPTK duplikat dengan baris ${nuptk.get(r.nuptk)}`);else nuptk.set(r.nuptk,no)}if(r.tanggal_lahir&&!/^\d{4}-\d{2}-\d{2}$/.test(r.tanggal_lahir))e.push("Tanggal lahir tidak valid");if(r.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email))e.push("Format email tidak valid");if(e.length)errors.push({row:no,message:e.join("; ")})});return errors}
+function renderGuruExcelPreview(){const p=document.getElementById("guruExcelPreview"),b=document.getElementById("guruExcelPreviewBody"),i=document.getElementById("guruExcelPreviewInfo"),badge=document.getElementById("guruExcelPreviewBadge"),el=document.getElementById("guruExcelErrors");p.hidden=false;badge.textContent=`${guruImportRows.length} baris`;i.textContent=`Menampilkan maksimal 30 baris pertama dari ${guruImportRows.length} data.`;const em=new Map(guruImportErrors.map(x=>[x.row,x.message]));b.innerHTML=guruImportRows.slice(0,30).map((r,j)=>{const no=j+2,err=em.get(no);return `<tr><td>${no}</td><td>${escapeHtml(r.nip||"-")}</td><td>${escapeHtml(r.nuptk||"-")}</td><td>${escapeHtml(r.nama_lengkap||"-")}</td><td>${escapeHtml(r.jenis_kelamin||"-")}</td><td>${escapeHtml(r.email||"-")}</td><td>${escapeHtml(r.tanggal_lahir||"-")}</td><td class="${err?"excel-row-error":"excel-row-ok"}">${err?"✕ Error":"✓ Siap"}</td></tr>`}).join("");if(guruImportErrors.length){el.hidden=false;el.innerHTML=`<strong>${guruImportErrors.length} baris perlu diperbaiki:</strong><br>`+guruImportErrors.slice(0,12).map(x=>`Baris ${x.row}: ${escapeHtml(x.message)}`).join("<br>")+(guruImportErrors.length>12?`<br>... dan ${guruImportErrors.length-12} error lainnya.`:"")}else{el.hidden=true;el.innerHTML=""}document.getElementById("btnImportGuruExcel").disabled=guruImportRows.length===0||guruImportErrors.length>0}
+async function handleGuruExcel(event){const file=event.target.files?.[0];resetGuruImport();if(!file)return;document.getElementById("guruExcelFileName").textContent=file.name;if(typeof XLSX==="undefined"){showGuruExcelStatus("Komponen Excel belum termuat. Pastikan koneksi internet tersedia lalu refresh halaman.","error");return}if(!/\.(xlsx|xls|csv)$/i.test(file.name)){showGuruExcelStatus("Format file tidak didukung. Gunakan .xlsx, .xls, atau .csv.","error");return}try{showGuruExcelStatus("Membaca file Excel...","info");const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});if(!wb.SheetNames.length)throw new Error("File Excel tidak memiliki worksheet.");const ws=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});if(!raw.length)throw new Error("Tidak ditemukan data guru pada worksheet pertama.");const required=["Nama Lengkap","Jenis Kelamin"],actual=Object.keys(raw[0]).map(normalizeGuruExcelHeader),missing=required.filter(h=>!actual.includes(normalizeGuruExcelHeader(h)));if(missing.length)throw new Error("Kolom template tidak lengkap: "+missing.join(", "));guruImportRows=raw.filter(r=>Object.values(r).some(v=>String(v??"").trim()!=="")).map(buildGuruImportRow);guruImportErrors=validateGuruImportRows(guruImportRows);renderGuruExcelPreview();showGuruExcelStatus(guruImportErrors.length?`File terbaca, tetapi ${guruImportErrors.length} baris masih memiliki kesalahan. Perbaiki Excel lalu upload ulang.`:`✓ ${guruImportRows.length} data guru siap divalidasi dan disimpan ke database.`,guruImportErrors.length?"error":"success")}catch(err){guruImportRows=[];guruImportErrors=[];document.getElementById("guruExcelPreview").hidden=true;document.getElementById("btnImportGuruExcel").disabled=true;showGuruExcelStatus(err.message||"File Excel gagal dibaca.","error")}}
+function downloadGuruTemplate(){if(typeof XLSX==="undefined"){alert("Komponen Excel belum termuat. Silakan refresh halaman.");return}const headers=["NIP","NUPTK","Nama Lengkap","Jenis Kelamin","Tempat Lahir","Tanggal Lahir","Nomor HP","Email","Alamat"],blank=Array.from({length:30},()=>Array(headers.length).fill("")),ws=XLSX.utils.aoa_to_sheet([headers,...blank]);ws["!cols"]=[{wch:18},{wch:20},{wch:30},{wch:16},{wch:20},{wch:16},{wch:18},{wch:30},{wch:40}];ws["!freeze"]={xSplit:0,ySplit:1};ws["!autofilter"]={ref:`A1:I${blank.length+1}`};const guide=XLSX.utils.aoa_to_sheet([["PETUNJUK PENGISIAN DATA GURU"],["Kolom","Keterangan"],["NIP","Opsional. Jika diisi harus unik."],["NUPTK","Opsional. Jika diisi harus unik."],["Nama Lengkap","Wajib. Nama lengkap guru."],["Jenis Kelamin","Wajib. Isi L untuk Laki-laki atau P untuk Perempuan."],["Tempat Lahir","Opsional."],["Tanggal Lahir","Opsional. Disarankan format tanggal Excel atau YYYY-MM-DD."],["Nomor HP","Opsional."],["Email","Opsional. Gunakan format email yang valid."],["Alamat","Opsional."],[],["PENTING"],["Jangan mengubah nama header pada sheet DATA GURU."],["NIP/NUPTK yang sudah ada di database akan ditolak."],["Gunakan sheet DATA GURU untuk data yang akan diimport."]]);guide["!cols"]=[{wch:24},{wch:72}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DATA GURU");XLSX.utils.book_append_sheet(wb,guide,"PETUNJUK");XLSX.writeFile(wb,"template_import_guru_sman6.xlsx")}
+async function importGuruExcel(){if(!guruImportRows.length||guruImportErrors.length)return;const btn=document.getElementById("btnImportGuruExcel");btn.disabled=true;btn.textContent="Menyimpan...";try{showGuruExcelStatus("Memvalidasi dan menyimpan data ke database...","info");const res=await fetch(API+"/guru/import",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({rows:guruImportRows})}),data=await res.json();if(!res.ok||!data.success){if(data.errors?.length)throw new Error((data.message||"Import ditolak.")+"\n"+data.errors.map(x=>`Baris ${x.row}: ${x.message}`).join("\n"));throw new Error(data.message||"Data guru gagal diimport.")}showGuruExcelStatus(`✓ Berhasil menyimpan ${data.jumlah} guru ke database.`,"success");showToast(`${data.jumlah} guru berhasil ditambahkan.`,"success");await loadGuru();await refreshDashboard();setTimeout(()=>{closeGuruModal();resetGuruImport();switchGuruMode("manual")},700)}catch(err){showGuruExcelStatus(err.message||"Import gagal.","error");btn.disabled=false;btn.textContent="✓ Simpan ke Database"}}
+function closeGuruModal(){
+
+    document.getElementById("guruModal").classList.remove("show");
+
+}
+
+
+
+document.getElementById("guruModal").addEventListener("click", function(e){
+
+    if(e.target === this) closeGuruModal();
+
+});
+
+
+
+
+async function readApiResponse(response){
+    const raw = await response.text();
+
+    if(!raw){
+        throw new Error(
+            response.status
+                ? `Server mengembalikan error HTTP ${response.status}.`
+                : "Server tidak mengembalikan respons."
+        );
+    }
+
+    try{
+        return JSON.parse(raw);
+    }catch(error){
+        throw new Error(
+            `Server mengembalikan respons yang tidak dapat dibaca (HTTP ${response.status}).`
+        );
+    }
+}
+
+function formatApiError(data, response){
+    if(data && typeof data.message === "string" && data.message.trim()){
+        return data.message.trim();
+    }
+
+    if(data && data.error && typeof data.error === "string"){
+        return data.error.trim();
+    }
+
+    if(response){
+        if(response.status === 400) return "Data yang dikirim tidak valid.";
+        if(response.status === 401) return "Sesi login tidak valid. Silakan login kembali.";
+        if(response.status === 403) return "Anda tidak memiliki izin untuk melakukan tindakan ini.";
+        if(response.status === 404) return "Endpoint atau data yang diminta tidak ditemukan.";
+        if(response.status === 409) return "Data sudah terdaftar atau terjadi konflik.";
+        if(response.status >= 500) return "Terjadi kesalahan pada server.";
+    }
+
+    return "Terjadi kesalahan yang tidak diketahui.";
+}
+
+document.getElementById("guruForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const btn = document.getElementById("btnSimpanGuru");
+    const errorBox = document.getElementById("guruError");
+
+    const payload = {
+        nip: document.getElementById("nipGuru").value.trim() || null,
+        nuptk: document.getElementById("nuptkGuru").value.trim() || null,
+        nama_lengkap: document.getElementById("namaGuru").value.trim(),
+        jenis_kelamin: document.getElementById("jkGuru").value,
+        tempat_lahir: document.getElementById("tempatLahirGuru").value.trim() || null,
+        tanggal_lahir: document.getElementById("tanggalLahirGuru").value || null,
+        nomor_hp: document.getElementById("nomorHpGuru").value.trim() || null,
+        email: document.getElementById("emailGuru").value.trim() || null,
+        alamat: document.getElementById("alamatGuru").value.trim() || null
+    };
+
+    errorBox.classList.remove("show");
+    errorBox.textContent = "";
+
+    if(!payload.nama_lengkap || !payload.jenis_kelamin){
+        errorBox.textContent = "Nama lengkap dan jenis kelamin wajib diisi.";
+        errorBox.classList.add("show");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Menyimpan...";
+
+    try{
+
+        const response = await fetch(API + "/guru", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await readApiResponse(response);
+
+        if(!response.ok || data.success === false){
+            throw new Error(formatApiError(data, response));
+        }
+
+        closeGuruModal();
+        showToast(data.message || "Guru berhasil ditambahkan.", "success");
+        await loadGuru();
+
+    }catch(error){
+
+        console.error("Simpan guru:", error);
+
+        errorBox.textContent = error.message || "Terjadi kesalahan saat menyimpan data guru.";
+        errorBox.classList.add("show");
+
+    }finally{
+
+        btn.disabled = false;
+        btn.textContent = "Simpan Guru";
+
+    }
+
+});
+
+
+let mapelImportRows = [];
+let mapelImportErrors = [];
+
+function switchMapelMode(mode){const manual=document.getElementById("mapelForm"),excel=document.getElementById("mapelExcelPanel"),mt=document.getElementById("tabMapelManual"),et=document.getElementById("tabMapelExcel");if(mode==="excel"){manual.style.display="none";excel.hidden=false;mt.classList.remove("active");et.classList.add("active")}else{manual.style.display="block";excel.hidden=true;mt.classList.add("active");et.classList.remove("active")}}
+function resetMapelImport(){mapelImportRows=[];mapelImportErrors=[];const f=document.getElementById("mapelExcelFile");if(f)f.value="";const n=document.getElementById("mapelExcelFileName");if(n)n.textContent="Belum ada file dipilih.";const p=document.getElementById("mapelExcelPreview");if(p)p.hidden=true;const s=document.getElementById("mapelExcelStatus");if(s){s.hidden=true;s.className="excel-import-status";s.textContent=""}const e=document.getElementById("mapelExcelErrors");if(e){e.hidden=true;e.innerHTML=""}const b=document.getElementById("btnImportMapelExcel");if(b){b.disabled=true;b.textContent="✓ Simpan ke Database"}}
+function showMapelExcelStatus(message,type="info"){const e=document.getElementById("mapelExcelStatus");if(!e)return;e.hidden=false;e.className="excel-import-status "+type;e.textContent=message}
+function normalizeMapelExcelHeader(v){return String(v||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"")}
+function getMapelExcelValue(row,names){const keys=Object.keys(row);for(const name of names){const wanted=normalizeMapelExcelHeader(name);const key=keys.find(k=>normalizeMapelExcelHeader(k)===wanted);if(key!==undefined)return row[key]}return ""}
+function buildMapelImportRow(row){return{kode_mapel:String(getMapelExcelValue(row,["Kode Mapel","Kode","Kode Mata Pelajaran"])||"").trim().toUpperCase(),nama_mapel:String(getMapelExcelValue(row,["Nama Mata Pelajaran","Nama Mapel","Mata Pelajaran"])||"").trim()}}
+function validateMapelImportRows(rows){const errors=[],kode=new Map();rows.forEach((r,i)=>{const no=i+2,e=[];if(!r.kode_mapel)e.push("Kode mapel wajib diisi");if(!r.nama_mapel)e.push("Nama mata pelajaran wajib diisi");if(r.kode_mapel){if(kode.has(r.kode_mapel))e.push(`Kode mapel duplikat dengan baris ${kode.get(r.kode_mapel)}`);else kode.set(r.kode_mapel,no)}if(e.length)errors.push({row:no,message:e.join("; ")})});return errors}
+function renderMapelExcelPreview(){const p=document.getElementById("mapelExcelPreview"),b=document.getElementById("mapelExcelPreviewBody"),i=document.getElementById("mapelExcelPreviewInfo"),badge=document.getElementById("mapelExcelPreviewBadge"),el=document.getElementById("mapelExcelErrors");p.hidden=false;badge.textContent=`${mapelImportRows.length} baris`;i.textContent=`Menampilkan maksimal 30 baris pertama dari ${mapelImportRows.length} data.`;const em=new Map(mapelImportErrors.map(x=>[x.row,x.message]));b.innerHTML=mapelImportRows.slice(0,30).map((r,j)=>{const no=j+2,err=em.get(no);return `<tr><td>${no}</td><td>${escapeHtml(r.kode_mapel||"-")}</td><td>${escapeHtml(r.nama_mapel||"-")}</td><td class="${err?"excel-row-error":"excel-row-ok"}">${err?"✕ Error":"✓ Siap"}</td></tr>`}).join("");if(mapelImportErrors.length){el.hidden=false;el.innerHTML=`<strong>${mapelImportErrors.length} baris perlu diperbaiki:</strong><br>`+mapelImportErrors.slice(0,12).map(x=>`Baris ${x.row}: ${escapeHtml(x.message)}`).join("<br>")+(mapelImportErrors.length>12?`<br>... dan ${mapelImportErrors.length-12} error lainnya.`:"")}else{el.hidden=true;el.innerHTML=""}document.getElementById("btnImportMapelExcel").disabled=mapelImportRows.length===0||mapelImportErrors.length>0}
+async function handleMapelExcel(event){const file=event.target.files?.[0];resetMapelImport();if(!file)return;document.getElementById("mapelExcelFileName").textContent=file.name;if(typeof XLSX==="undefined"){showMapelExcelStatus("Komponen Excel belum termuat. Pastikan koneksi internet tersedia lalu refresh halaman.","error");return}if(!/\.(xlsx|xls|csv)$/i.test(file.name)){showMapelExcelStatus("Format file tidak didukung. Gunakan .xlsx, .xls, atau .csv.","error");return}try{showMapelExcelStatus("Membaca file Excel...","info");const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});if(!wb.SheetNames.length)throw new Error("File Excel tidak memiliki worksheet.");const ws=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(ws,{defval:"",raw:true});if(!raw.length)throw new Error("Tidak ditemukan data mata pelajaran pada worksheet pertama.");const required=["Kode Mapel","Nama Mata Pelajaran"],actual=Object.keys(raw[0]).map(normalizeMapelExcelHeader),missing=required.filter(h=>!actual.includes(normalizeMapelExcelHeader(h)));if(missing.length)throw new Error("Kolom template tidak lengkap: "+missing.join(", "));mapelImportRows=raw.filter(r=>Object.values(r).some(v=>String(v??"").trim()!=="")).map(buildMapelImportRow);mapelImportErrors=validateMapelImportRows(mapelImportRows);renderMapelExcelPreview();showMapelExcelStatus(mapelImportErrors.length?`File terbaca, tetapi ${mapelImportErrors.length} baris masih memiliki kesalahan. Perbaiki Excel lalu upload ulang.`:`✓ ${mapelImportRows.length} data mata pelajaran siap divalidasi dan disimpan ke database.`,mapelImportErrors.length?"error":"success")}catch(err){mapelImportRows=[];mapelImportErrors=[];document.getElementById("mapelExcelPreview").hidden=true;document.getElementById("btnImportMapelExcel").disabled=true;showMapelExcelStatus(err.message||"File Excel gagal dibaca.","error")}}
+function downloadMapelTemplate(){if(typeof XLSX==="undefined"){alert("Komponen Excel belum termuat. Silakan refresh halaman.");return}const headers=["Kode Mapel","Nama Mata Pelajaran"],blank=Array.from({length:30},()=>Array(headers.length).fill("")),ws=XLSX.utils.aoa_to_sheet([headers,...blank]);ws["!cols"]=[{wch:20},{wch:36}];ws["!freeze"]={xSplit:0,ySplit:1};ws["!autofilter"]={ref:`A1:B${blank.length+1}`};const guide=XLSX.utils.aoa_to_sheet([["PETUNJUK PENGISIAN DATA MATA PELAJARAN"],["Kolom","Keterangan"],["Kode Mapel","Wajib. Kode mata pelajaran dan harus unik. Contoh: MAT."],["Nama Mata Pelajaran","Wajib. Nama lengkap mata pelajaran. Contoh: Matematika."],[],["PENTING"],["Jangan mengubah nama header pada sheet DATA MAPEL."],["Kode mata pelajaran yang sudah ada di database akan ditolak."],["Gunakan sheet DATA MAPEL untuk data yang akan diimport."]]);guide["!cols"]=[{wch:28},{wch:78}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"DATA MAPEL");XLSX.utils.book_append_sheet(wb,guide,"PETUNJUK");XLSX.writeFile(wb,"template_import_mapel_sman6.xlsx")}
+async function importMapelExcel(){
+    if(!mapelImportRows.length || mapelImportErrors.length){
+        return;
+    }
+
+    const btn = document.getElementById("btnImportMapelExcel");
+    btn.disabled = true;
+    btn.textContent = "Menyimpan...";
+
+    try{
+        showMapelExcelStatus(
+            "Memvalidasi dan menyimpan data ke database...",
+            "info"
+        );
+
+        const response = await fetch(API + "/mapel/import", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                rows: mapelImportRows
+            })
+        });
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+            if(data.errors?.length){
+                throw new Error(
+                    (data.message || "Import ditolak.") + "\n" +
+                    data.errors.map(
+                        x => `Baris ${x.row}: ${x.message}`
+                    ).join("\n")
+                );
+            }
+
+            throw new Error(
+                data.message ||
+                "Data mata pelajaran gagal diimport."
+            );
+        }
+
+        showMapelExcelStatus(
+            `✓ Berhasil menyimpan ${data.jumlah} mata pelajaran ke database.`,
+            "success"
+        );
+
+        showToast(
+            `${data.jumlah} mata pelajaran berhasil ditambahkan.`,
+            "success"
+        );
+
+        await loadMapel();
+        await refreshDashboard();
+
+        setTimeout(() => {
+            closeMapelModal();
+            resetMapelImport();
+            switchMapelMode("manual");
+        }, 700);
+
+    }catch(error){
+        showMapelExcelStatus(
+            error.message || "Import gagal.",
+            "error"
+        );
+
+        btn.disabled = false;
+        btn.textContent = "✓ Simpan ke Database";
+    }
+}
+
+function closeMapelModal(){
+
+    document.getElementById("mapelModal").classList.remove("show");
+
+}
+
+
+
+document.getElementById("mapelModal").addEventListener("click", function(e){
+
+    if(e.target === this) closeMapelModal();
+
+});
+
+
+
+document.getElementById("mapelForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+
+    const btn = document.getElementById("btnSimpanMapel");
+
+    const errorBox = document.getElementById("mapelError");
+
+
+
+    const payload = {
+
+        kode_mapel: document.getElementById("kodeMapel").value.trim().toUpperCase(),
+
+        nama_mapel: document.getElementById("namaMapel").value.trim()
+
+    };
+
+
+
+    errorBox.classList.remove("show");
+
+
+
+    if(!payload.kode_mapel || !payload.nama_mapel){
+
+        errorBox.textContent = "Kode mapel dan nama mata pelajaran wajib diisi.";
+
+        errorBox.classList.add("show");
+
+        return;
+
+    }
+
+
+
+    btn.disabled = true;
+
+    btn.textContent = "Menyimpan...";
+
+
+
+    try{
+
+        const response = await fetch(API + "/mapel", {
+
+            method: "POST",
+
+            headers: {"Content-Type": "application/json"},
+              credentials: "same-origin",
+
+            body: JSON.stringify(payload)
+
+        });
+
+
+
+        const data = await response.json();
+
+
+
+        if(!response.ok || !data.success){
+
+            throw new Error(data.message || "Mata pelajaran gagal disimpan.");
+
+        }
+
+
+
+        closeMapelModal();
+
+        showToast("Mata pelajaran berhasil ditambahkan.", "success");
+
+        await loadMapel();
+
+    }catch(error){
+
+        errorBox.textContent = error.message;
+
+        errorBox.classList.add("show");
+
+    }finally{
+
+        btn.disabled = false;
+
+        btn.textContent = "Simpan Mapel";
+
+    }
+
+});
+
+
+
+function closeWaliModal(){
+
+    document.getElementById("waliModal").classList.remove("show");
+
+}
+
+
+
+document.getElementById("waliModal").addEventListener("click", function(e){
+
+    if(e.target === this) closeWaliModal();
+
+});
+
+
+
+async function loadWaliDropdowns(){
+
+    const guruSelect = document.getElementById("waliGuru");
+
+    const kelasSelect = document.getElementById("waliKelas");
+
+
+
+    guruSelect.innerHTML = '<option value="">Memuat guru...</option>';
+
+    kelasSelect.innerHTML = '<option value="">Memuat kelas...</option>';
+
+
+
+    try{
+
+        const [guruResponse, kelasResponse] = await Promise.all([
+
+            fetch(API + "/guru", {credentials:"same-origin", cache:"no-store"}),
+
+            fetch(API + "/kelas", {credentials:"same-origin", cache:"no-store"})
+
+        ]);
+
+
+
+        const guruData = await guruResponse.json();
+
+        const kelasData = await kelasResponse.json();
+
+
+
+        if(!guruResponse.ok) throw new Error(guruData.message || "Gagal mengambil data guru.");
+
+        if(!kelasResponse.ok) throw new Error(kelasData.message || "Gagal mengambil data kelas.");
+
+
+
+        const guruRows = Array.isArray(guruData) ? guruData : (guruData.data || []);
+
+        const kelasRows = Array.isArray(kelasData) ? kelasData : (kelasData.data || []);
+
+
+
+        guruSelect.innerHTML = '<option value="">Pilih guru</option>' +
+
+            guruRows.map(x => `<option value="${x.id}">${escapeHtml(x.nama_lengkap)}</option>`).join("");
+
+
+
+        kelasSelect.innerHTML = '<option value="">Pilih kelas</option>' +
+
+            kelasRows.map(x => `<option value="${x.id}">${escapeHtml(x.nama_kelas)} — ${escapeHtml(x.tahun_ajaran)}</option>`).join("");
+
+
+
+        if(!guruRows.length) guruSelect.innerHTML = '<option value="">Belum ada guru</option>';
+
+        if(!kelasRows.length) kelasSelect.innerHTML = '<option value="">Belum ada kelas</option>';
+
+
+
+    }catch(error){
+
+        guruSelect.innerHTML = '<option value="">Gagal memuat guru</option>';
+
+        kelasSelect.innerHTML = '<option value="">Gagal memuat kelas</option>';
+
+        document.getElementById("waliError").textContent = error.message;
+
+        document.getElementById("waliError").classList.add("show");
+
+    }
+
+}
+
+
+
+document.getElementById("waliForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+
+    const btn = document.getElementById("btnSimpanWali");
+
+    const errorBox = document.getElementById("waliError");
+
+
+
+    const payload = {
+
+        guru_id: Number(document.getElementById("waliGuru").value),
+
+        kelas_id: Number(document.getElementById("waliKelas").value),
+
+        tahun_ajaran: document.getElementById("waliTahun").value.trim()
+
+    };
+
+
+
+    errorBox.classList.remove("show");
+
+
+
+    if(!payload.guru_id || !payload.kelas_id || !payload.tahun_ajaran){
+
+        errorBox.textContent = "Guru, kelas, dan tahun ajaran wajib diisi.";
+
+        errorBox.classList.add("show");
+
+        return;
+
+    }
+
+
+
+    btn.disabled = true;
+
+    btn.textContent = "Menyimpan...";
+
+
+
+    try{
+
+        const response = await fetch(API + "/wali-kelas", {
+
+            method: "POST",
+
+            headers: {"Content-Type": "application/json"},
+              credentials: "same-origin",
+
+            body: JSON.stringify(payload)
+
+        });
+
+
+
+        const data = await response.json();
+
+
+
+        if(!response.ok || !data.success){
+
+            throw new Error(data.message || "Data wali kelas gagal disimpan.");
+
+        }
+
+
+
+        closeWaliModal();
+
+        showToast("Wali kelas berhasil ditambahkan.", "success");
+
+        await loadWaliKelas();
+
+
+
+    }catch(error){
+
+        errorBox.textContent = error.message;
+
+        errorBox.classList.add("show");
+
+    }finally{
+
+        btn.disabled = false;
+
+        btn.textContent = "Simpan Wali Kelas";
+
+    }
+
+});
+
+
+
+async function loadWaliKelas(){
+    const body = document.getElementById("waliBody");
+    if(!body) return;
+
+    body.innerHTML = '<tr><td colspan="6" class="empty">Memuat data...</td></tr>';
+
+    try{
+        const data = await getJSON(API + "/operator/wali-kelas");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+
+        if(!rows.length){
+            body.innerHTML = '<tr><td colspan="6" class="empty">Belum ada data wali kelas.</td></tr>';
+            return;
+        }
+
+        body.innerHTML = rows.map((x,i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td><strong>${escapeHtml(x.nama_guru || "-")}</strong></td>
+                <td>${escapeHtml(x.nama_kelas || "-")}</td>
+                <td>${escapeHtml(x.tahun_ajaran || "-")}</td>
+                <td>${statusBadge(x.status)}</td>
+                <td><button class="btn btn-light btn-sm" type="button" disabled title="Fitur edit akan dibuat setelah API update siap">Edit</button></td>
+            </tr>
+        `).join("");
+    }catch(e){
+        body.innerHTML = `<tr><td colspan="6" class="empty">${escapeHtml(e.message)}</td></tr>`;
+    }
+}
+
+async function loadKelas(){
+
+ const body=document.getElementById("kelasBody");
+
+ body.innerHTML='<tr><td colspan="7" class="empty">Memuat data...</td></tr>';
+
+
+
+ try{
+
+  const response=await fetch(API+"/kelas");
+
+  const data=await response.json();
+
+
+
+  if(!response.ok){
+
+   throw new Error(data.message || "Gagal mengambil data kelas.");
+
+  }
+
+
+
+  const rows=Array.isArray(data)?data:(data.data||[]);
+
+
+
+  body.innerHTML=rows.map((x,i)=>`
+
+    <tr>
+
+      <td>${i+1}</td>
+
+      <td><strong>${escapeHtml(x.nama_kelas)}</strong></td>
+
+      <td>${escapeHtml(x.tingkat)}</td>
+
+      <td>${escapeHtml(x.jurusan||"-")}</td>
+
+      <td>${escapeHtml(x.tahun_ajaran)}</td>
+
+      <td>${statusBadge(x.status)}</td>
+
+      <td><button class="btn btn-light btn-sm" type="button" disabled title="Fitur edit akan dibuat setelah API update siap">Edit</button></td>
+
+    </tr>
+
+  `).join("") || '<tr><td colspan="7" class="empty">Belum ada data.</td></tr>';
+
+
+
+  document.getElementById("statKelas").textContent=rows.length;
+
+ }catch(e){
+
+  body.innerHTML=`<tr><td colspan="7" class="empty">${escapeHtml(e.message)}</td></tr>`;
+
+  document.getElementById("statKelas").textContent="-";
+
+ }
+
+}
+
+async function loadSiswa(){
+
+ try{
+
+  const data=await getJSON(API+"/siswa");
+
+  const rows=Array.isArray(data)?data:(data.data||[]);
+
+
+
+  document.getElementById("siswaBody").innerHTML=rows.map((x,i)=>`
+
+    <tr>
+
+      <td>${i+1}</td>
+
+      <td>${escapeHtml(x.nis||"-")}</td>
+
+      <td>${escapeHtml(x.nisn||"-")}</td>
+
+      <td><strong>${escapeHtml(x.nama_lengkap)}</strong></td>
+
+      <td>${escapeHtml(x.jenis_kelamin||"-")}</td>
+
+      <td>${escapeHtml(x.nama_kelas||x.kelas_id||"-")}</td>
+
+      <td>${statusBadge(x.status)}</td>
+
+    </tr>
+
+  `).join("") || '<tr><td colspan="7" class="empty">Belum ada data.</td></tr>';
+
+
+
+  document.getElementById("statSiswa").textContent=rows.length;
+
+ }catch(e){
+
+  document.getElementById("siswaBody").innerHTML=`<tr><td colspan="7" class="empty">${escapeHtml(e.message)}</td></tr>`;
+
+  document.getElementById("statSiswa").textContent="-";
+
+ }
+
+}
+
+
+
+async function loadGuru(){
+
+
+
+ try{
+
+
+
+  const data=await getJSON(API+"/guru"); const rows=Array.isArray(data)?data:(data.data||[]);
+
+
+
+  document.getElementById("guruBody").innerHTML=rows.map((x,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(x.nip||"-")}</td><td>${escapeHtml(x.nuptk||"-")}</td><td><strong>${escapeHtml(x.nama_lengkap)}</strong></td><td>${escapeHtml(x.email||"-")}</td><td>${escapeHtml(x.nomor_hp||"-")}</td><td>${statusBadge(x.status)}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">Belum ada data.</td></tr>';
+
+
+
+  document.getElementById("statGuru").textContent=rows.length;
+
+
+
+ }catch(e){document.getElementById("guruBody").innerHTML='<tr><td colspan="7" class="empty">Gagal mengambil data guru.</td></tr>'}
+
+
+
+}
+
+
+
+async function loadMapel(){
+
+
+
+ try{
+
+
+
+  const data=await getJSON(API+"/mapel"); const rows=Array.isArray(data)?data:(data.data||[]);
+
+
+
+  document.getElementById("mapelBody").innerHTML=rows.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${escapeHtml(x.kode_mapel)}</strong></td><td>${escapeHtml(x.nama_mapel)}</td><td>${statusBadge(x.status)}</td><td><button class="btn btn-light btn-sm" type="button" disabled title="Fitur edit akan dibuat setelah API update siap">Edit</button></td></tr>`).join("")||'<tr><td colspan="5" class="empty">Belum ada data.</td></tr>';
+
+
+
+  document.getElementById("statMapel").textContent=rows.length;
+
+
+
+ }catch(e){document.getElementById("mapelBody").innerHTML='<tr><td colspan="5" class="empty">Gagal mengambil data mapel.</td></tr>'}
+
+
+
+}
+
+
+
+async function loadGuruMapel(){
+    const body = document.getElementById("guruMapelBody");
+    if(!body) return;
+
+    body.innerHTML = '<tr><td colspan="6" class="empty">Memuat data...</td></tr>';
+
+    try{
+        const data = await getJSON(API + "/guru-mapel");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+
+        if(!rows.length){
+            body.innerHTML = '<tr><td colspan="6" class="empty">Belum ada data guru mapel.</td></tr>';
+            return;
+        }
+
+        body.innerHTML = rows.map((x,i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td><strong>${escapeHtml(x.nama_guru || "-")}</strong></td>
+                <td>${x.nama_mapel || "-"}</td>
+                <td>${escapeHtml(x.nama_kelas || "-")}</td>
+                <td>${escapeHtml(x.tahun_ajaran || "-")}</td>
+                <td>${statusBadge(x.status)}</td>
+            </tr>
+        `).join("");
+    }catch(e){
+        body.innerHTML = `<tr><td colspan="6" class="empty">${escapeHtml(e.message)}</td></tr>`;
+    }
+}
+
+function closeGuruMapelModal(){
+    document.getElementById("guruMapelModal").classList.remove("show");
+}
+
+document.getElementById("guruMapelModal").addEventListener("click", function(e){
+    if(e.target === this) closeGuruMapelModal();
+});
+
+async function loadGuruMapelDropdowns(){
+    const guruSelect = document.getElementById("guruMapelGuru");
+    const mapelSelect = document.getElementById("guruMapelMapel");
+    const kelasSelect = document.getElementById("guruMapelKelas");
+
+    guruSelect.innerHTML = '<option value="">Memuat guru...</option>';
+    mapelSelect.innerHTML = '<option value="">Memuat mata pelajaran...</option>';
+    kelasSelect.innerHTML = '<option value="">Memuat kelas...</option>';
+
+    try{
+        const [guruResponse, mapelResponse, kelasResponse] = await Promise.all([
+            fetch(API + "/guru", {credentials:"same-origin", cache:"no-store"}),
+            fetch(API + "/mapel", {credentials:"same-origin", cache:"no-store"}),
+            fetch(API + "/kelas", {credentials:"same-origin", cache:"no-store"})
+        ]);
+
+        const guruData = await guruResponse.json();
+        const mapelData = await mapelResponse.json();
+        const kelasData = await kelasResponse.json();
+
+        if(!guruResponse.ok) throw new Error(guruData.message || "Gagal mengambil data guru.");
+        if(!mapelResponse.ok) throw new Error(mapelData.message || "Gagal mengambil data mata pelajaran.");
+        if(!kelasResponse.ok) throw new Error(kelasData.message || "Gagal mengambil data kelas.");
+
+        const guruRows = Array.isArray(guruData) ? guruData : (guruData.data || []);
+        const mapelRows = Array.isArray(mapelData) ? mapelData : (mapelData.data || []);
+        const kelasRows = Array.isArray(kelasData) ? kelasData : (kelasData.data || []);
+
+        guruSelect.innerHTML = '<option value="">Pilih guru</option>' +
+            guruRows.map(x => `<option value="${x.id}">${escapeHtml(x.nama_lengkap)}</option>`).join("");
+
+        mapelSelect.innerHTML = '<option value="">Pilih mata pelajaran</option>' +
+            mapelRows.map(x => `<option value="${x.id}">${escapeHtml(x.kode_mapel)} — ${escapeHtml(x.nama_mapel)}</option>`).join("");
+
+        kelasSelect.innerHTML = '<option value="">Pilih kelas</option>' +
+            kelasRows.map(x => `<option value="${x.id}">${escapeHtml(x.nama_kelas)} — ${escapeHtml(x.tahun_ajaran)}</option>`).join("");
+
+        if(!guruRows.length) guruSelect.innerHTML = '<option value="">Belum ada guru</option>';
+        if(!mapelRows.length) mapelSelect.innerHTML = '<option value="">Belum ada mata pelajaran</option>';
+        if(!kelasRows.length) kelasSelect.innerHTML = '<option value="">Belum ada kelas</option>';
+
+    }catch(error){
+        guruSelect.innerHTML = '<option value="">Gagal memuat guru</option>';
+        mapelSelect.innerHTML = '<option value="">Gagal memuat mata pelajaran</option>';
+        kelasSelect.innerHTML = '<option value="">Gagal memuat kelas</option>';
+
+        const errorBox = document.getElementById("guruMapelError");
+        errorBox.textContent = error.message;
+        errorBox.classList.add("show");
+    }
+}
+
+document.getElementById("guruMapelForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const btn = document.getElementById("btnSimpanGuruMapel");
+    const errorBox = document.getElementById("guruMapelError");
+
+    const payload = {
+        guru_id: Number(document.getElementById("guruMapelGuru").value),
+        mata_pelajaran_id: Number(document.getElementById("guruMapelMapel").value),
+        kelas_id: Number(document.getElementById("guruMapelKelas").value),
+        tahun_ajaran: document.getElementById("guruMapelTahun").value.trim()
+    };
+
+    errorBox.classList.remove("show");
+
+    if(!payload.guru_id || !payload.mata_pelajaran_id || !payload.kelas_id || !payload.tahun_ajaran){
+        errorBox.textContent = "Guru, mata pelajaran, kelas, dan tahun ajaran wajib diisi.";
+        errorBox.classList.add("show");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Menyimpan...";
+
+    try{
+        const response = await fetch(API + "/guru-mapel", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+              credentials: "same-origin",
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+            throw new Error(data.message || "Penugasan guru mapel gagal disimpan.");
+        }
+
+        closeGuruMapelModal();
+        showToast(data.message || "Guru mapel berhasil ditambahkan.", "success");
+        await loadGuruMapel();
+
+    }catch(error){
+        errorBox.textContent = error.message;
+        errorBox.classList.add("show");
+
+    }finally{
+        btn.disabled = false;
+        btn.textContent = "Simpan Penugasan";
+    }
+});
+
+
+async function refreshDashboard(){
+
+    // Dashboard statistics are loaded independently so one failed API
+    // does not make all dashboard cards show "-".
+    const statIds = [
+        "statKelas", "statSiswa", "statGuru",
+        "statMapel", "statWali", "statGuruMapel"
+    ];
+
+    statIds.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.textContent = "...";
+    });
+
+    try {
+        const data = await getJSON(API + "/kelas");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statKelas").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - kelas:", error);
+        document.getElementById("statKelas").textContent = "-";
+    }
+
+    try {
+        const data = await getJSON(API + "/siswa");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statSiswa").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - siswa:", error);
+        document.getElementById("statSiswa").textContent = "-";
+    }
+
+    try {
+        const data = await getJSON(API + "/guru");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statGuru").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - guru:", error);
+        document.getElementById("statGuru").textContent = "-";
+    }
+
+    try {
+        const data = await getJSON(API + "/mapel");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statMapel").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - mapel:", error);
+        document.getElementById("statMapel").textContent = "-";
+    }
+
+    try {
+        const data = await getJSON(API + "/guru-mapel");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statGuruMapel").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - guru mapel:", error);
+        document.getElementById("statGuruMapel").textContent = "-";
+    }
+
+    try {
+        const data = await getJSON(API + "/operator/wali-kelas");
+        const rows = Array.isArray(data) ? data : (data.data || []);
+        document.getElementById("statWali").textContent = rows.length;
+    } catch(error) {
+        console.error("Dashboard - wali kelas:", error);
+        document.getElementById("statWali").textContent = "-";
+    }
+}
+
+
+let accountsData = [];
+
+function closeAkunModal(){
+  document.getElementById("akunModal").classList.remove("show");
+}
+
+function showAkunError(message){
+  const el=document.getElementById("akunError");
+  if(!el) return;
+  el.textContent=message||"";
+  el.style.display=message?"block":"none";
+}
+
+function roleLabel(role){
+  const map={
+    operator_sekolah:"Operator Sekolah",
+    guru_mapel:"Guru Mata Pelajaran",
+    wali_kelas:"Wali Kelas"
+  };
+  return map[role]||role||"-";
+}
+
+async function loadAccounts(){
+  const body=document.getElementById("akunBody");
+  if(!body) return;
+
+  body.innerHTML='<tr><td colspan="6" class="empty">Memuat data...</td></tr>';
+
+  try{
+    const result=await getJSON(API+"/users");
+    accountsData=Array.isArray(result)?result:(result.data||[]);
+    renderAccounts();
+  }catch(error){
+    console.error("loadAccounts:",error);
+    body.innerHTML=`<tr><td colspan="6" class="empty">${escapeHtml(error.message||"Gagal memuat akun.")}</td></tr>`;
+  }
+}
+
+function renderAccounts(){
+  const body=document.getElementById("akunBody");
+  if(!body) return;
+
+  const keyword=String(document.getElementById("akunSearch")?.value||"").trim().toLowerCase();
+
+  const rows=accountsData.filter(x=>{
+    const text=[
+      x.username,
+      x.nama_lengkap,
+      x.nama_guru,
+      x.role,
+      x.status
+    ].join(" ").toLowerCase();
+
+    return !keyword||text.includes(keyword);
+  });
+
+  if(!rows.length){
+    body.innerHTML='<tr><td colspan="6" class="empty">Tidak ada data akun.</td></tr>';
+    return;
+  }
+
+  body.innerHTML=rows.map((x,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${escapeHtml(x.username)}</strong></td>
+      <td>${escapeHtml(x.nama_lengkap||"-")}</td>
+      <td>${escapeHtml(x.nama_guru||"-")}</td>
+      <td>${escapeHtml(roleLabel(x.role))}</td>
+      <td>${statusBadge(x.status)}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadGuruTanpaAkun(){
+  const select=document.getElementById("akunGuru");
+  if(!select) return;
+
+  select.innerHTML='<option value="">Memuat guru...</option>';
+
+  try{
+    const [guruResult,usersResult]=await Promise.all([
+      getJSON(API+"/guru"),
+      getJSON(API+"/users")
+    ]);
+
+    const guruRows=Array.isArray(guruResult)?guruResult:(guruResult.data||[]);
+    const userRows=Array.isArray(usersResult)?usersResult:(usersResult.data||[]);
+
+    const punyaAkun=new Set(
+      userRows.map(x=>Number(x.guru_id)).filter(Boolean)
+    );
+
+    const tersedia=guruRows.filter(g=>!punyaAkun.has(Number(g.id)));
+
+    if(!tersedia.length){
+      select.innerHTML='<option value="">Semua guru sudah memiliki akun</option>';
+      return;
+    }
+
+    select.innerHTML='<option value="">Pilih guru...</option>'+
+      tersedia.map(g=>`<option value="${escapeHtml(g.id)}">${escapeHtml(g.nama_lengkap)}</option>`).join("");
+
+  }catch(error){
+    console.error("loadGuruTanpaAkun:",error);
+    select.innerHTML='<option value="">Gagal memuat guru</option>';
+  }
+}
+
+function usernameDariNama(nama){
+  return String(nama||"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"")
+    .slice(0,30);
+}
+
+async function openAkunModal(){
+  document.getElementById("akunForm").reset();
+  showAkunError("");
+
+  const btn=document.getElementById("btnSimpanAkun");
+  btn.disabled=false;
+  btn.textContent="Simpan Akun";
+
+  document.getElementById("akunModal").classList.add("show");
+  await loadGuruTanpaAkun();
+}
+
+document.getElementById("akunGuru")?.addEventListener("change",async function(){
+  if(!this.value) return;
+
+  try{
+    const result=await getJSON(API+"/guru");
+    const rows=Array.isArray(result)?result:(result.data||[]);
+    const guru=rows.find(x=>Number(x.id)===Number(this.value));
+
+    if(guru){
+      const input=document.getElementById("akunUsername");
+      if(input) input.value=usernameDariNama(guru.nama_lengkap);
+    }
+  }catch(error){
+    console.error(error);
+  }
+});
+
+document.getElementById("akunForm")?.addEventListener("submit",async function(e){
+  e.preventDefault();
+  showAkunError("");
+
+  const guruId=Number(document.getElementById("akunGuru").value);
+  const role=document.getElementById("akunRole").value;
+  const username=document.getElementById("akunUsername").value.trim().toLowerCase();
+  const password=document.getElementById("akunPassword").value;
+  const confirm=document.getElementById("akunPasswordConfirm").value;
+
+  if(!guruId||!role||!username||!password||!confirm){
+    showAkunError("Semua field wajib diisi.");
+    return;
+  }
+
+  if(password.length<8){
+    showAkunError("Password minimal 8 karakter.");
+    return;
+  }
+
+  if(password!==confirm){
+    showAkunError("Konfirmasi password tidak sama.");
+    return;
+  }
+
+  const btn=document.getElementById("btnSimpanAkun");
+  btn.disabled=true;
+  btn.textContent="Menyimpan...";
+
+  try{
+    const response=await fetch(API+"/users",{
+      method:"POST",
+      credentials:"same-origin",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        guru_id:guruId,
+        username,
+        password,
+        role
+      })
+    });
+
+    const data=await response.json();
+
+    if(!response.ok||!data.success){
+      throw new Error(data.message||"Akun gagal dibuat.");
+    }
+
+    alert(data.message||"Akun berhasil dibuat.");
+    closeAkunModal();
+    await loadAccounts();
+
+  }catch(error){
+    console.error("create account:",error);
+    showAkunError(error.message||"Gagal membuat akun.");
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Simpan Akun";
+  }
+});
+
+(async function initOperatorPage(){
+  const validSession = await loadOperatorSession();
+  if(!validSession) return;
+
+  await Promise.all([
+    loadKelas(),
+    loadSiswa(),
+    loadGuru(),
+    loadMapel(),
+    loadWaliKelas(),
+    loadGuruMapel(),
+    refreshDashboard()
+  ]);
+})();
+
+
+
+</script>
+
+
+
+</body>
+
+
+
+</html>

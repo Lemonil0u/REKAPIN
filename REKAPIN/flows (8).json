@@ -1,0 +1,121 @@
+[
+    {
+        "id": "9f4652590a6496a5",
+        "type": "tab",
+        "label": "Rekap Presensi",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dadca88032dcc2e3",
+        "type": "http in",
+        "z": "9f4652590a6496a5",
+        "name": "",
+        "url": "/sman6/api/wali-kelas/rekap",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 340,
+        "wires": [
+            [
+                "78bdd9ef0b3105b5"
+            ]
+        ]
+    },
+    {
+        "id": "78bdd9ef0b3105b5",
+        "type": "function",
+        "z": "9f4652590a6496a5",
+        "name": "function 55",
+        "func": "const kelasId = msg.req.query.kelas_id;\nconst mataPelajaranId = msg.req.query.mata_pelajaran_id;\nconst tanggalMulai = msg.req.query.tanggal_mulai;\nconst tanggalSelesai = msg.req.query.tanggal_selesai;\n\nif (!kelasId) {\n    msg.statusCode = 400;\n    msg.payload = {\n        success: false,\n        message: \"Parameter kelas_id wajib diisi.\"\n    };\n    return msg;\n}\n\nconst params = [Number(kelasId)];\nlet parameterIndex = 2;\n\nlet filterMapel = \"\";\nlet filterTanggal = \"\";\n\nif (mataPelajaranId) {\n    filterMapel = `\n        AND guru_mapel.mata_pelajaran_id = $${parameterIndex}\n    `;\n\n    params.push(Number(mataPelajaranId));\n    parameterIndex++;\n}\n\nif (tanggalMulai) {\n    filterTanggal += `\n        AND sesi.tanggal >= $${parameterIndex}::date\n    `;\n\n    params.push(tanggalMulai);\n    parameterIndex++;\n}\n\nif (tanggalSelesai) {\n    filterTanggal += `\n        AND sesi.tanggal <= $${parameterIndex}::date\n    `;\n\n    params.push(tanggalSelesai);\n    parameterIndex++;\n}\n\nmsg.query = `\n    SELECT\n        siswa.id AS siswa_id,\n        siswa.nisn,\n        siswa.nis,\n        siswa.nama_lengkap,\n        siswa.jenis_kelamin,\n\n        COUNT(presensi.id)\n            FILTER (WHERE presensi.status = 'hadir')\n            AS jumlah_hadir,\n\n        COUNT(presensi.id)\n            FILTER (WHERE presensi.status = 'sakit')\n            AS jumlah_sakit,\n\n        COUNT(presensi.id)\n            FILTER (WHERE presensi.status = 'izin')\n            AS jumlah_izin,\n\n        COUNT(presensi.id)\n            FILTER (WHERE presensi.status = 'tanpa_keterangan')\n            AS jumlah_tanpa_keterangan,\n\n        COUNT(presensi.id)\n            AS jumlah_presensi\n\n    FROM siswa\n\n    LEFT JOIN kelas\n        ON siswa.kelas_id = kelas.id\n\n    LEFT JOIN presensi\n        ON presensi.siswa_id = siswa.id\n\n    LEFT JOIN sesi\n        ON presensi.sesi_id = sesi.id\n\n    LEFT JOIN guru_mapel\n        ON sesi.guru_mapel_id = guru_mapel.id\n\n    WHERE siswa.kelas_id = $1\n      AND siswa.status = 'aktif'\n      ${filterMapel}\n      ${filterTanggal}\n\n    GROUP BY\n        siswa.id,\n        siswa.nisn,\n        siswa.nis,\n        siswa.nama_lengkap,\n        siswa.jenis_kelamin\n\n    ORDER BY\n        siswa.nama_lengkap;\n`;\n\nmsg.params = params;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 340,
+        "wires": [
+            [
+                "f85189adcfa1d384"
+            ]
+        ]
+    },
+    {
+        "id": "f85189adcfa1d384",
+        "type": "postgresql",
+        "z": "9f4652590a6496a5",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "5b774b4baf2fba5e"
+            ]
+        ]
+    },
+    {
+        "id": "5b774b4baf2fba5e",
+        "type": "function",
+        "z": "9f4652590a6496a5",
+        "name": "function 56",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nmsg.payload = {\n    success: true,\n    data: hasil\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 340,
+        "wires": [
+            [
+                "82058535452682e9"
+            ]
+        ]
+    },
+    {
+        "id": "82058535452682e9",
+        "type": "http response",
+        "z": "9f4652590a6496a5",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 970,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "47a6f13f1fd4b173",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "absen_smansix",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "userFieldType": "cred",
+        "userEnv": "",
+        "passwordFieldType": "cred",
+        "passwordEnv": ""
+    }
+]

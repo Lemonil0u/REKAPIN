@@ -1,0 +1,2510 @@
+[
+    {
+        "id": "4cd6b315374826cb",
+        "type": "tab",
+        "label": "Smansix",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "10afb12a5c582511",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/kelas",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 100,
+        "wires": [
+            [
+                "f2728eced72695c9"
+            ]
+        ]
+    },
+    {
+        "id": "f2728eced72695c9",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "Get Query kelas",
+        "func": "msg.query = `\n    SELECT\n        id,\n        nama_kelas,\n        tingkat,\n        jurusan,\n        tahun_ajaran,\n        status\n    FROM kelas\n    WHERE status = 'aktif'\n    ORDER BY\n        tingkat,\n        nama_kelas;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "619c9cfcf709c3f1"
+            ]
+        ]
+    },
+    {
+        "id": "619c9cfcf709c3f1",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 100,
+        "wires": [
+            [
+                "15b3b87a449b0b9c"
+            ]
+        ]
+    },
+    {
+        "id": "037f3ff847415e3e",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "15b3b87a449b0b9c",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 8",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "037f3ff847415e3e"
+            ]
+        ]
+    },
+    {
+        "id": "4a2835d526b12e34",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/wali-kelas",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 800,
+        "wires": [
+            [
+                "dfdbf2a758a6f9d6"
+            ]
+        ]
+    },
+    {
+        "id": "dfdbf2a758a6f9d6",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 9",
+        "func": "const userId = msg.req.query.user_id;\n\nif (!userId) {\n    msg.statusCode = 400;\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n    return msg;\n}\n\nmsg.query = `\n    SELECT\n        wali_kelas.id AS wali_kelas_id,\n        users.id AS user_id,\n        users.username,\n        guru.id AS guru_id,\n        guru.nama_lengkap AS nama_guru,\n        kelas.id AS kelas_id,\n        kelas.nama_kelas,\n        kelas.tingkat,\n        kelas.jurusan,\n        kelas.tahun_ajaran,\n        wali_kelas.status\n    FROM wali_kelas\n    JOIN guru\n        ON wali_kelas.guru_id = guru.id\n    JOIN users\n        ON guru.user_id = users.id\n    JOIN kelas\n        ON wali_kelas.kelas_id = kelas.id\n    WHERE users.id = $1\n      AND wali_kelas.status = 'aktif'\n      AND kelas.status = 'aktif'\n    ORDER BY\n        kelas.tingkat,\n        kelas.nama_kelas;\n`;\n\nmsg.params = [Number(userId)];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 800,
+        "wires": [
+            [
+                "8f4dbaa922dd5443"
+            ]
+        ]
+    },
+    {
+        "id": "8f4dbaa922dd5443",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 590,
+        "y": 800,
+        "wires": [
+            [
+                "45b6c47c74f320d0"
+            ]
+        ]
+    },
+    {
+        "id": "103f909df3340e49",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 990,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "45b6c47c74f320d0",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 10",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nmsg.payload = {\n    success: true,\n    data: msg.payload\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 800,
+        "wires": [
+            [
+                "103f909df3340e49"
+            ]
+        ]
+    },
+    {
+        "id": "1821900a8024bf50",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/guru",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 480,
+        "wires": [
+            [
+                "ae1fb3d2f5ef9b2b"
+            ]
+        ]
+    },
+    {
+        "id": "ae1fb3d2f5ef9b2b",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 11",
+        "func": "msg.query = `\n    SELECT\n        id,\n        nip,\n        nuptk,\n        nama_lengkap,\n        jenis_kelamin,\n        tempat_lahir,\n        tanggal_lahir,\n        nomor_hp,\n        email,\n        alamat,\n        status\n    FROM guru\n    WHERE status = 'aktif'\n    ORDER BY nama_lengkap;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 480,
+        "wires": [
+            [
+                "1872adc85c71739a"
+            ]
+        ]
+    },
+    {
+        "id": "1872adc85c71739a",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 520,
+        "y": 480,
+        "wires": [
+            [
+                "a9e3babe6ac99151"
+            ]
+        ]
+    },
+    {
+        "id": "6376841fe6f672f9",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 900,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "a9e3babe6ac99151",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 12",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 480,
+        "wires": [
+            [
+                "6376841fe6f672f9"
+            ]
+        ]
+    },
+    {
+        "id": "41897c5a24bc682b",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/mapel",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 720,
+        "wires": [
+            [
+                "f62a419a1b1c57e0"
+            ]
+        ]
+    },
+    {
+        "id": "f62a419a1b1c57e0",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 13",
+        "func": "const kodeMapel = msg.payload.kode_mapel;\nconst namaMapel = msg.payload.nama_mapel;\n\nif (!kodeMapel || !namaMapel) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Kode mapel dan nama mapel wajib diisi.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO mata_pelajaran (\n        kode_mapel,\n        nama_mapel,\n        status\n    )\n    VALUES (\n        $1,\n        $2,\n        'aktif'\n    )\n    RETURNING\n        id,\n        kode_mapel,\n        nama_mapel,\n        status;\n`;\n\nmsg.params = [\n    kodeMapel,\n    namaMapel\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 720,
+        "wires": [
+            [
+                "c3a34186f1b53f4b"
+            ]
+        ]
+    },
+    {
+        "id": "540707b4a6b37039",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 920,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "cb05f03879c46ca4",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 14",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Mata pelajaran gagal disimpan.\"\n    };\n\n    return msg;\n}\n\nconst mapel = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Mata pelajaran berhasil ditambahkan.\",\n    data: {\n        id: mapel.id,\n        kode_mapel: mapel.kode_mapel,\n        nama_mapel: mapel.nama_mapel,\n        status: mapel.status\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 720,
+        "wires": [
+            [
+                "540707b4a6b37039"
+            ]
+        ]
+    },
+    {
+        "id": "f54b9a780cc386a3",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/guru-mapel",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 1000,
+        "wires": [
+            [
+                "d84d5e2f9040f6a6"
+            ]
+        ]
+    },
+    {
+        "id": "d84d5e2f9040f6a6",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 15",
+        "func": "msg.query = `\n    SELECT\n        guru_mapel.id,\n        guru_mapel.guru_id,\n        guru.nama_lengkap AS nama_guru,\n        guru_mapel.mata_pelajaran_id,\n        mata_pelajaran.kode_mapel,\n        mata_pelajaran.nama_mapel,\n        guru_mapel.kelas_id,\n        kelas.nama_kelas,\n        kelas.tingkat,\n        kelas.jurusan,\n        guru_mapel.tahun_ajaran,\n        guru_mapel.status\n    FROM guru_mapel\n    JOIN guru\n        ON guru_mapel.guru_id = guru.id\n    JOIN mata_pelajaran\n        ON guru_mapel.mata_pelajaran_id = mata_pelajaran.id\n    JOIN kelas\n        ON guru_mapel.kelas_id = kelas.id\n    WHERE guru_mapel.status = 'aktif'\n    ORDER BY\n        guru.nama_lengkap,\n        kelas.nama_kelas,\n        mata_pelajaran.nama_mapel;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1000,
+        "wires": [
+            [
+                "986cc97b9d67d944"
+            ]
+        ]
+    },
+    {
+        "id": "986cc97b9d67d944",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 630,
+        "y": 1000,
+        "wires": [
+            [
+                "6c32de84ae76c578"
+            ]
+        ]
+    },
+    {
+        "id": "2c0521b5990b6b87",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 970,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "6c32de84ae76c578",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 16",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 1000,
+        "wires": [
+            [
+                "2c0521b5990b6b87"
+            ]
+        ]
+    },
+    {
+        "id": "e898815e79f0b6dc",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/presensi",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 1720,
+        "wires": [
+            [
+                "af65c1664aa19531"
+            ]
+        ]
+    },
+    {
+        "id": "af65c1664aa19531",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 23",
+        "func": "const guruMapelId = msg.payload.guru_mapel_id;\nconst daftarPresensi = msg.payload.presensi;\n\nif (!guruMapelId || !Array.isArray(daftarPresensi)) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"guru_mapel_id dan presensi wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (daftarPresensi.length === 0) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Daftar presensi tidak boleh kosong.\"\n    };\n\n    return msg;\n}\n\nconst statusValid = [\n    \"hadir\",\n    \"sakit\",\n    \"izin\",\n    \"tanpa_keterangan\"\n];\n\nfor (const item of daftarPresensi) {\n\n    if (!item.siswa_id || !item.status) {\n        msg.statusCode = 400;\n\n        msg.payload = {\n            success: false,\n            message: \"Setiap presensi harus memiliki siswa_id dan status.\"\n        };\n\n        return msg;\n    }\n\n    if (!statusValid.includes(item.status)) {\n        msg.statusCode = 400;\n\n        msg.payload = {\n            success: false,\n            message:\n                `Status presensi tidak valid untuk siswa ${item.siswa_id}.`\n        };\n\n        return msg;\n    }\n}\n\nconst params = [\n    Number(guruMapelId)\n];\n\nlet parameterIndex = 2;\n\nconst values = [];\n\nfor (const item of daftarPresensi) {\n\n    values.push(\n        `(\n            $${parameterIndex}::bigint,\n            $${parameterIndex + 1},\n            $${parameterIndex + 2}\n        )`\n    );\n\n    params.push(\n        Number(item.siswa_id),\n        item.status,\n        item.keterangan || null\n    );\n\n    parameterIndex += 3;\n}\n\nmsg.query = `\n    WITH new_sesi AS (\n        INSERT INTO sesi (\n            guru_mapel_id,\n            tanggal,\n            waktu_mulai,\n            waktu_selesai,\n            status\n        )\n        VALUES (\n            $1,\n            CURRENT_DATE,\n            CURRENT_TIMESTAMP,\n            CURRENT_TIMESTAMP,\n            'selesai'\n        )\n        RETURNING\n            id,\n            guru_mapel_id,\n            tanggal,\n            waktu_mulai,\n            waktu_selesai,\n            status\n    ),\n\n    saved_presensi AS (\n        INSERT INTO presensi (\n            sesi_id,\n            siswa_id,\n            status,\n            keterangan\n        )\n\n        SELECT\n            new_sesi.id,\n            presensi_data.siswa_id,\n            presensi_data.status,\n            presensi_data.keterangan\n\n        FROM new_sesi\n\n        CROSS JOIN (\n            VALUES ${values.join(\",\")}\n        ) AS presensi_data(\n            siswa_id,\n            status,\n            keterangan\n        )\n\n        RETURNING\n            id,\n            sesi_id,\n            siswa_id,\n            status,\n            keterangan,\n            waktu_input,\n            updated_at\n    )\n\n    SELECT\n        new_sesi.id AS sesi_id,\n        new_sesi.guru_mapel_id,\n        new_sesi.tanggal,\n        new_sesi.waktu_mulai,\n        new_sesi.waktu_selesai,\n        new_sesi.status AS sesi_status,\n\n        saved_presensi.id AS presensi_id,\n        saved_presensi.siswa_id,\n        saved_presensi.status AS presensi_status,\n        saved_presensi.keterangan,\n        saved_presensi.waktu_input,\n        saved_presensi.updated_at\n\n    FROM new_sesi\n\n    JOIN saved_presensi\n        ON saved_presensi.sesi_id = new_sesi.id\n`;\n\nmsg.params = params;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1720,
+        "wires": [
+            [
+                "f0d3c191a5c6a072"
+            ]
+        ]
+    },
+    {
+        "id": "f0d3c191a5c6a072",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 1720,
+        "wires": [
+            [
+                "993fbfaebc7419cf"
+            ]
+        ]
+    },
+    {
+        "id": "993fbfaebc7419cf",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 24",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\n\n/*\n * Jika PostgreSQL tidak menghasilkan data\n */\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Tidak ada data presensi yang disimpan.\"\n    };\n\n    return [msg, null];\n}\n\n\n/*\n * Data sesi diambil dari baris pertama\n */\nconst first = hasil[0];\n\n\n/*\n * =========================================================\n * OUTPUT 1\n * Response untuk website Guru Mapel\n * =========================================================\n */\n\nconst responseMsg = RED.util.cloneMessage(msg);\n\nresponseMsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nresponseMsg.statusCode = 200;\n\nresponseMsg.payload = {\n\n    success: true,\n\n    message:\n        \"Presensi berhasil disimpan.\",\n\n    sesi: {\n\n        sesi_id:\n            first.sesi_id,\n\n        guru_mapel_id:\n            first.guru_mapel_id,\n\n        tanggal:\n            first.tanggal,\n\n        waktu_mulai:\n            first.waktu_mulai,\n\n        waktu_selesai:\n            first.waktu_selesai,\n\n        status:\n            first.sesi_status\n\n    },\n\n    jumlah:\n        hasil.length,\n\n    data:\n        hasil.map(row => ({\n\n            presensi_id:\n                row.presensi_id,\n\n            siswa_id:\n                row.siswa_id,\n\n            status:\n                row.presensi_status,\n\n            keterangan:\n                row.keterangan,\n\n            waktu_input:\n                row.waktu_input\n\n        }))\n\n};\n\n\n/*\n * =========================================================\n * CEK APAKAH ADA SISWA TIDAK HADIR\n * =========================================================\n */\n\nconst adaTidakHadir = hasil.some(row =>\n    [\n        \"sakit\",\n        \"izin\",\n        \"tanpa_keterangan\"\n    ].includes(row.presensi_status)\n);\n\n\n/*\n * Kalau semua siswa hadir:\n *\n * Output 1 → HTTP\n * Output 2 → tidak ada Telegram\n */\nif (!adaTidakHadir) {\n\n    return [responseMsg, null];\n\n}\n\n\n/*\n * =========================================================\n * OUTPUT 2\n * Query detail untuk Telegram\n * =========================================================\n */\n\nconst telegramMsg = RED.util.cloneMessage(msg);\n\ntelegramMsg.query = `\n    SELECT\n\n        sesi.id AS sesi_id,\n\n        sesi.tanggal,\n\n        guru.nama_lengkap AS nama_guru,\n\n        mata_pelajaran.nama_mapel,\n\n        kelas.nama_kelas,\n\n        siswa.nama_lengkap AS nama_siswa,\n\n        presensi.status AS status_presensi,\n\n        presensi.keterangan\n\n    FROM sesi\n\n    JOIN guru_mapel\n        ON sesi.guru_mapel_id = guru_mapel.id\n\n    JOIN guru\n        ON guru_mapel.guru_id = guru.id\n\n    JOIN mata_pelajaran\n        ON guru_mapel.mata_pelajaran_id = mata_pelajaran.id\n\n    JOIN kelas\n        ON guru_mapel.kelas_id = kelas.id\n\n    JOIN presensi\n        ON presensi.sesi_id = sesi.id\n\n    JOIN siswa\n        ON presensi.siswa_id = siswa.id\n\n    WHERE sesi.id = $1\n\n    ORDER BY\n        CASE presensi.status\n            WHEN 'sakit' THEN 1\n            WHEN 'izin' THEN 2\n            WHEN 'tanpa_keterangan' THEN 3\n            ELSE 4\n        END,\n        siswa.nama_lengkap;\n`;\n\ntelegramMsg.params = [\n    Number(first.sesi_id)\n];\n\n\n/*\n * Tandai bahwa message ini adalah\n * message khusus Telegram.\n */\ntelegramMsg.telegramNotification = true;\n\n\n/*\n * Output 1 → HTTP\n * Output 2 → PostgreSQL detail Telegram\n */\nreturn [\n    responseMsg,\n    telegramMsg\n];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 1720,
+        "wires": [
+            [
+                "90ca16d4935ec939"
+            ],
+            [
+                "10eeea14d9c108a8"
+            ]
+        ]
+    },
+    {
+        "id": "90ca16d4935ec939",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 990,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "696e86fc1251dd10",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/kelas",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "7535aaf53477db32"
+            ]
+        ]
+    },
+    {
+        "id": "7535aaf53477db32",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "Post Query kelas",
+        "func": "const namaKelas = msg.payload.nama_kelas;\nconst tingkat = msg.payload.tingkat;\nconst jurusan = msg.payload.jurusan || null;\nconst tahunAjaran = msg.payload.tahun_ajaran;\n\nif (!namaKelas || !tingkat || !tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Nama kelas, tingkat, dan tahun ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (![10, 11, 12].includes(Number(tingkat))) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Tingkat harus 10, 11, atau 12.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO kelas (\n        nama_kelas,\n        tingkat,\n        jurusan,\n        tahun_ajaran,\n        status\n    )\n    VALUES (\n        $1,\n        $2,\n        $3,\n        $4,\n        'aktif'\n    )\n    RETURNING\n        id,\n        nama_kelas,\n        tingkat,\n        jurusan,\n        tahun_ajaran,\n        status;\n`;\n\nmsg.params = [\n    namaKelas,\n    Number(tingkat),\n    jurusan,\n    tahunAjaran\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 200,
+        "wires": [
+            [
+                "f3e9cf104254688e"
+            ]
+        ]
+    },
+    {
+        "id": "f3e9cf104254688e",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 200,
+        "wires": [
+            [
+                "c693de3b1a624b7b"
+            ]
+        ]
+    },
+    {
+        "id": "5ed512840fa80375",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c693de3b1a624b7b",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 28",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data kelas gagal disimpan.\"\n    };\n\n    return msg;\n}\n\nconst kelas = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Kelas berhasil ditambahkan.\",\n    data: {\n        id: kelas.id,\n        nama_kelas: kelas.nama_kelas,\n        tingkat: kelas.tingkat,\n        jurusan: kelas.jurusan,\n        tahun_ajaran: kelas.tahun_ajaran,\n        status: kelas.status\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 200,
+        "wires": [
+            [
+                "5ed512840fa80375"
+            ]
+        ]
+    },
+    {
+        "id": "cd45b4b113c2f510",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/siswa",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "d12c5a4be1b5462d"
+            ]
+        ]
+    },
+    {
+        "id": "d12c5a4be1b5462d",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 29",
+        "func": "const nisn = msg.payload.nisn || null;\nconst nis = msg.payload.nis || null;\nconst namaLengkap = msg.payload.nama_lengkap;\nconst jenisKelamin = msg.payload.jenis_kelamin;\nconst tempatLahir = msg.payload.tempat_lahir || null;\nconst tanggalLahir = msg.payload.tanggal_lahir || null;\nconst nomorHp = msg.payload.nomor_hp || null;\nconst alamat = msg.payload.alamat || null;\nconst kelasId = msg.payload.kelas_id;\n\nif (!namaLengkap || !jenisKelamin || !kelasId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Nama, jenis kelamin, dan kelas wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (![\"L\", \"P\"].includes(jenisKelamin)) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Jenis kelamin tidak valid.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO siswa (\n        nisn,\n        nis,\n        nama_lengkap,\n        jenis_kelamin,\n        tempat_lahir,\n        tanggal_lahir,\n        nomor_hp,\n        alamat,\n        kelas_id,\n        status\n    )\n    VALUES (\n        $1,\n        $2,\n        $3,\n        $4,\n        $5,\n        $6,\n        $7,\n        $8,\n        $9,\n        'aktif'\n    )\n    RETURNING\n        id,\n        nisn,\n        nis,\n        nama_lengkap,\n        jenis_kelamin,\n        kelas_id,\n        status;\n`;\n\nmsg.params = [\n    nisn,\n    nis,\n    namaLengkap,\n    jenisKelamin,\n    tempatLahir,\n    tanggalLahir,\n    nomorHp,\n    alamat,\n    Number(kelasId)\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 380,
+        "wires": [
+            [
+                "f7d59fd596abd7b9"
+            ]
+        ]
+    },
+    {
+        "id": "f7d59fd596abd7b9",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 510,
+        "y": 380,
+        "wires": [
+            [
+                "3da45ab8fd5713c2"
+            ]
+        ]
+    },
+    {
+        "id": "00f8c5f879155b64",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 910,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3da45ab8fd5713c2",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 30",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data siswa gagal disimpan.\"\n    };\n\n    return msg;\n}\n\nconst siswa = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Siswa berhasil ditambahkan.\",\n    data: {\n        id: siswa.id,\n        nisn: siswa.nisn,\n        nis: siswa.nis,\n        nama_lengkap: siswa.nama_lengkap,\n        jenis_kelamin: siswa.jenis_kelamin,\n        kelas_id: siswa.kelas_id,\n        status: siswa.status\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 380,
+        "wires": [
+            [
+                "00f8c5f879155b64"
+            ]
+        ]
+    },
+    {
+        "id": "c3a34186f1b53f4b",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 540,
+        "y": 720,
+        "wires": [
+            [
+                "cb05f03879c46ca4"
+            ]
+        ]
+    },
+    {
+        "id": "f7859658079c3b5e",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/mapel",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 660,
+        "wires": [
+            [
+                "5354b8439f77d158"
+            ]
+        ]
+    },
+    {
+        "id": "5354b8439f77d158",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 31",
+        "func": "msg.query = `\n    SELECT\n        id,\n        kode_mapel,\n        nama_mapel,\n        status\n    FROM mata_pelajaran\n    WHERE status = 'aktif'\n    ORDER BY nama_mapel;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 660,
+        "wires": [
+            [
+                "e488c61d63e0ae5f"
+            ]
+        ]
+    },
+    {
+        "id": "f0705fb57d85bc87",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 870,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "e488c61d63e0ae5f",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 660,
+        "wires": [
+            [
+                "f0705fb57d85bc87"
+            ]
+        ]
+    },
+    {
+        "id": "43b6abd9acf73b78",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d94bc67433d2ac86",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/siswa",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "fb76ba1ed7810a1f"
+            ]
+        ]
+    },
+    {
+        "id": "fb76ba1ed7810a1f",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "Get query Siswa",
+        "func": "const kelasId = msg.req.query.kelas_id;\n\nmsg.query = `\n    SELECT\n        siswa.id,\n        siswa.kelas_id,\n        siswa.nisn,\n        siswa.nis,\n        siswa.nama_lengkap,\n        siswa.jenis_kelamin,\n        siswa.tempat_lahir,\n        siswa.tanggal_lahir,\n        siswa.nomor_hp,\n        siswa.alamat,\n        kelas.nama_kelas,\n        kelas.tingkat,\n        kelas.jurusan,\n        kelas.tahun_ajaran,\n        siswa.status\n    FROM siswa\n    JOIN kelas\n        ON siswa.kelas_id = kelas.id\n    WHERE siswa.status = 'aktif'\n`;\n\nif (kelasId) {\n    msg.query += `\n        AND siswa.kelas_id = $1\n    `;\n\n    msg.params = [Number(kelasId)];\n}\n\nmsg.query += `\n    ORDER BY\n        kelas.tingkat,\n        kelas.nama_kelas,\n        siswa.nama_lengkap;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "bafef3dfc59cf8e9"
+            ]
+        ]
+    },
+    {
+        "id": "bafef3dfc59cf8e9",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 300,
+        "wires": [
+            [
+                "f3427d19e19659e9"
+            ]
+        ]
+    },
+    {
+        "id": "f3427d19e19659e9",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 34",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 300,
+        "wires": [
+            [
+                "43b6abd9acf73b78"
+            ]
+        ]
+    },
+    {
+        "id": "7e610c0da88c1357",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/guru",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "f49d0aaa3c164e15"
+            ]
+        ]
+    },
+    {
+        "id": "f49d0aaa3c164e15",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 37",
+        "func": "const nip = msg.payload.nip || null;\nconst nuptk = msg.payload.nuptk || null;\nconst namaLengkap = msg.payload.nama_lengkap;\nconst jenisKelamin = msg.payload.jenis_kelamin;\nconst tempatLahir = msg.payload.tempat_lahir || null;\nconst tanggalLahir = msg.payload.tanggal_lahir || null;\nconst nomorHp = msg.payload.nomor_hp || null;\nconst email = msg.payload.email || null;\nconst alamat = msg.payload.alamat || null;\n\nif (!namaLengkap || !jenisKelamin) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Nama lengkap dan jenis kelamin wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (![\"L\", \"P\"].includes(jenisKelamin)) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Jenis kelamin tidak valid.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO guru (\n        nip,\n        nuptk,\n        nama_lengkap,\n        jenis_kelamin,\n        tempat_lahir,\n        tanggal_lahir,\n        nomor_hp,\n        email,\n        alamat,\n        status\n    )\n    VALUES (\n        $1,\n        $2,\n        $3,\n        $4,\n        $5,\n        $6,\n        $7,\n        $8,\n        $9,\n        'aktif'\n    )\n    RETURNING\n        id,\n        nip,\n        nuptk,\n        nama_lengkap,\n        jenis_kelamin,\n        email,\n        nomor_hp,\n        status;\n`;\n\nmsg.params = [\n    nip,\n    nuptk,\n    namaLengkap,\n    jenisKelamin,\n    tempatLahir,\n    tanggalLahir,\n    nomorHp,\n    email,\n    alamat\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 540,
+        "wires": [
+            [
+                "ac2f7b8161358bbd"
+            ]
+        ]
+    },
+    {
+        "id": "ac2f7b8161358bbd",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 520,
+        "y": 540,
+        "wires": [
+            [
+                "88f85b6a4b0eea5e"
+            ]
+        ]
+    },
+    {
+        "id": "2e0cafbc131d8f6e",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 900,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "88f85b6a4b0eea5e",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 38",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data guru gagal disimpan.\"\n    };\n\n    return msg;\n}\n\nconst guru = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Guru berhasil ditambahkan.\",\n    data: {\n        id: guru.id,\n        nip: guru.nip,\n        nuptk: guru.nuptk,\n        nama_lengkap: guru.nama_lengkap,\n        jenis_kelamin: guru.jenis_kelamin,\n        email: guru.email,\n        nomor_hp: guru.nomor_hp,\n        status: guru.status\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 540,
+        "wires": [
+            [
+                "2e0cafbc131d8f6e"
+            ]
+        ]
+    },
+    {
+        "id": "d5ad4b23d7eec299",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/wali-kelas",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 900,
+        "wires": [
+            [
+                "c416e83449384c99"
+            ]
+        ]
+    },
+    {
+        "id": "c416e83449384c99",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 39",
+        "func": "const guruId = msg.payload.guru_id;\nconst kelasId = msg.payload.kelas_id;\nconst tahunAjaran = msg.payload.tahun_ajaran;\n\nif (!guruId || !kelasId || !tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Guru, kelas, dan tahun ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO wali_kelas (\n        guru_id,\n        kelas_id,\n        tahun_ajaran,\n        status\n    )\n    SELECT\n        $1,\n        $2,\n        $3::varchar,\n        'aktif'\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM wali_kelas\n        WHERE kelas_id = $2\n          AND tahun_ajaran = $3::varchar\n          AND status = 'aktif'\n    )\n    RETURNING\n        id,\n        guru_id,\n        kelas_id,\n        tahun_ajaran,\n        status;\n`;\n\nmsg.params = [\n    Number(guruId),\n    Number(kelasId),\n    tahunAjaran\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 900,
+        "wires": [
+            [
+                "357f2f0426bb01e0"
+            ]
+        ]
+    },
+    {
+        "id": "33ba287e6833510b",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1000,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "fd20ad4fc4b034df",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 40",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 409;\n\n    msg.payload = {\n        success: false,\n        message: \"Kelas tersebut sudah memiliki wali kelas pada tahun ajaran ini.\"\n    };\n\n    return msg;\n}\n\nconst data = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Wali kelas berhasil ditambahkan.\",\n    data: data\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 900,
+        "wires": [
+            [
+                "33ba287e6833510b"
+            ]
+        ]
+    },
+    {
+        "id": "357f2f0426bb01e0",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 900,
+        "wires": [
+            [
+                "fd20ad4fc4b034df"
+            ]
+        ]
+    },
+    {
+        "id": "5802aee727e99645",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/guru-mapel",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 1080,
+        "wires": [
+            [
+                "a3e75981588e3d9c"
+            ]
+        ]
+    },
+    {
+        "id": "a3e75981588e3d9c",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 41",
+        "func": "const guruId = msg.payload.guru_id;\nconst mataPelajaranId = msg.payload.mata_pelajaran_id;\nconst kelasId = msg.payload.kelas_id;\nconst tahunAjaran = msg.payload.tahun_ajaran;\n\nif (!guruId || !mataPelajaranId || !kelasId || !tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Guru, mata pelajaran, kelas, dan tahun ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    INSERT INTO guru_mapel (\n        guru_id,\n        mata_pelajaran_id,\n        kelas_id,\n        tahun_ajaran,\n        status\n    )\n    SELECT\n        $1,\n        $2,\n        $3,\n        $4::varchar,\n        'aktif'\n    WHERE NOT EXISTS (\n        SELECT 1\n        FROM guru_mapel\n        WHERE guru_id = $1\n          AND mata_pelajaran_id = $2\n          AND kelas_id = $3\n          AND tahun_ajaran = $4::varchar\n          AND status = 'aktif'\n    )\n    RETURNING\n        id,\n        guru_id,\n        mata_pelajaran_id,\n        kelas_id,\n        tahun_ajaran,\n        status;\n`;\n\nmsg.params = [\n    Number(guruId),\n    Number(mataPelajaranId),\n    Number(kelasId),\n    tahunAjaran\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 1080,
+        "wires": [
+            [
+                "20c46fed66ce788b"
+            ]
+        ]
+    },
+    {
+        "id": "20c46fed66ce788b",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 1080,
+        "wires": [
+            [
+                "6a561ee53e514c29"
+            ]
+        ]
+    },
+    {
+        "id": "2b2efc368be12617",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "6a561ee53e514c29",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 42",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 409;\n\n    msg.payload = {\n        success: false,\n        message: \"Penugasan guru tersebut sudah ada.\"\n    };\n\n    return msg;\n}\n\nconst data = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Guru mata pelajaran berhasil ditambahkan.\",\n    data: data\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 1080,
+        "wires": [
+            [
+                "2b2efc368be12617"
+            ]
+        ]
+    },
+    {
+        "id": "533a15c242104e1e",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/users",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 1200,
+        "wires": [
+            [
+                "e71732df4e48e91a"
+            ]
+        ]
+    },
+    {
+        "id": "e71732df4e48e91a",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 43",
+        "func": "msg.query = `\n    SELECT\n        users.id,\n        users.username,\n        users.role,\n        users.nama_lengkap,\n        users.email,\n        users.status,\n        guru.id AS guru_id,\n        guru.nama_lengkap AS nama_guru\n    FROM users\n    LEFT JOIN guru\n        ON guru.user_id = users.id\n    ORDER BY users.id;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 1200,
+        "wires": [
+            [
+                "b5733268fe28b8c8"
+            ]
+        ]
+    },
+    {
+        "id": "b5733268fe28b8c8",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 590,
+        "y": 1200,
+        "wires": [
+            [
+                "22c5340dd8afc305"
+            ]
+        ]
+    },
+    {
+        "id": "ec3e335eccee3288",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "22c5340dd8afc305",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 44",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 1200,
+        "wires": [
+            [
+                "ec3e335eccee3288"
+            ]
+        ]
+    },
+    {
+        "id": "7e3e07ae508e104c",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/users",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 1280,
+        "wires": [
+            [
+                "60cc0d44b899f6c3"
+            ]
+        ]
+    },
+    {
+        "id": "60cc0d44b899f6c3",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 45",
+        "func": "const guruId = Number(msg.payload.guru_id);\nconst username = String(msg.payload.username || \"\").trim().toLowerCase();\nconst password = String(msg.payload.password || \"\");\nconst role = String(msg.payload.role || \"\").trim();\n\nconst email = msg.payload.email\n    ? String(msg.payload.email).trim()\n    : null;\n\nif (!guruId || !username || !password || !role) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Guru, username, password, dan role wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (![\"guru_mapel\", \"wali_kelas\"].includes(role)) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Role akun guru tidak valid.\"\n    };\n\n    return msg;\n}\n\nif (username.length < 3) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Username minimal 3 karakter.\"\n    };\n\n    return msg;\n}\n\nif (password.length < 8) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Password minimal 8 karakter.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    SELECT\n        id,\n        user_id,\n        nama_lengkap,\n        email\n    FROM guru\n    WHERE id = $1\n      AND status = 'aktif';\n`;\n\nmsg.params = [guruId];\n\nmsg.accountData = {\n    guruId,\n    username,\n    password,\n    role,\n    email\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "bcrypt",
+                "module": "bcrypt"
+            }
+        ],
+        "x": 370,
+        "y": 1280,
+        "wires": [
+            [
+                "fb2e3f87af566d8d"
+            ]
+        ]
+    },
+    {
+        "id": "fb2e3f87af566d8d",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 1280,
+        "wires": [
+            [
+                "de1ef9d5938d6a89"
+            ]
+        ]
+    },
+    {
+        "id": "e888e788a79ed240",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1210,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "de1ef9d5938d6a89",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 46",
+        "func": "const hasil = msg.payload;\n\nif (!hasil || hasil.length === 0) {\n    msg.statusCode = 404;\n\n    msg.payload = {\n        success: false,\n        message: \"Guru tidak ditemukan atau tidak aktif.\"\n    };\n\n    return msg;\n}\n\nconst guru = hasil[0];\nconst account = msg.accountData;\n\nif (!account) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data pembuatan akun tidak ditemukan.\"\n    };\n\n    return msg;\n}\n\nif (guru.user_id !== null) {\n    msg.statusCode = 409;\n\n    msg.payload = {\n        success: false,\n        message: \"Guru tersebut sudah memiliki akun.\"\n    };\n\n    return msg;\n}\n\n// Hash password\nconst passwordHash = bcrypt.hashSync(account.password, 10);\n\n// Simpan query untuk PostgreSQL kedua\nmsg.query = `\n    WITH guru_target AS (\n        SELECT\n            id,\n            nama_lengkap,\n            email\n        FROM guru\n        WHERE id = $1\n          AND status = 'aktif'\n          AND user_id IS NULL\n    ),\n\n    akun_baru AS (\n        INSERT INTO users (\n            username,\n            password_hash,\n            role,\n            nama_lengkap,\n            email,\n            status\n        )\n        SELECT\n            $2,\n            $3,\n            $4,\n            guru_target.nama_lengkap,\n            COALESCE(guru_target.email, $5),\n            'aktif'\n        FROM guru_target\n\n        ON CONFLICT (username)\n        DO NOTHING\n\n        RETURNING\n            id,\n            username,\n            role,\n            nama_lengkap,\n            email,\n            status\n    ),\n\n    guru_update AS (\n        UPDATE guru\n        SET\n            user_id = akun_baru.id,\n            updated_at = CURRENT_TIMESTAMP\n        FROM akun_baru\n        WHERE guru.id = $1\n\n        RETURNING\n            guru.id AS guru_id,\n            akun_baru.id AS user_id,\n            akun_baru.username,\n            akun_baru.role,\n            akun_baru.nama_lengkap,\n            akun_baru.email,\n            akun_baru.status\n    )\n\n    SELECT *\n    FROM guru_update;\n`;\n\nmsg.params = [\n    account.guruId,\n    account.username,\n    passwordHash,\n    account.role,\n    account.email\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "bcrypt",
+                "module": "bcrypt"
+            }
+        ],
+        "x": 750,
+        "y": 1280,
+        "wires": [
+            [
+                "be18124a1afebdb2"
+            ]
+        ]
+    },
+    {
+        "id": "be18124a1afebdb2",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 910,
+        "y": 1280,
+        "wires": [
+            [
+                "8c882d1279f311f0"
+            ]
+        ]
+    },
+    {
+        "id": "8c882d1279f311f0",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 48",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n    msg.statusCode = 409;\n\n    msg.payload = {\n        success: false,\n        message: \"Akun tidak dapat dibuat. Username mungkin sudah digunakan atau guru sudah memiliki akun.\"\n    };\n\n    return msg;\n}\n\nconst akun = hasil[0];\n\nmsg.payload = {\n    success: true,\n    message: \"Akun guru berhasil dibuat.\",\n    data: {\n        guru_id: akun.guru_id,\n        user_id: akun.user_id,\n        username: akun.username,\n        role: akun.role,\n        nama_lengkap: akun.nama_lengkap,\n        email: akun.email,\n        status: akun.status\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "bcrypt",
+                "module": "bcrypt"
+            }
+        ],
+        "x": 1070,
+        "y": 1280,
+        "wires": [
+            [
+                "e888e788a79ed240"
+            ]
+        ]
+    },
+    {
+        "id": "16cd55e2d35b19a7",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/login",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 1420,
+        "wires": [
+            [
+                "c641a824fa2dfc22"
+            ]
+        ]
+    },
+    {
+        "id": "c641a824fa2dfc22",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 49",
+        "func": "const username = String(msg.payload.username || \"\").trim();\nconst password = String(msg.payload.password || \"\");\n\nif (!username || !password) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Username dan password wajib diisi.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    SELECT\n        id,\n        username,\n        password_hash,\n        role,\n        nama_lengkap,\n        email,\n        status\n    FROM users\n    WHERE username = $1\n      AND status = 'aktif';\n`;\n\nmsg.params = [username];\n\nmsg.loginData = {\n    username,\n    password\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1420,
+        "wires": [
+            [
+                "a3cbd3f3d9a648d3"
+            ]
+        ]
+    },
+    {
+        "id": "a3cbd3f3d9a648d3",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 630,
+        "y": 1420,
+        "wires": [
+            [
+                "662b851fbc8a28ac"
+            ]
+        ]
+    },
+    {
+        "id": "71a10245350e158c",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 970,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "662b851fbc8a28ac",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 50",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nif (!hasil || hasil.length === 0) {\n    msg.statusCode = 401;\n\n    msg.payload = {\n        success: false,\n        message: \"Username atau password salah.\"\n    };\n\n    return msg;\n}\n\nconst user = hasil[0];\nconst loginData = msg.loginData;\n\nif (!loginData) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data login tidak ditemukan.\"\n    };\n\n    return msg;\n}\n\nbcrypt.compare(\n    loginData.password,\n    user.password_hash,\n    function (error, cocok) {\n\n        if (error) {\n            node.error(\"Gagal memeriksa password.\", error);\n\n            msg.statusCode = 500;\n\n            msg.payload = {\n                success: false,\n                message: \"Terjadi kesalahan saat login.\"\n            };\n\n            node.send(msg);\n            node.done();\n            return;\n        }\n\n        if (!cocok) {\n            msg.statusCode = 401;\n\n            msg.payload = {\n                success: false,\n                message: \"Username atau password salah.\"\n            };\n\n            node.send(msg);\n            node.done();\n            return;\n        }\n\n        // Buat session token\n        const sessionId = crypto.randomBytes(32).toString(\"hex\");\n\n        // Simpan session di flow context\n        flow.set(\"session_\" + sessionId, {\n            user_id: user.id,\n            username: user.username,\n            role: user.role,\n            nama_lengkap: user.nama_lengkap,\n            email: user.email,\n            created_at: Date.now()\n        });\n\n        // Simpan session selama 8 jam\n        setTimeout(() => {\n            flow.set(\"session_\" + sessionId, null);\n        }, 8 * 60 * 60 * 1000);\n\n        // Cookie login\n        msg.headers[\"Set-Cookie\"] =\n            \"sman6_session=\" + sessionId +\n            \"; Path=/sman6; HttpOnly; SameSite=Lax; Max-Age=28800\";\n\n        msg.statusCode = 200;\n\n        msg.payload = {\n            success: true,\n            message: \"Login berhasil.\",\n            data: {\n                user_id: user.id,\n                username: user.username,\n                role: user.role,\n                nama_lengkap: user.nama_lengkap,\n                email: user.email\n            }\n        };\n\n        node.send(msg);\n        node.done();\n    }\n);\n\nreturn;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "bcrypt",
+                "module": "bcrypt"
+            },
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 810,
+        "y": 1420,
+        "wires": [
+            [
+                "71a10245350e158c"
+            ]
+        ]
+    },
+    {
+        "id": "bfdf22f0d1745a8d",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/session",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 170,
+        "y": 1500,
+        "wires": [
+            [
+                "b26977791f3b7df9"
+            ]
+        ]
+    },
+    {
+        "id": "b26977791f3b7df9",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 51",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nconst cookies = msg.req.headers.cookie || \"\";\n\nconst match = cookies.match(/(?:^|;\\s*)sman6_session=([^;]+)/);\n\nif (!match) {\n    msg.statusCode = 401;\n\n    msg.payload = {\n        success: false,\n        message: \"Belum login.\"\n    };\n\n    return msg;\n}\n\nconst sessionId = match[1];\n\nconst session = flow.get(\"session_\" + sessionId);\n\nif (!session) {\n    msg.statusCode = 401;\n\n    msg.payload = {\n        success: false,\n        message: \"Session tidak valid atau sudah berakhir.\"\n    };\n\n    return msg;\n}\n\nmsg.payload = {\n    success: true,\n    data: session\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1500,
+        "wires": [
+            [
+                "4e23a290a6e84f3b"
+            ]
+        ]
+    },
+    {
+        "id": "4e23a290a6e84f3b",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 650,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "a94efed6274dd289",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/logout",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 1560,
+        "wires": [
+            [
+                "0706bb6fbd8ceb44"
+            ]
+        ]
+    },
+    {
+        "id": "0706bb6fbd8ceb44",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 52",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nconst cookies = msg.req.headers.cookie || \"\";\n\nconst match = cookies.match(/(?:^|;\\s*)sman6_session=([^;]+)/);\n\nif (match) {\n    flow.set(\"session_\" + match[1], null);\n}\n\nmsg.headers[\"Set-Cookie\"] =\n    \"sman6_session=; Path=/sman6; HttpOnly; SameSite=Lax; Max-Age=0\";\n\nmsg.payload = {\n    success: true,\n    message: \"Logout berhasil.\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1560,
+        "wires": [
+            [
+                "9c0e746fe71d71f0"
+            ]
+        ]
+    },
+    {
+        "id": "9c0e746fe71d71f0",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 650,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "23a5f8139d20e2d8",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/sesi/riwayat",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 1860,
+        "wires": [
+            [
+                "451ca63ff2725e8b"
+            ]
+        ]
+    },
+    {
+        "id": "451ca63ff2725e8b",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 53",
+        "func": "const userId = msg.req.query.user_id;\n\n// Untuk sementara user_id wajib ada\nif (!userId) {\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\nmsg.query = `\n    SELECT\n        sesi.id AS sesi_id,\n        sesi.tanggal,\n        sesi.waktu_mulai,\n        sesi.waktu_selesai,\n        sesi.status AS sesi_status,\n\n        guru_mapel.id AS guru_mapel_id,\n\n        guru.nama_lengkap AS nama_guru,\n\n        mata_pelajaran.nama_mapel,\n\n        kelas.nama_kelas,\n\n        COUNT(presensi.id) AS jumlah_siswa,\n\n        COUNT(*) FILTER (\n            WHERE presensi.status = 'hadir'\n        ) AS jumlah_hadir,\n\n        COUNT(*) FILTER (\n            WHERE presensi.status = 'sakit'\n        ) AS jumlah_sakit,\n\n        COUNT(*) FILTER (\n            WHERE presensi.status = 'izin'\n        ) AS jumlah_izin,\n\n        COUNT(*) FILTER (\n            WHERE presensi.status = 'tanpa_keterangan'\n        ) AS jumlah_tanpa_keterangan\n\n    FROM sesi\n\n    JOIN guru_mapel\n        ON sesi.guru_mapel_id = guru_mapel.id\n\n    JOIN guru\n        ON guru_mapel.guru_id = guru.id\n\n    JOIN users\n        ON guru.user_id = users.id\n\n    JOIN mata_pelajaran\n        ON guru_mapel.mata_pelajaran_id = mata_pelajaran.id\n\n    JOIN kelas\n        ON guru_mapel.kelas_id = kelas.id\n\n    LEFT JOIN presensi\n        ON presensi.sesi_id = sesi.id\n\n    WHERE users.id = $1\n\n    GROUP BY\n        sesi.id,\n        sesi.tanggal,\n        sesi.waktu_mulai,\n        sesi.waktu_selesai,\n        sesi.status,\n        guru_mapel.id,\n        guru.nama_lengkap,\n        mata_pelajaran.nama_mapel,\n        kelas.nama_kelas\n\n    ORDER BY\n        sesi.tanggal DESC,\n        sesi.waktu_mulai DESC;\n`;\n\nmsg.params = [\n    Number(userId)\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1860,
+        "wires": [
+            [
+                "e564e54efaf969d3"
+            ]
+        ]
+    },
+    {
+        "id": "e564e54efaf969d3",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 1860,
+        "wires": [
+            [
+                "c45b9318dd0d42f7"
+            ]
+        ]
+    },
+    {
+        "id": "c45b9318dd0d42f7",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 54",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nmsg.payload = {\n    success: true,\n    data: msg.payload\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 1860,
+        "wires": [
+            [
+                "b1645cef64d55d9f"
+            ]
+        ]
+    },
+    {
+        "id": "b1645cef64d55d9f",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "54d12b2827a4241d",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 57",
+        "func": "const passwordBaru = \"Budi1234\";\n\nbcrypt.hash(\n    passwordBaru,\n    10,\n    function (error, hash) {\n\n        if (error) {\n\n            node.error(\n                \"Gagal membuat hash password.\",\n                error\n            );\n\n            node.done();\n\n            return;\n        }\n\n        msg.query = `\n            UPDATE users\n            SET password_hash = $1\n            WHERE username = 'budi'\n            RETURNING\n                id,\n                username,\n                role,\n                nama_lengkap;\n        `;\n\n        msg.params = [hash];\n\n        node.send(msg);\n\n        node.done();\n    }\n);\n\nreturn;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "bcrypt",
+                "module": "bcrypt"
+            }
+        ],
+        "x": 330,
+        "y": 2040,
+        "wires": [
+            [
+                "4bbc7b9b9b5d95b7"
+            ]
+        ]
+    },
+    {
+        "id": "7bc6b1152e79ce81",
+        "type": "inject",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 2040,
+        "wires": [
+            [
+                "54d12b2827a4241d"
+            ]
+        ]
+    },
+    {
+        "id": "4bbc7b9b9b5d95b7",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 510,
+        "y": 2040,
+        "wires": [
+            [
+                "71bb9c5e718eb79d"
+            ]
+        ]
+    },
+    {
+        "id": "71bb9c5e718eb79d",
+        "type": "debug",
+        "z": "4cd6b315374826cb",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 2040,
+        "wires": []
+    },
+    {
+        "id": "30f95c513c667244",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/operator/wali-kelas",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 2180,
+        "wires": [
+            [
+                "520fc5ebc8d11f94"
+            ]
+        ]
+    },
+    {
+        "id": "520fc5ebc8d11f94",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 58",
+        "func": "msg.query = `\n    SELECT\n        wali_kelas.id AS wali_kelas_id,\n\n        guru.id AS guru_id,\n        guru.nama_lengkap AS nama_guru,\n\n        kelas.id AS kelas_id,\n        kelas.nama_kelas,\n        kelas.tingkat,\n        kelas.jurusan,\n        kelas.tahun_ajaran,\n\n        wali_kelas.status\n\n    FROM wali_kelas\n\n    JOIN guru\n        ON wali_kelas.guru_id = guru.id\n\n    JOIN kelas\n        ON wali_kelas.kelas_id = kelas.id\n\n    WHERE wali_kelas.status = 'aktif'\n      AND kelas.status = 'aktif'\n\n    ORDER BY\n        kelas.tingkat,\n        kelas.nama_kelas,\n        guru.nama_lengkap;\n`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 2180,
+        "wires": [
+            [
+                "af3f65c913e0698e"
+            ]
+        ]
+    },
+    {
+        "id": "af3f65c913e0698e",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 590,
+        "y": 2180,
+        "wires": [
+            [
+                "d407579af91496c9"
+            ]
+        ]
+    },
+    {
+        "id": "34288951ddbe4a6c",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 990,
+        "y": 2180,
+        "wires": []
+    },
+    {
+        "id": "d407579af91496c9",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 59",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\nmsg.payload = {\n    success: true,\n    data: msg.payload\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 2180,
+        "wires": [
+            [
+                "34288951ddbe4a6c"
+            ]
+        ]
+    },
+    {
+        "id": "2dd674a089ead6da",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/siswa/import",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 2320,
+        "wires": [
+            [
+                "a8518f5756e3de4d"
+            ]
+        ]
+    },
+    {
+        "id": "a8518f5756e3de4d",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 60",
+        "func": "const rows = msg.payload?.rows;\n\n\n/*\n====================================================\nVALIDASI PAYLOAD\n====================================================\n*/\n\nif (!Array.isArray(rows)) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Payload rows wajib berupa array.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data siswa tidak boleh kosong.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length > 1000) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Maksimal 1000 siswa per import.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nBERSIHKAN DATA DARI EXCEL\n====================================================\n*/\n\nconst cleanRows = rows.map((row) => {\n\n    return {\n\n        nis: String(\n            row.nis ?? \"\"\n        ).trim(),\n\n\n        nisn: String(\n            row.nisn ?? \"\"\n        ).trim(),\n\n\n        nama_lengkap: String(\n            row.nama_lengkap ?? \"\"\n        ).trim(),\n\n\n        jenis_kelamin: String(\n            row.jenis_kelamin ?? \"\"\n        ).trim().toUpperCase(),\n\n\n        tempat_lahir:\n            row.tempat_lahir\n                ? String(row.tempat_lahir).trim()\n                : null,\n\n\n        tanggal_lahir:\n            row.tanggal_lahir\n                ? String(row.tanggal_lahir).trim()\n                : null,\n\n\n        nomor_hp:\n            row.nomor_hp\n                ? String(row.nomor_hp).trim()\n                : null,\n\n\n        alamat:\n            row.alamat\n                ? String(row.alamat).trim()\n                : null,\n\n\n        nama_kelas: String(\n            row.nama_kelas ?? \"\"\n        ).trim(),\n\n\n        tahun_ajaran: String(\n            row.tahun_ajaran ?? \"\"\n        ).trim()\n\n    };\n\n});\n\n\n/*\n====================================================\nQUERY POSTGRESQL\n====================================================\n*/\n\nmsg.query = `\n\nWITH incoming AS (\n\n    SELECT\n\n        row_number() OVER ()::integer AS row_no,\n\n        NULLIF(\n            TRIM(x.nis),\n            ''\n        ) AS nis,\n\n        NULLIF(\n            TRIM(x.nisn),\n            ''\n        ) AS nisn,\n\n        NULLIF(\n            TRIM(x.nama_lengkap),\n            ''\n        ) AS nama_lengkap,\n\n        UPPER(\n            NULLIF(\n                TRIM(x.jenis_kelamin),\n                ''\n            )\n        ) AS jenis_kelamin,\n\n        NULLIF(\n            TRIM(x.tempat_lahir),\n            ''\n        ) AS tempat_lahir,\n\n        NULLIF(\n            TRIM(x.tanggal_lahir),\n            ''\n        ) AS tanggal_lahir,\n\n        NULLIF(\n            TRIM(x.nomor_hp),\n            ''\n        ) AS nomor_hp,\n\n        NULLIF(\n            TRIM(x.alamat),\n            ''\n        ) AS alamat,\n\n        NULLIF(\n            TRIM(x.nama_kelas),\n            ''\n        ) AS nama_kelas,\n\n        NULLIF(\n            TRIM(x.tahun_ajaran),\n            ''\n        ) AS tahun_ajaran\n\n    FROM jsonb_to_recordset(\n        $1::jsonb\n    ) AS x(\n        nis text,\n        nisn text,\n        nama_lengkap text,\n        jenis_kelamin text,\n        tempat_lahir text,\n        tanggal_lahir text,\n        nomor_hp text,\n        alamat text,\n        nama_kelas text,\n        tahun_ajaran text\n    )\n\n),\n\n\n/*\n====================================================\nVALIDASI DATA\n====================================================\n*/\n\nchecked AS (\n\n    SELECT\n\n        i.*,\n\n        k.id AS kelas_id,\n\n\n        CASE\n\n\n            /*\n            ========================================\n            NIS\n            ========================================\n            */\n\n            WHEN i.nis IS NULL\n\n                THEN 'NIS wajib diisi'\n\n\n            /*\n            ========================================\n            NISN\n            ========================================\n            */\n\n            WHEN i.nisn IS NULL\n\n                THEN 'NISN wajib diisi'\n\n\n            /*\n            ========================================\n            NAMA\n            ========================================\n            */\n\n            WHEN i.nama_lengkap IS NULL\n\n                THEN 'Nama lengkap wajib diisi'\n\n\n            /*\n            ========================================\n            JENIS KELAMIN\n            ========================================\n            */\n\n            WHEN i.jenis_kelamin NOT IN ('L', 'P')\n\n                THEN 'Jenis kelamin harus L atau P'\n\n\n            /*\n            ========================================\n            KELAS\n            ========================================\n            */\n\n            WHEN i.nama_kelas IS NULL\n\n                THEN 'Nama kelas wajib diisi'\n\n\n            /*\n            ========================================\n            TAHUN AJARAN\n            ========================================\n            */\n\n            WHEN i.tahun_ajaran IS NULL\n\n                THEN 'Tahun ajaran wajib diisi'\n\n\n            /*\n            ========================================\n            CEK KELAS DI DATABASE\n            ========================================\n            */\n\n            WHEN k.id IS NULL\n\n                THEN 'Kelas tidak ditemukan atau tidak aktif'\n\n\n            /*\n            ========================================\n            CEK DUPLIKAT NIS DALAM FILE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM incoming d\n\n                WHERE d.row_no <> i.row_no\n\n                  AND d.nis = i.nis\n\n            )\n\n                THEN 'NIS duplikat di file'\n\n\n            /*\n            ========================================\n            CEK DUPLIKAT NISN DALAM FILE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM incoming d\n\n                WHERE d.row_no <> i.row_no\n\n                  AND d.nisn = i.nisn\n\n            )\n\n                THEN 'NISN duplikat di file'\n\n\n            /*\n            ========================================\n            CEK NIS DI DATABASE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM siswa s\n\n                WHERE s.nis = i.nis\n\n            )\n\n                THEN 'NIS sudah terdaftar'\n\n\n            /*\n            ========================================\n            CEK NISN DI DATABASE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM siswa s\n\n                WHERE s.nisn = i.nisn\n\n            )\n\n                THEN 'NISN sudah terdaftar'\n\n\n            /*\n            ========================================\n            CEK FORMAT TANGGAL\n            ========================================\n            */\n\n            WHEN i.tanggal_lahir IS NOT NULL\n\n             AND i.tanggal_lahir !~ '^\\\\d{4}-\\\\d{2}-\\\\d{2}$'\n\n                THEN 'Tanggal lahir harus YYYY-MM-DD'\n\n\n            /*\n            ========================================\n            SEMUA VALID\n            ========================================\n            */\n\n            ELSE NULL\n\n        END AS error_message\n\n\n    FROM incoming i\n\n\n    LEFT JOIN kelas k\n\n        ON k.nama_kelas = i.nama_kelas\n\n       AND k.tahun_ajaran = i.tahun_ajaran\n\n       AND k.status = 'aktif'\n\n),\n\n\n/*\n====================================================\nKUMPULKAN ERROR\n====================================================\n*/\n\nerrors AS (\n\n    SELECT\n\n        COUNT(*)\n\n        FILTER (\n\n            WHERE error_message IS NOT NULL\n\n        )::integer AS error_count,\n\n\n        COALESCE(\n\n            jsonb_agg(\n\n                jsonb_build_object(\n\n                    'row',\n                    row_no,\n\n                    'nis',\n                    nis,\n\n                    'nisn',\n                    nisn,\n\n                    'nama_lengkap',\n                    nama_lengkap,\n\n                    'message',\n                    error_message\n\n                )\n\n                ORDER BY row_no\n\n            )\n\n            FILTER (\n\n                WHERE error_message IS NOT NULL\n\n            ),\n\n            '[]'::jsonb\n\n        ) AS error_rows\n\n\n    FROM checked\n\n),\n\n\n/*\n====================================================\nINSERT KE TABEL SISWA\n====================================================\n\nPENTING:\n\nINSERT HANYA DILAKUKAN JIKA\nerror_count = 0\n\nJadi:\n\n10 valid\n→ 10 masuk\n\n9 valid + 1 error\n→ 0 masuk\n\n====================================================\n*/\n\ninserted AS (\n\n    INSERT INTO siswa (\n\n        nisn,\n\n        nis,\n\n        nama_lengkap,\n\n        jenis_kelamin,\n\n        tempat_lahir,\n\n        tanggal_lahir,\n\n        nomor_hp,\n\n        alamat,\n\n        kelas_id,\n\n        status\n\n    )\n\n    SELECT\n\n        c.nisn,\n\n        c.nis,\n\n        c.nama_lengkap,\n\n        c.jenis_kelamin,\n\n        c.tempat_lahir,\n\n        NULLIF(\n            c.tanggal_lahir,\n            ''\n        )::date,\n\n        c.nomor_hp,\n\n        c.alamat,\n\n        c.kelas_id,\n\n        'aktif'\n\n\n    FROM checked c\n\n\n    CROSS JOIN errors e\n\n\n    WHERE e.error_count = 0\n\n\n    RETURNING id\n\n)\n\n\n/*\n====================================================\nHASIL AKHIR\n====================================================\n*/\n\nSELECT\n\n    e.error_count,\n\n    e.error_rows,\n\n    (\n\n        SELECT COUNT(*)\n\n        FROM inserted\n\n    )::integer AS inserted_count\n\n\nFROM errors e;\n\n`;\n\n\n/*\n====================================================\nPARAMETER POSTGRESQL\n====================================================\n*/\n\nmsg.params = [\n\n    JSON.stringify(cleanRows)\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 2320,
+        "wires": [
+            [
+                "c2d9d163e022bfb9"
+            ]
+        ]
+    },
+    {
+        "id": "c2d9d163e022bfb9",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 2320,
+        "wires": [
+            [
+                "68921eb0fa80189b"
+            ]
+        ]
+    },
+    {
+        "id": "ea8787de454cad04",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 2320,
+        "wires": []
+    },
+    {
+        "id": "68921eb0fa80189b",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 61",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\n\n/*\n====================================================\nCEK HASIL POSTGRESQL\n====================================================\n*/\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message: \"Tidak ada hasil dari proses import.\"\n    };\n\n    return msg;\n}\n\n\nconst result = hasil[0];\n\n\n/*\n====================================================\nADA ERROR\n====================================================\n*/\n\nif (Number(result.error_count) > 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n\n        success: false,\n\n        message:\n            \"Import dibatalkan karena ada data yang tidak valid.\",\n\n        jumlah_error:\n            Number(result.error_count),\n\n        errors:\n            result.error_rows || []\n\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nSEMUA DATA BERHASIL\n====================================================\n*/\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    message:\n        \"Data siswa berhasil diimport.\",\n\n    jumlah:\n        Number(result.inserted_count || 0)\n\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 2320,
+        "wires": [
+            [
+                "ea8787de454cad04"
+            ]
+        ]
+    },
+    {
+        "id": "596bd353a3c46cc0",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/guru/import",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 2400,
+        "wires": [
+            [
+                "92a7cc94df12b211"
+            ]
+        ]
+    },
+    {
+        "id": "92a7cc94df12b211",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 62",
+        "func": "const rows = msg.payload?.rows;\n\n\n/*\n====================================================\nVALIDASI PAYLOAD\n====================================================\n*/\n\nif (!Array.isArray(rows)) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Payload rows wajib berupa array.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data guru tidak boleh kosong.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length > 1000) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Maksimal 1000 guru per import.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nBERSIHKAN DATA DARI EXCEL\n====================================================\n*/\n\nconst cleanRows = rows.map((row) => {\n\n    return {\n\n        nip: String(\n            row.nip ?? \"\"\n        ).trim(),\n\n        nuptk: String(\n            row.nuptk ?? \"\"\n        ).trim(),\n\n        nama_lengkap: String(\n            row.nama_lengkap ?? \"\"\n        ).trim(),\n\n        jenis_kelamin: String(\n            row.jenis_kelamin ?? \"\"\n        ).trim().toUpperCase(),\n\n        tempat_lahir:\n            row.tempat_lahir\n                ? String(row.tempat_lahir).trim()\n                : null,\n\n        tanggal_lahir:\n            row.tanggal_lahir\n                ? String(row.tanggal_lahir).trim()\n                : null,\n\n        nomor_hp:\n            row.nomor_hp\n                ? String(row.nomor_hp).trim()\n                : null,\n\n        email:\n            row.email\n                ? String(row.email).trim()\n                : null,\n\n        alamat:\n            row.alamat\n                ? String(row.alamat).trim()\n                : null\n\n    };\n\n});\n\n\n/*\n====================================================\nQUERY POSTGRESQL\n====================================================\n*/\n\nmsg.query = `\n\nWITH incoming AS (\n\n    SELECT\n\n        row_number() OVER ()::integer AS row_no,\n\n        NULLIF(\n            TRIM(x.nip),\n            ''\n        ) AS nip,\n\n        NULLIF(\n            TRIM(x.nuptk),\n            ''\n        ) AS nuptk,\n\n        NULLIF(\n            TRIM(x.nama_lengkap),\n            ''\n        ) AS nama_lengkap,\n\n        UPPER(\n            NULLIF(\n                TRIM(x.jenis_kelamin),\n                ''\n            )\n        ) AS jenis_kelamin,\n\n        NULLIF(\n            TRIM(x.tempat_lahir),\n            ''\n        ) AS tempat_lahir,\n\n        NULLIF(\n            TRIM(x.tanggal_lahir),\n            ''\n        ) AS tanggal_lahir,\n\n        NULLIF(\n            TRIM(x.nomor_hp),\n            ''\n        ) AS nomor_hp,\n\n        NULLIF(\n            TRIM(x.email),\n            ''\n        ) AS email,\n\n        NULLIF(\n            TRIM(x.alamat),\n            ''\n        ) AS alamat\n\n    FROM jsonb_to_recordset(\n        $1::jsonb\n    ) AS x(\n        nip text,\n        nuptk text,\n        nama_lengkap text,\n        jenis_kelamin text,\n        tempat_lahir text,\n        tanggal_lahir text,\n        nomor_hp text,\n        email text,\n        alamat text\n    )\n\n),\n\n\n/*\n====================================================\nVALIDASI DATA\n====================================================\n*/\n\nchecked AS (\n\n    SELECT\n\n        i.*,\n\n\n        CASE\n\n\n            /*\n            ========================================\n            NAMA LENGKAP\n            ========================================\n            */\n\n            WHEN i.nama_lengkap IS NULL\n\n                THEN 'Nama lengkap wajib diisi'\n\n\n            /*\n            ========================================\n            JENIS KELAMIN\n            ========================================\n            */\n\n            WHEN i.jenis_kelamin NOT IN ('L', 'P')\n\n                THEN 'Jenis kelamin harus L atau P'\n\n\n            /*\n            ========================================\n            DUPLIKAT NIP DI FILE\n            ========================================\n\n            NIP boleh kosong.\n            Hanya dicek jika diisi.\n            */\n\n            WHEN i.nip IS NOT NULL\n\n             AND EXISTS (\n\n                SELECT 1\n\n                FROM incoming d\n\n                WHERE d.row_no <> i.row_no\n\n                  AND d.nip IS NOT NULL\n\n                  AND d.nip = i.nip\n\n             )\n\n                THEN 'NIP duplikat di file'\n\n\n            /*\n            ========================================\n            DUPLIKAT NUPTK DI FILE\n            ========================================\n\n            NUPTK boleh kosong.\n            Hanya dicek jika diisi.\n            */\n\n            WHEN i.nuptk IS NOT NULL\n\n             AND EXISTS (\n\n                SELECT 1\n\n                FROM incoming d\n\n                WHERE d.row_no <> i.row_no\n\n                  AND d.nuptk IS NOT NULL\n\n                  AND d.nuptk = i.nuptk\n\n             )\n\n                THEN 'NUPTK duplikat di file'\n\n\n            /*\n            ========================================\n            NIP SUDAH ADA DI DATABASE\n            ========================================\n            */\n\n            WHEN i.nip IS NOT NULL\n\n             AND EXISTS (\n\n                SELECT 1\n\n                FROM guru g\n\n                WHERE g.nip = i.nip\n\n             )\n\n                THEN 'NIP sudah terdaftar'\n\n\n            /*\n            ========================================\n            NUPTK SUDAH ADA DI DATABASE\n            ========================================\n            */\n\n            WHEN i.nuptk IS NOT NULL\n\n             AND EXISTS (\n\n                SELECT 1\n\n                FROM guru g\n\n                WHERE g.nuptk = i.nuptk\n\n             )\n\n                THEN 'NUPTK sudah terdaftar'\n\n\n            /*\n            ========================================\n            FORMAT TANGGAL\n            ========================================\n            */\n\n            WHEN i.tanggal_lahir IS NOT NULL\n\n             AND i.tanggal_lahir !~ '^\\\\d{4}-\\\\d{2}-\\\\d{2}$'\n\n                THEN 'Tanggal lahir harus YYYY-MM-DD'\n\n\n            /*\n            ========================================\n            FORMAT EMAIL\n            ========================================\n            */\n\n            WHEN i.email IS NOT NULL\n\n             AND i.email !~ '^[^[:space:]@]+@[^[:space:]@]+\\\\.[^[:space:]@]+$'\n\n                THEN 'Format email tidak valid'\n\n\n            /*\n            ========================================\n            SEMUA VALID\n            ========================================\n            */\n\n            ELSE NULL\n\n        END AS error_message\n\n\n    FROM incoming i\n\n),\n\n\n/*\n====================================================\nKUMPULKAN ERROR\n====================================================\n*/\n\nerrors AS (\n\n    SELECT\n\n        COUNT(*)\n\n        FILTER (\n\n            WHERE error_message IS NOT NULL\n\n        )::integer AS error_count,\n\n\n        COALESCE(\n\n            jsonb_agg(\n\n                jsonb_build_object(\n\n                    'row',\n                    row_no,\n\n                    'nip',\n                    nip,\n\n                    'nuptk',\n                    nuptk,\n\n                    'nama_lengkap',\n                    nama_lengkap,\n\n                    'message',\n                    error_message\n\n                )\n\n                ORDER BY row_no\n\n            )\n\n            FILTER (\n\n                WHERE error_message IS NOT NULL\n\n            ),\n\n            '[]'::jsonb\n\n        ) AS error_rows\n\n\n    FROM checked\n\n),\n\n\n/*\n====================================================\nINSERT KE TABEL GURU\n====================================================\n\nHanya dilakukan jika SEMUA data valid.\n\nJika ada 1 error:\n→ 0 data masuk.\n\n====================================================\n*/\n\ninserted AS (\n\n    INSERT INTO guru (\n\n        nip,\n\n        nuptk,\n\n        nama_lengkap,\n\n        jenis_kelamin,\n\n        tempat_lahir,\n\n        tanggal_lahir,\n\n        nomor_hp,\n\n        email,\n\n        alamat,\n\n        status\n\n    )\n\n    SELECT\n\n        c.nip,\n\n        c.nuptk,\n\n        c.nama_lengkap,\n\n        c.jenis_kelamin,\n\n        c.tempat_lahir,\n\n        NULLIF(\n            c.tanggal_lahir,\n            ''\n        )::date,\n\n        c.nomor_hp,\n\n        c.email,\n\n        c.alamat,\n\n        'aktif'\n\n\n    FROM checked c\n\n\n    CROSS JOIN errors e\n\n\n    WHERE e.error_count = 0\n\n\n    RETURNING id\n\n)\n\n\n/*\n====================================================\nHASIL AKHIR\n====================================================\n*/\n\nSELECT\n\n    e.error_count,\n\n    e.error_rows,\n\n    (\n\n        SELECT COUNT(*)\n\n        FROM inserted\n\n    )::integer AS inserted_count\n\n\nFROM errors e;\n\n`;\n\n\n/*\n====================================================\nPARAMETER POSTGRESQL\n====================================================\n*/\n\nmsg.params = [\n\n    JSON.stringify(cleanRows)\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 2400,
+        "wires": [
+            [
+                "d17a496a1bf1a277"
+            ]
+        ]
+    },
+    {
+        "id": "d17a496a1bf1a277",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 2400,
+        "wires": [
+            [
+                "5fb9f97e73bfc196"
+            ]
+        ]
+    },
+    {
+        "id": "6c110bca5936e711",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 2400,
+        "wires": []
+    },
+    {
+        "id": "5fb9f97e73bfc196",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 63",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\n\n/*\n====================================================\nCEK HASIL POSTGRESQL\n====================================================\n*/\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message: \"Tidak ada hasil dari proses import.\"\n    };\n\n    return msg;\n}\n\n\nconst result = hasil[0];\n\n\n/*\n====================================================\nADA ERROR\n====================================================\n*/\n\nif (Number(result.error_count) > 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n\n        success: false,\n\n        message:\n            \"Import dibatalkan karena ada data yang tidak valid.\",\n\n        jumlah_error:\n            Number(result.error_count),\n\n        errors:\n            result.error_rows || []\n\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nSEMUA DATA BERHASIL\n====================================================\n*/\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    message:\n        \"Data guru berhasil diimport.\",\n\n    jumlah:\n        Number(result.inserted_count || 0)\n\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 2400,
+        "wires": [
+            [
+                "6c110bca5936e711"
+            ]
+        ]
+    },
+    {
+        "id": "de98945a53badb9e",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/mapel/import",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 2480,
+        "wires": [
+            [
+                "1fac8edc0637862f"
+            ]
+        ]
+    },
+    {
+        "id": "1fac8edc0637862f",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 64",
+        "func": "const rows = msg.payload?.rows;\n\n\n/*\n====================================================\nVALIDASI PAYLOAD\n====================================================\n*/\n\nif (!Array.isArray(rows)) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Payload rows wajib berupa array.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length === 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Data mata pelajaran tidak boleh kosong.\"\n    };\n\n    return msg;\n}\n\n\nif (rows.length > 1000) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Maksimal 1000 mata pelajaran per import.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nBERSIHKAN DATA\n====================================================\n*/\n\nconst cleanRows = rows.map((row) => {\n\n    return {\n\n        kode_mapel: String(\n            row.kode_mapel ?? \"\"\n        ).trim().toUpperCase(),\n\n        nama_mapel: String(\n            row.nama_mapel ?? \"\"\n        ).trim()\n\n    };\n\n});\n\n\n/*\n====================================================\nQUERY POSTGRESQL\n====================================================\n*/\n\nmsg.query = `\n\nWITH incoming AS (\n\n    SELECT\n\n        row_number() OVER ()::integer AS row_no,\n\n        NULLIF(\n            TRIM(x.kode_mapel),\n            ''\n        ) AS kode_mapel,\n\n        NULLIF(\n            TRIM(x.nama_mapel),\n            ''\n        ) AS nama_mapel\n\n    FROM jsonb_to_recordset(\n        $1::jsonb\n    ) AS x(\n        kode_mapel text,\n        nama_mapel text\n    )\n\n),\n\n\n/*\n====================================================\nVALIDASI\n====================================================\n*/\n\nchecked AS (\n\n    SELECT\n\n        i.*,\n\n\n        CASE\n\n\n            /*\n            ========================================\n            KODE MAPEL\n            ========================================\n            */\n\n            WHEN i.kode_mapel IS NULL\n\n                THEN 'Kode mapel wajib diisi'\n\n\n            /*\n            ========================================\n            NAMA MAPEL\n            ========================================\n            */\n\n            WHEN i.nama_mapel IS NULL\n\n                THEN 'Nama mata pelajaran wajib diisi'\n\n\n            /*\n            ========================================\n            DUPLIKAT KODE DI FILE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM incoming d\n\n                WHERE d.row_no <> i.row_no\n\n                  AND d.kode_mapel = i.kode_mapel\n\n            )\n\n                THEN 'Kode mapel duplikat di file'\n\n\n            /*\n            ========================================\n            KODE SUDAH ADA DI DATABASE\n            ========================================\n            */\n\n            WHEN EXISTS (\n\n                SELECT 1\n\n                FROM mata_pelajaran mp\n\n                WHERE UPPER(mp.kode_mapel)\n                    = UPPER(i.kode_mapel)\n\n            )\n\n                THEN 'Kode mapel sudah terdaftar'\n\n\n            /*\n            ========================================\n            SEMUA VALID\n            ========================================\n            */\n\n            ELSE NULL\n\n        END AS error_message\n\n\n    FROM incoming i\n\n),\n\n\n/*\n====================================================\nKUMPULKAN ERROR\n====================================================\n*/\n\nerrors AS (\n\n    SELECT\n\n        COUNT(*)\n\n        FILTER (\n\n            WHERE error_message IS NOT NULL\n\n        )::integer AS error_count,\n\n\n        COALESCE(\n\n            jsonb_agg(\n\n                jsonb_build_object(\n\n                    'row',\n                    row_no,\n\n                    'kode_mapel',\n                    kode_mapel,\n\n                    'nama_mapel',\n                    nama_mapel,\n\n                    'message',\n                    error_message\n\n                )\n\n                ORDER BY row_no\n\n            )\n\n            FILTER (\n\n                WHERE error_message IS NOT NULL\n\n            ),\n\n            '[]'::jsonb\n\n        ) AS error_rows\n\n\n    FROM checked\n\n),\n\n\n/*\n====================================================\nINSERT DATA\n====================================================\n\nJika satu saja error:\n→ tidak ada data yang masuk.\n\n====================================================\n*/\n\ninserted AS (\n\n    INSERT INTO mata_pelajaran (\n\n        kode_mapel,\n\n        nama_mapel,\n\n        status\n\n    )\n\n    SELECT\n\n        c.kode_mapel,\n\n        c.nama_mapel,\n\n        'aktif'\n\n\n    FROM checked c\n\n\n    CROSS JOIN errors e\n\n\n    WHERE e.error_count = 0\n\n\n    RETURNING id\n\n)\n\n\n/*\n====================================================\nHASIL\n====================================================\n*/\n\nSELECT\n\n    e.error_count,\n\n    e.error_rows,\n\n    (\n\n        SELECT COUNT(*)\n\n        FROM inserted\n\n    )::integer AS inserted_count\n\n\nFROM errors e;\n\n`;\n\n\n/*\n====================================================\nPARAMETER\n====================================================\n*/\n\nmsg.params = [\n\n    JSON.stringify(cleanRows)\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 2480,
+        "wires": [
+            [
+                "cd0d4cc4e043ddc1"
+            ]
+        ]
+    },
+    {
+        "id": "cd0d4cc4e043ddc1",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 2480,
+        "wires": [
+            [
+                "fd54d2fe1f56cc9c"
+            ]
+        ]
+    },
+    {
+        "id": "d1537e20c82a86df",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 2480,
+        "wires": []
+    },
+    {
+        "id": "fd54d2fe1f56cc9c",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 65",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\n\n/*\n====================================================\nCEK HASIL POSTGRESQL\n====================================================\n*/\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message: \"Tidak ada hasil dari proses import.\"\n    };\n\n    return msg;\n}\n\n\nconst result = hasil[0];\n\n\n/*\n====================================================\nADA ERROR\n====================================================\n*/\n\nif (Number(result.error_count) > 0) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n\n        success: false,\n\n        message:\n            \"Import dibatalkan karena ada data yang tidak valid.\",\n\n        jumlah_error:\n            Number(result.error_count),\n\n        errors:\n            result.error_rows || []\n\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nBERHASIL\n====================================================\n*/\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    message:\n        \"Mata pelajaran berhasil diimport.\",\n\n    jumlah:\n        Number(result.inserted_count || 0)\n\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 2480,
+        "wires": [
+            [
+                "d1537e20c82a86df"
+            ]
+        ]
+    },
+    {
+        "id": "4d9a1b0b256afd53",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/sesi/riwayat/detail",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 2620,
+        "wires": [
+            [
+                "c29615bb939c2dac"
+            ]
+        ]
+    },
+    {
+        "id": "c29615bb939c2dac",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 66",
+        "func": "const userId = msg.req.query.user_id;\nconst sesiId = msg.req.query.sesi_id;\n\nif (!userId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\nif (!sesiId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter sesi_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nAMBIL DETAIL PRESENSI\n====================================================\n\nSekaligus memastikan sesi tersebut memang\nmilik guru yang sedang login.\n*/\n\nmsg.query = `\n\nSELECT\n\n    sesi.id AS sesi_id,\n\n    sesi.tanggal,\n\n    sesi.waktu_mulai,\n\n    sesi.waktu_selesai,\n\n    guru_mapel.id AS guru_mapel_id,\n\n    guru.nama_lengkap AS nama_guru,\n\n    mata_pelajaran.nama_mapel,\n\n    kelas.nama_kelas,\n\n    siswa.id AS siswa_id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin,\n\n    presensi.id AS presensi_id,\n\n    presensi.status AS presensi_status,\n\n    presensi.keterangan,\n\n    presensi.waktu_input,\n\n    presensi.updated_at\n\nFROM sesi\n\nJOIN guru_mapel\n    ON sesi.guru_mapel_id = guru_mapel.id\n\nJOIN guru\n    ON guru_mapel.guru_id = guru.id\n\nJOIN users\n    ON guru.user_id = users.id\n\nJOIN mata_pelajaran\n    ON guru_mapel.mata_pelajaran_id =\n       mata_pelajaran.id\n\nJOIN kelas\n    ON guru_mapel.kelas_id =\n       kelas.id\n\nJOIN presensi\n    ON presensi.sesi_id =\n       sesi.id\n\nJOIN siswa\n    ON presensi.siswa_id =\n       siswa.id\n\nWHERE users.id = $1\n\n  AND sesi.id = $2\n\nORDER BY\n    siswa.nama_lengkap;\n\n`;\n\nmsg.params = [\n    Number(userId),\n    Number(sesiId)\n];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 2620,
+        "wires": [
+            [
+                "fd1bb620f7814712"
+            ]
+        ]
+    },
+    {
+        "id": "fd1bb620f7814712",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 570,
+        "y": 2620,
+        "wires": [
+            [
+                "b2fe406363710f38"
+            ]
+        ]
+    },
+    {
+        "id": "ca5f5defcf8ef60f",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 970,
+        "y": 2620,
+        "wires": []
+    },
+    {
+        "id": "b2fe406363710f38",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 67",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\n\n\nif (!hasil || hasil.length === 0) {\n\n    msg.statusCode = 404;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Data detail presensi tidak ditemukan.\"\n    };\n\n    return msg;\n}\n\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n    success: true,\n    data: hasil\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 2620,
+        "wires": [
+            [
+                "ca5f5defcf8ef60f"
+            ]
+        ]
+    },
+    {
+        "id": "a4ccbfcbaa65144a",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/sesi/rekap-semester",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 200,
+        "y": 2740,
+        "wires": [
+            [
+                "c46f46e59e958cd9"
+            ]
+        ]
+    },
+    {
+        "id": "c46f46e59e958cd9",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 68",
+        "func": "const userId = msg.req.query.user_id;\nconst tahunAjaran = msg.req.query.tahun_ajaran;\nconst semester = msg.req.query.semester;\n\n\n/*\n====================================================\nVALIDASI\n====================================================\n*/\n\nif (!userId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tahun_ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!semester || ![\"1\", \"2\"].includes(String(semester))) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter semester harus 1 atau 2.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nPARSE TAHUN AJARAN\n====================================================\n\nContoh:\n\n2026/2027\n\nSemester 1:\n2026-07-01 s/d 2026-12-31\n\nSemester 2:\n2027-01-01 s/d 2027-06-30\n====================================================\n*/\n\nconst match =\n    String(tahunAjaran).match(\n        /^(\\d{4})\\/(\\d{4})$/\n    );\n\n\nif (!match) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format tahun ajaran harus YYYY/YYYY.\"\n    };\n\n    return msg;\n}\n\n\nconst tahunAwal =\n    Number(match[1]);\n\nconst tahunAkhir =\n    Number(match[2]);\n\n\nlet tanggalMulai;\nlet tanggalSelesai;\n\n\nif (String(semester) === \"1\") {\n\n    tanggalMulai =\n        `${tahunAwal}-07-01`;\n\n    tanggalSelesai =\n        `${tahunAwal}-12-31`;\n\n} else {\n\n    tanggalMulai =\n        `${tahunAkhir}-01-01`;\n\n    tanggalSelesai =\n        `${tahunAkhir}-06-30`;\n\n}\n\n\n/*\n====================================================\nQUERY REKAP SEMESTER\n====================================================\n\nData dibatasi berdasarkan:\n\n1. Guru yang sedang login\n2. Tahun ajaran\n3. Periode semester\n4. Guru mapel aktif\n5. Kelas aktif\n6. Siswa aktif\n\nLEFT JOIN digunakan supaya siswa tetap\nmuncul meskipun belum memiliki presensi.\n====================================================\n*/\n\nmsg.query = `\n\nSELECT\n\n    guru_mapel.id AS guru_mapel_id,\n\n    guru.nama_lengkap AS nama_guru,\n\n    mata_pelajaran.id AS mata_pelajaran_id,\n\n    mata_pelajaran.kode_mapel,\n\n    mata_pelajaran.nama_mapel,\n\n    kelas.id AS kelas_id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    siswa.id AS siswa_id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin,\n\n\n    /*\n    ================================================\n    JUMLAH PERTEMUAN\n    ================================================\n    */\n\n    COUNT(\n        DISTINCT sesi.id\n    ) AS jumlah_pertemuan,\n\n\n    /*\n    ================================================\n    HADIR\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'hadir'\n        ) AS jumlah_hadir,\n\n\n    /*\n    ================================================\n    SAKIT\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'sakit'\n        ) AS jumlah_sakit,\n\n\n    /*\n    ================================================\n    IZIN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'izin'\n        ) AS jumlah_izin,\n\n\n    /*\n    ================================================\n    TANPA KETERANGAN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'tanpa_keterangan'\n        ) AS jumlah_tanpa_keterangan,\n\n\n    /*\n    ================================================\n    TOTAL DATA PRESENSI\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        AS jumlah_presensi\n\n\nFROM guru_mapel\n\n\nJOIN guru\n    ON guru_mapel.guru_id =\n       guru.id\n\n\nJOIN users\n    ON guru.user_id =\n       users.id\n\n\nJOIN mata_pelajaran\n    ON guru_mapel.mata_pelajaran_id =\n       mata_pelajaran.id\n\n\nJOIN kelas\n    ON guru_mapel.kelas_id =\n       kelas.id\n\n\n/*\n====================================================\nAMBIL SEMUA SISWA DI KELAS\n====================================================\n*/\n\nJOIN siswa\n    ON siswa.kelas_id =\n       kelas.id\n\n   AND siswa.status = 'aktif'\n\n\n/*\n====================================================\nAMBIL SESI PADA PERIODE SEMESTER\n====================================================\n*/\n\nLEFT JOIN sesi\n    ON sesi.guru_mapel_id =\n       guru_mapel.id\n\n   AND sesi.status = 'selesai'\n\n   AND sesi.tanggal >= $2::date\n\n   AND sesi.tanggal <= $3::date\n\n\n/*\n====================================================\nAMBIL PRESENSI SISWA\n====================================================\n*/\n\nLEFT JOIN presensi\n    ON presensi.sesi_id =\n       sesi.id\n\n   AND presensi.siswa_id =\n       siswa.id\n\n\n/*\n====================================================\nFILTER GURU\n====================================================\n*/\n\nWHERE users.id = $1\n\n  AND guru_mapel.status = 'aktif'\n\n  AND guru_mapel.tahun_ajaran =\n      $4\n\n  AND kelas.status = 'aktif'\n\n\n/*\n====================================================\nGROUP\n====================================================\n*/\n\nGROUP BY\n\n    guru_mapel.id,\n\n    guru.nama_lengkap,\n\n    mata_pelajaran.id,\n\n    mata_pelajaran.kode_mapel,\n\n    mata_pelajaran.nama_mapel,\n\n    kelas.id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    siswa.id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin\n\n\n/*\n====================================================\nURUTKAN\n====================================================\n*/\n\nORDER BY\n\n    kelas.tingkat,\n\n    kelas.nama_kelas,\n\n    mata_pelajaran.nama_mapel,\n\n    siswa.nama_lengkap;\n\n`;\n\n\n/*\n====================================================\nPARAMETER POSTGRESQL\n====================================================\n*/\n\nmsg.params = [\n\n    Number(userId),\n\n    tanggalMulai,\n\n    tanggalSelesai,\n\n    tahunAjaran\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 2740,
+        "wires": [
+            [
+                "1914953207f28996"
+            ]
+        ]
+    },
+    {
+        "id": "1914953207f28996",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 2740,
+        "wires": [
+            [
+                "cad2a3cc4c7bf105"
+            ]
+        ]
+    },
+    {
+        "id": "33eec390d7b62d05",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 2740,
+        "wires": []
+    },
+    {
+        "id": "cad2a3cc4c7bf105",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 69",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\":\n        \"application/json; charset=utf-8\"\n};\n\n\nif (!Array.isArray(hasil)) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format hasil database tidak valid.\"\n    };\n\n    return msg;\n}\n\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    data: hasil\n\n};\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 2740,
+        "wires": [
+            [
+                "33eec390d7b62d05"
+            ]
+        ]
+    },
+    {
+        "id": "5c27c1b639d01486",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/sesi/rekap-range",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 2840,
+        "wires": [
+            [
+                "b675a7c1388ac2b1"
+            ]
+        ]
+    },
+    {
+        "id": "b675a7c1388ac2b1",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 70",
+        "func": "const userId = msg.req.query.user_id;\nconst kelasId = msg.req.query.kelas_id;\nconst tahunAjaran = msg.req.query.tahun_ajaran;\nconst tanggalMulai = msg.req.query.tanggal_mulai;\nconst tanggalSelesai = msg.req.query.tanggal_selesai;\n\n\n/*\n====================================================\nVALIDASI PARAMETER\n====================================================\n*/\n\nif (!userId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!kelasId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter kelas_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tahun_ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tanggalMulai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tanggal_mulai wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tanggalSelesai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tanggal_selesai wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nVALIDASI FORMAT TANGGAL\n====================================================\n*/\n\nconst dateRegex =\n    /^\\d{4}-\\d{2}-\\d{2}$/;\n\n\nif (\n    !dateRegex.test(tanggalMulai) ||\n    !dateRegex.test(tanggalSelesai)\n) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format tanggal harus YYYY-MM-DD.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nVALIDASI RANGE\n====================================================\n*/\n\nif (tanggalMulai > tanggalSelesai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Tanggal mulai tidak boleh lebih besar dari tanggal selesai.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nQUERY REKAP\n====================================================\n\nRekap:\n\n1. Guru yang sedang login\n2. Kelas yang dipilih\n3. Tahun ajaran yang dipilih\n4. Rentang tanggal yang dipilih\n\nSetiap siswa hanya muncul SATU BARIS.\n\nJika guru memiliki beberapa mata pelajaran\ndi kelas yang sama, seluruh presensinya\ndigabungkan.\n\n====================================================\n*/\n\nmsg.query = `\n\nSELECT\n\n    kelas.id AS kelas_id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    kelas.tahun_ajaran,\n\n    guru.id AS guru_id,\n\n    guru.nama_lengkap AS nama_guru,\n\n    siswa.id AS siswa_id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin,\n\n\n    /*\n    ================================================\n    JUMLAH PERTEMUAN\n    ================================================\n    */\n\n    COUNT(\n        DISTINCT sesi.id\n    ) AS jumlah_pertemuan,\n\n\n    /*\n    ================================================\n    HADIR\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'hadir'\n        ) AS jumlah_hadir,\n\n\n    /*\n    ================================================\n    SAKIT\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'sakit'\n        ) AS jumlah_sakit,\n\n\n    /*\n    ================================================\n    IZIN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'izin'\n        ) AS jumlah_izin,\n\n\n    /*\n    ================================================\n    TANPA KETERANGAN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'tanpa_keterangan'\n        ) AS jumlah_tanpa_keterangan,\n\n\n    /*\n    ================================================\n    TOTAL PRESENSI\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        AS jumlah_presensi\n\n\nFROM guru_mapel\n\n\n/*\n====================================================\nGURU\n====================================================\n*/\n\nJOIN guru\n\n    ON guru_mapel.guru_id =\n       guru.id\n\n\n/*\n====================================================\nUSER LOGIN\n====================================================\n*/\n\nJOIN users\n\n    ON guru.user_id =\n       users.id\n\n\n/*\n====================================================\nKELAS\n====================================================\n*/\n\nJOIN kelas\n\n    ON guru_mapel.kelas_id =\n       kelas.id\n\n\n/*\n====================================================\nSISWA\n====================================================\n*/\n\nJOIN siswa\n\n    ON siswa.kelas_id =\n       kelas.id\n\n   AND siswa.status = 'aktif'\n\n\n/*\n====================================================\nSESI\n====================================================\n\nAmbil semua sesi guru pada kelas tersebut\ndalam rentang tanggal.\n\n====================================================\n*/\n\nLEFT JOIN sesi\n\n    ON sesi.guru_mapel_id =\n       guru_mapel.id\n\n   AND sesi.status = 'selesai'\n\n   AND sesi.tanggal >= $3::date\n\n   AND sesi.tanggal <= $4::date\n\n\n/*\n====================================================\nPRESENSI\n====================================================\n*/\n\nLEFT JOIN presensi\n\n    ON presensi.sesi_id =\n       sesi.id\n\n   AND presensi.siswa_id =\n       siswa.id\n\n\n/*\n====================================================\nFILTER\n====================================================\n*/\n\nWHERE users.id = $1\n\n  AND guru_mapel.kelas_id = $2\n\n  AND guru_mapel.tahun_ajaran = $5\n\n  AND guru_mapel.status = 'aktif'\n\n  AND kelas.status = 'aktif'\n\n\n/*\n====================================================\nGROUP PER SISWA\n====================================================\n*/\n\nGROUP BY\n\n    kelas.id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    kelas.tahun_ajaran,\n\n    guru.id,\n\n    guru.nama_lengkap,\n\n    siswa.id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin\n\n\n/*\n====================================================\nURUTKAN\n====================================================\n*/\n\nORDER BY\n\n    siswa.nama_lengkap;\n\n`;\n\n\n/*\n====================================================\nPARAMETER POSTGRESQL\n====================================================\n*/\n\nmsg.params = [\n\n    Number(userId),\n\n    Number(kelasId),\n\n    tanggalMulai,\n\n    tanggalSelesai,\n\n    tahunAjaran\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 2840,
+        "wires": [
+            [
+                "10947d87bddf064f"
+            ]
+        ]
+    },
+    {
+        "id": "10947d87bddf064f",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 2840,
+        "wires": [
+            [
+                "073276d086c04222"
+            ]
+        ]
+    },
+    {
+        "id": "e95b2fbc74e44575",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 2840,
+        "wires": []
+    },
+    {
+        "id": "073276d086c04222",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 71",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\":\n        \"application/json; charset=utf-8\"\n};\n\n\nif (!Array.isArray(hasil)) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format hasil database tidak valid.\"\n    };\n\n    return msg;\n}\n\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    data: hasil\n\n};\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 2840,
+        "wires": [
+            [
+                "e95b2fbc74e44575"
+            ]
+        ]
+    },
+    {
+        "id": "40c0102af77b4046",
+        "type": "http in",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "url": "/sman6/api/sesi/rekap-range",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 3000,
+        "wires": [
+            [
+                "339e1c341dfc3580"
+            ]
+        ]
+    },
+    {
+        "id": "339e1c341dfc3580",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 72",
+        "func": "const userId = msg.req.query.user_id;\nconst kelasId = msg.req.query.kelas_id;\nconst tahunAjaran = msg.req.query.tahun_ajaran;\nconst tanggalMulai = msg.req.query.tanggal_mulai;\nconst tanggalSelesai = msg.req.query.tanggal_selesai;\n\n\n/*\n====================================================\nVALIDASI PARAMETER\n====================================================\n*/\n\nif (!userId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter user_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!kelasId) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter kelas_id wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tahunAjaran) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tahun_ajaran wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tanggalMulai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tanggal_mulai wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\nif (!tanggalSelesai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message: \"Parameter tanggal_selesai wajib diisi.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nVALIDASI FORMAT TANGGAL\n====================================================\n*/\n\nconst dateRegex =\n    /^\\d{4}-\\d{2}-\\d{2}$/;\n\n\nif (\n    !dateRegex.test(tanggalMulai) ||\n    !dateRegex.test(tanggalSelesai)\n) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format tanggal harus YYYY-MM-DD.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nVALIDASI RANGE\n====================================================\n*/\n\nif (tanggalMulai > tanggalSelesai) {\n\n    msg.statusCode = 400;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Tanggal mulai tidak boleh lebih besar dari tanggal selesai.\"\n    };\n\n    return msg;\n}\n\n\n/*\n====================================================\nQUERY REKAP\n====================================================\n\nRekap:\n\n1. Guru yang sedang login\n2. Kelas yang dipilih\n3. Tahun ajaran yang dipilih\n4. Rentang tanggal yang dipilih\n\nSetiap siswa hanya muncul SATU BARIS.\n\nJika guru memiliki beberapa mata pelajaran\ndi kelas yang sama, seluruh presensinya\ndigabungkan.\n\n====================================================\n*/\n\nmsg.query = `\n\nSELECT\n\n    kelas.id AS kelas_id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    kelas.tahun_ajaran,\n\n    guru.id AS guru_id,\n\n    guru.nama_lengkap AS nama_guru,\n\n    siswa.id AS siswa_id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin,\n\n\n    /*\n    ================================================\n    JUMLAH PERTEMUAN\n    ================================================\n    */\n\n    COUNT(\n        DISTINCT sesi.id\n    ) AS jumlah_pertemuan,\n\n\n    /*\n    ================================================\n    HADIR\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'hadir'\n        ) AS jumlah_hadir,\n\n\n    /*\n    ================================================\n    SAKIT\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'sakit'\n        ) AS jumlah_sakit,\n\n\n    /*\n    ================================================\n    IZIN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'izin'\n        ) AS jumlah_izin,\n\n\n    /*\n    ================================================\n    TANPA KETERANGAN\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        FILTER (\n            WHERE presensi.status = 'tanpa_keterangan'\n        ) AS jumlah_tanpa_keterangan,\n\n\n    /*\n    ================================================\n    TOTAL PRESENSI\n    ================================================\n    */\n\n    COUNT(presensi.id)\n        AS jumlah_presensi\n\n\nFROM guru_mapel\n\n\n/*\n====================================================\nGURU\n====================================================\n*/\n\nJOIN guru\n\n    ON guru_mapel.guru_id =\n       guru.id\n\n\n/*\n====================================================\nUSER LOGIN\n====================================================\n*/\n\nJOIN users\n\n    ON guru.user_id =\n       users.id\n\n\n/*\n====================================================\nKELAS\n====================================================\n*/\n\nJOIN kelas\n\n    ON guru_mapel.kelas_id =\n       kelas.id\n\n\n/*\n====================================================\nSISWA\n====================================================\n*/\n\nJOIN siswa\n\n    ON siswa.kelas_id =\n       kelas.id\n\n   AND siswa.status = 'aktif'\n\n\n/*\n====================================================\nSESI\n====================================================\n\nAmbil semua sesi guru pada kelas tersebut\ndalam rentang tanggal.\n\n====================================================\n*/\n\nLEFT JOIN sesi\n\n    ON sesi.guru_mapel_id =\n       guru_mapel.id\n\n   AND sesi.status = 'selesai'\n\n   AND sesi.tanggal >= $3::date\n\n   AND sesi.tanggal <= $4::date\n\n\n/*\n====================================================\nPRESENSI\n====================================================\n*/\n\nLEFT JOIN presensi\n\n    ON presensi.sesi_id =\n       sesi.id\n\n   AND presensi.siswa_id =\n       siswa.id\n\n\n/*\n====================================================\nFILTER\n====================================================\n*/\n\nWHERE users.id = $1\n\n  AND guru_mapel.kelas_id = $2\n\n  AND guru_mapel.tahun_ajaran = $5\n\n  AND guru_mapel.status = 'aktif'\n\n  AND kelas.status = 'aktif'\n\n\n/*\n====================================================\nGROUP PER SISWA\n====================================================\n*/\n\nGROUP BY\n\n    kelas.id,\n\n    kelas.nama_kelas,\n\n    kelas.tingkat,\n\n    kelas.jurusan,\n\n    kelas.tahun_ajaran,\n\n    guru.id,\n\n    guru.nama_lengkap,\n\n    siswa.id,\n\n    siswa.nis,\n\n    siswa.nisn,\n\n    siswa.nama_lengkap,\n\n    siswa.jenis_kelamin\n\n\n/*\n====================================================\nURUTKAN\n====================================================\n*/\n\nORDER BY\n\n    siswa.nama_lengkap;\n\n`;\n\n\n/*\n====================================================\nPARAMETER POSTGRESQL\n====================================================\n*/\n\nmsg.params = [\n\n    Number(userId),\n\n    Number(kelasId),\n\n    tanggalMulai,\n\n    tanggalSelesai,\n\n    tahunAjaran\n\n];\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 3000,
+        "wires": [
+            [
+                "68f0d71a3177177c"
+            ]
+        ]
+    },
+    {
+        "id": "68f0d71a3177177c",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 610,
+        "y": 3000,
+        "wires": [
+            [
+                "e0a30c011a0841e6"
+            ]
+        ]
+    },
+    {
+        "id": "0e69768a6d6a5927",
+        "type": "http response",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 3000,
+        "wires": []
+    },
+    {
+        "id": "e0a30c011a0841e6",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 73",
+        "func": "const hasil = msg.payload;\n\nmsg.headers = {\n    \"Content-Type\":\n        \"application/json; charset=utf-8\"\n};\n\n\nif (!Array.isArray(hasil)) {\n\n    msg.statusCode = 500;\n\n    msg.payload = {\n        success: false,\n        message:\n            \"Format hasil database tidak valid.\"\n    };\n\n    return msg;\n}\n\n\nmsg.statusCode = 200;\n\nmsg.payload = {\n\n    success: true,\n\n    data: hasil\n\n};\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 3000,
+        "wires": [
+            [
+                "0e69768a6d6a5927"
+            ]
+        ]
+    },
+    {
+        "id": "b83c15b6b8cee20a",
+        "type": "telegram sender",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "bot": "f49f18482c1c0d45",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1370,
+        "y": 1800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10eeea14d9c108a8",
+        "type": "postgresql",
+        "z": "4cd6b315374826cb",
+        "name": "",
+        "query": "\n",
+        "postgreSQLConfig": "47a6f13f1fd4b173",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 950,
+        "y": 1800,
+        "wires": [
+            [
+                "2d24aac05eda1405",
+                "65fda11fced07ddd"
+            ]
+        ]
+    },
+    {
+        "id": "2d24aac05eda1405",
+        "type": "function",
+        "z": "4cd6b315374826cb",
+        "name": "function 74",
+        "func": "/*\n * =========================================================\n * FUNCTION TELEGRAM\n * Notifikasi presensi siswa\n * =========================================================\n */\n\nlet hasil = msg.payload;\n\n\n/*\n * =========================================================\n * NORMALISASI DATA\n * =========================================================\n */\n\nif (!Array.isArray(hasil)) {\n\n    if (hasil && Array.isArray(hasil.rows)) {\n        hasil = hasil.rows;\n    } else {\n        hasil = [];\n    }\n\n}\n\n\n/*\n * Kalau tidak ada data\n */\nif (hasil.length === 0) {\n    return null;\n}\n\n\n/*\n * =========================================================\n * AMBIL DATA DARI BARIS PERTAMA\n * =========================================================\n */\n\nconst first = hasil[0];\n\n\n/*\n * Beberapa kemungkinan nama field\n * supaya aman terhadap output PostgreSQL\n */\n\nconst namaGuru =\n    first.nama_guru ||\n    first.guru_nama ||\n    first.nama_lengkap_guru ||\n    \"-\";\n\n\nconst namaMapel =\n    first.nama_mapel ||\n    first.mata_pelajaran ||\n    first.nama_mata_pelajaran ||\n    \"-\";\n\n\nconst namaKelas =\n    first.nama_kelas ||\n    first.kelas_nama ||\n    \"-\";\n\n\nconst tanggal =\n    first.tanggal ||\n    first.tanggal_presensi ||\n    \"-\";\n\n\n/*\n * =========================================================\n * NORMALISASI STATUS\n * =========================================================\n */\n\nfunction getStatus(row) {\n\n    return (\n        row.status_presensi ||\n        row.presensi_status ||\n        row.status ||\n        \"\"\n    ).toString().toLowerCase().trim();\n\n}\n\n\n/*\n * =========================================================\n * NORMALISASI NAMA SISWA\n * =========================================================\n */\n\nfunction getNamaSiswa(row) {\n\n    return (\n        row.nama_siswa ||\n        row.nama_lengkap ||\n        row.siswa_nama ||\n        row.nama ||\n        \"Nama siswa tidak ditemukan\"\n    );\n\n}\n\n\n/*\n * =========================================================\n * NORMALISASI KETERANGAN\n * =========================================================\n */\n\nfunction getKeterangan(row) {\n\n    return (\n        row.keterangan ||\n        \"\"\n    ).toString().trim();\n\n}\n\n\n/*\n * =========================================================\n * HITUNG STATUS\n * =========================================================\n */\n\nconst siswaHadir = hasil.filter(row =>\n    getStatus(row) === \"hadir\"\n);\n\n\nconst siswaSakit = hasil.filter(row =>\n    getStatus(row) === \"sakit\"\n);\n\n\nconst siswaIzin = hasil.filter(row =>\n    getStatus(row) === \"izin\"\n);\n\n\nconst siswaTanpaKeterangan = hasil.filter(row =>\n    getStatus(row) === \"tanpa_keterangan\"\n);\n\n\n/*\n * =========================================================\n * FORMAT TANGGAL\n * =========================================================\n */\n\nlet tanggalFormat = tanggal;\n\ntry {\n\n    const d = new Date(tanggal);\n\n    if (!isNaN(d.getTime())) {\n\n        tanggalFormat = d.toLocaleDateString(\n            \"id-ID\",\n            {\n                day: \"2-digit\",\n                month: \"long\",\n                year: \"numeric\"\n            }\n        );\n\n    }\n\n} catch (error) {\n\n    tanggalFormat = tanggal;\n\n}\n\n\n/*\n * =========================================================\n * BUAT PESAN\n * =========================================================\n */\n\nlet pesan = \"\";\n\npesan += \"🔔 NOTIFIKASI PRESENSI\\n\\n\";\n\npesan += \"🏫 Kelas: \" + namaKelas + \"\\n\";\npesan += \"📚 Mata Pelajaran: \" + namaMapel + \"\\n\";\npesan += \"👨‍🏫 Guru: \" + namaGuru + \"\\n\";\npesan += \"📅 Tanggal: \" + tanggalFormat + \"\\n\\n\";\n\n\n/*\n * =========================================================\n * REKAP\n * =========================================================\n */\n\npesan += \"📊 REKAP KEHADIRAN\\n\\n\";\n\npesan += \"✅ Hadir: \" + siswaHadir.length + \"\\n\";\n\npesan += \"🤒 Sakit: \" + siswaSakit.length + \"\\n\";\n\npesan += \"📄 Izin: \" + siswaIzin.length + \"\\n\";\n\npesan +=\n    \"❌ Tanpa Keterangan: \" +\n    siswaTanpaKeterangan.length +\n    \"\\n\";\n\n\n/*\n * =========================================================\n * DAFTAR SISWA SAKIT\n * =========================================================\n */\n\nif (siswaSakit.length > 0) {\n\n    pesan += \"\\n🤒 DAFTAR SISWA SAKIT\\n\";\n\n    siswaSakit.forEach(row => {\n\n        pesan +=\n            \"• \" +\n            getNamaSiswa(row);\n\n        const keterangan =\n            getKeterangan(row);\n\n        if (keterangan) {\n\n            pesan +=\n                \" — \" +\n                keterangan;\n\n        }\n\n        pesan += \"\\n\";\n\n    });\n\n}\n\n\n/*\n * =========================================================\n * DAFTAR SISWA IZIN\n * =========================================================\n */\n\nif (siswaIzin.length > 0) {\n\n    pesan += \"\\n📄 DAFTAR SISWA IZIN\\n\";\n\n    siswaIzin.forEach(row => {\n\n        pesan +=\n            \"• \" +\n            getNamaSiswa(row);\n\n        const keterangan =\n            getKeterangan(row);\n\n        if (keterangan) {\n\n            pesan +=\n                \" — \" +\n                keterangan;\n\n        }\n\n        pesan += \"\\n\";\n\n    });\n\n}\n\n\n/*\n * =========================================================\n * DAFTAR SISWA TANPA KETERANGAN\n * =========================================================\n */\n\nif (siswaTanpaKeterangan.length > 0) {\n\n    pesan +=\n        \"\\n❌ DAFTAR SISWA TANPA KETERANGAN\\n\";\n\n    siswaTanpaKeterangan.forEach(row => {\n\n        pesan +=\n            \"• \" +\n            getNamaSiswa(row);\n\n        const keterangan =\n            getKeterangan(row);\n\n        if (keterangan) {\n\n            pesan +=\n                \" — \" +\n                keterangan;\n\n        }\n\n        pesan += \"\\n\";\n\n    });\n\n}\n\n\n/*\n * =========================================================\n * DATA UNTUK TELEGRAM SENDER\n * =========================================================\n */\n\nmsg.payload = {\n\n    chatId: -4129309784,\n\n    type: \"message\",\n\n    content: pesan\n\n};\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 1800,
+        "wires": [
+            [
+                "b83c15b6b8cee20a"
+            ]
+        ]
+    },
+    {
+        "id": "65fda11fced07ddd",
+        "type": "debug",
+        "z": "4cd6b315374826cb",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 1720,
+        "wires": []
+    },
+    {
+        "id": "47a6f13f1fd4b173",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "absen_smansix",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "userFieldType": "cred",
+        "userEnv": "",
+        "passwordFieldType": "cred",
+        "passwordEnv": ""
+    },
+    {
+        "id": "f49f18482c1c0d45",
+        "type": "telegram bot",
+        "botname": "",
+        "usernames": "",
+        "chatids": "-4129309784",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]

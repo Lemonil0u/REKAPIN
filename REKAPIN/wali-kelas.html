@@ -1,0 +1,6268 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Wali Kelas | Sistem Presensi SMAN 6
+    </title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        :root {
+
+            --primary: #ff6b00;
+            --primary-dark: #e85d00;
+            --primary-soft: #fff3e9;
+
+            --green: #16a34a;
+            --green-soft: #eaf8ef;
+
+            --yellow: #d99a00;
+            --yellow-soft: #fff7df;
+
+            --blue: #2878d0;
+            --blue-soft: #eaf3ff;
+
+            --red: #dc4c4c;
+            --red-soft: #fff0f0;
+
+            --dark: #172235;
+            --text: #172033;
+            --muted: #667085;
+
+            --background: #f4f6fa;
+            --white: #ffffff;
+
+            --border: #e4e8ef;
+
+            --shadow:
+                0 4px 18px rgba(30, 40, 50, 0.05);
+
+            --radius: 16px;
+        }
+
+
+        body {
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                var(--background);
+
+            color:
+                var(--text);
+
+            min-height: 100vh;
+
+        }
+
+
+        button,
+        input,
+        select {
+
+            font-family: inherit;
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background:
+                var(--white);
+
+            border-right:
+                1px solid var(--border);
+
+            display: flex;
+
+            flex-direction: column;
+
+            z-index: 100;
+
+        }
+
+
+        .brand {
+
+            height: 82px;
+
+            padding:
+                17px 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .brand-logo {
+
+            width: 46px;
+            height: 46px;
+
+            object-fit: contain;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .brand-name {
+
+            font-size: 16px;
+
+            font-weight: 750;
+
+            color:
+                var(--dark);
+
+            letter-spacing:
+                -0.3px;
+
+        }
+
+
+        .brand-subtitle {
+
+            font-size: 10px;
+
+            color:
+                var(--muted);
+
+            margin-top: 4px;
+
+        }
+
+
+        .sidebar-content {
+
+            padding:
+                24px 13px;
+
+            flex: 1;
+
+        }
+
+
+        .menu-label {
+
+            padding:
+                0 12px;
+
+            margin-bottom:
+                9px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing:
+                0.8px;
+
+            text-transform:
+                uppercase;
+
+            color:
+                #a1a6ad;
+
+        }
+
+
+        .menu-item {
+
+            width: 100%;
+
+            border: none;
+
+            background:
+                transparent;
+
+            color:
+                #626a74;
+
+            padding:
+                12px 13px;
+
+            border-radius:
+                9px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            text-align: left;
+
+            transition:
+                0.18s ease;
+
+        }
+
+
+        .menu-item:hover {
+
+            background:
+                var(--primary-soft);
+
+            color:
+                var(--primary);
+
+        }
+
+
+        .menu-item.active {
+
+            background:
+                var(--primary-soft);
+
+            color:
+                var(--primary);
+
+            font-weight:
+                650;
+
+        }
+
+
+        .menu-icon {
+
+            width: 20px;
+            height: 20px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+
+        }
+
+
+        .sidebar-footer {
+
+            padding:
+                13px;
+
+            border-top:
+                1px solid var(--border);
+
+        }
+
+
+        .logout-button {
+
+            color:
+                #dc5a5a;
+
+        }
+
+
+        .logout-button:hover {
+
+            background:
+                var(--red-soft);
+
+            color:
+                var(--red);
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left:
+                250px;
+
+            min-height:
+                100vh;
+
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+
+            height:
+                82px;
+
+            background:
+                var(--white);
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                0 32px;
+
+        }
+
+
+        .page-heading h1 {
+
+            font-size:
+                21px;
+
+            line-height:
+                1.2;
+
+            color:
+                var(--dark);
+
+            letter-spacing:
+                -0.4px;
+
+        }
+
+
+        .page-heading p {
+
+            font-size:
+                12px;
+
+            color:
+                var(--muted);
+
+            margin-top:
+                5px;
+
+        }
+
+
+        .user-area {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                11px;
+
+        }
+
+
+        .user-info {
+
+            text-align:
+                right;
+
+        }
+
+
+        .user-name {
+
+            font-size:
+                13px;
+
+            font-weight:
+                700;
+
+            color:
+                var(--dark);
+
+        }
+
+
+        .user-role {
+
+            font-size:
+                10px;
+
+            color:
+                var(--muted);
+
+            margin-top:
+                3px;
+
+        }
+
+
+        .avatar {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            border-radius:
+                50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f47b20,
+                    #ff9b48
+                );
+
+            color:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                14px;
+
+            font-weight:
+                750;
+
+            box-shadow:
+                0 4px 10px
+                rgba(244, 123, 32, 0.22);
+
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding:
+                27px 32px 40px;
+
+            max-width:
+                1600px;
+
+            margin:
+                0 auto;
+
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error-message {
+
+            display:
+                none;
+
+            background:
+                var(--red-soft);
+
+            border:
+                1px solid #f3c8c8;
+
+            color:
+                #bd3f3f;
+
+            padding:
+                12px 15px;
+
+            border-radius:
+                9px;
+
+            margin-bottom:
+                18px;
+
+            font-size:
+                12px;
+
+        }
+
+
+        .error-message.show {
+
+            display:
+                block;
+
+        }
+
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
+        .filter-card {
+
+            background:
+                var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius);
+
+            box-shadow:
+                var(--shadow);
+
+            padding:
+                21px;
+
+            margin-bottom:
+                20px;
+
+        }
+
+
+        .section-heading {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                17px;
+
+        }
+
+
+        .section-title {
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            color:
+                var(--dark);
+
+        }
+
+
+        .section-description {
+
+            font-size:
+                11px;
+
+            color:
+                var(--muted);
+
+            margin-top:
+                4px;
+
+        }
+
+
+        .filter-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1.05fr
+                1.45fr
+                1fr
+                1fr
+                auto;
+
+            gap:
+                13px;
+
+            align-items:
+                end;
+
+        }
+
+
+        .form-group label {
+
+            display:
+                block;
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            color:
+                #6f7680;
+
+            margin-bottom:
+                7px;
+
+        }
+
+
+        .form-control {
+
+            width:
+                100%;
+
+            height:
+                40px;
+
+            padding:
+                0 11px;
+
+            border:
+                1px solid #dfe3e8;
+
+            border-radius:
+                8px;
+
+            background:
+                #fff;
+
+            color:
+                #363b42;
+
+            font-size:
+                12px;
+
+            outline:
+                none;
+
+            transition:
+                0.18s ease;
+
+        }
+
+
+        .form-control:hover {
+
+            border-color:
+                #cbd0d7;
+
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(244, 123, 32, 0.10);
+
+        }
+
+
+        .btn-primary {
+
+            height:
+                40px;
+
+            padding:
+                0 19px;
+
+            border:
+                none;
+
+            border-radius:
+                8px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #ff9140
+                );
+
+            color:
+                white;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            cursor:
+                pointer;
+
+            white-space:
+                nowrap;
+
+            box-shadow:
+                0 4px 10px
+                rgba(244, 123, 32, 0.18);
+
+            transition:
+                0.18s ease;
+
+        }
+
+
+        .btn-primary:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 6px 14px
+                rgba(244, 123, 32, 0.24);
+
+        }
+
+
+        .btn-primary:active {
+
+            transform:
+                translateY(0);
+
+        }
+
+
+        .btn-primary:disabled {
+
+            background:
+                #c7cbd0;
+
+            box-shadow:
+                none;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+
+        }
+
+
+        /* =====================================================
+           CLASS INFORMATION
+        ===================================================== */
+
+        .class-info {
+
+            display:
+                none;
+
+            margin-top:
+                17px;
+
+            padding:
+                14px 16px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8f1,
+                    #fffaf7
+                );
+
+            border:
+                1px solid #f6dfcc;
+
+            border-radius:
+                10px;
+
+            gap:
+                30px;
+
+            flex-wrap:
+                wrap;
+
+        }
+
+
+        .class-info.show {
+
+            display:
+                flex;
+
+        }
+
+
+        .class-info-item {
+
+            min-width:
+                100px;
+
+        }
+
+
+        .class-info-item span {
+
+            display:
+                block;
+
+            font-size:
+                9px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.4px;
+
+            color:
+                #a09a94;
+
+            margin-bottom:
+                4px;
+
+        }
+
+
+        .class-info-item strong {
+
+            font-size:
+                12px;
+
+            color:
+                #444;
+
+        }
+
+
+        /* =====================================================
+           SUMMARY
+        ===================================================== */
+
+        .summary-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap:
+                13px;
+
+            margin-bottom:
+                20px;
+
+        }
+
+
+        .summary-card {
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            background:
+                var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                12px;
+
+            padding:
+                17px;
+
+            box-shadow:
+                var(--shadow);
+
+        }
+
+
+        .summary-card::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            right:
+                -15px;
+
+            top:
+                -15px;
+
+            width:
+                55px;
+
+            height:
+                55px;
+
+            border-radius:
+                50%;
+
+            opacity:
+                0.55;
+
+        }
+
+
+        .summary-card.total::after {
+
+            background:
+                #edf0f3;
+
+        }
+
+
+        .summary-card.hadir::after {
+
+            background:
+                #dff5e7;
+
+        }
+
+
+        .summary-card.sakit::after {
+
+            background:
+                #fff0bd;
+
+        }
+
+
+        .summary-card.izin::after {
+
+            background:
+                #dcecff;
+
+        }
+
+
+        .summary-card.tk::after {
+
+            background:
+                #ffe0e0;
+
+        }
+
+
+        .summary-label {
+
+            font-size:
+                10px;
+
+            color:
+                var(--muted);
+
+            font-weight:
+                600;
+
+            margin-bottom:
+                9px;
+
+        }
+
+
+        .summary-value {
+
+            font-size:
+                25px;
+
+            line-height:
+                1;
+
+            font-weight:
+                750;
+
+            color:
+                var(--dark);
+
+        }
+
+
+        .summary-card.hadir .summary-value {
+
+            color:
+                var(--green);
+
+        }
+
+
+        .summary-card.sakit .summary-value {
+
+            color:
+                var(--yellow);
+
+        }
+
+
+        .summary-card.izin .summary-value {
+
+            color:
+                var(--blue);
+
+        }
+
+
+        .summary-card.tk .summary-value {
+
+            color:
+                var(--red);
+
+        }
+
+
+        /* =====================================================
+           TABLE CARD
+        ===================================================== */
+
+        .table-card {
+
+            background:
+                var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius);
+
+            box-shadow:
+                var(--shadow);
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .table-header {
+
+            padding:
+                18px 21px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+        }
+
+
+        .table-title {
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            color:
+                var(--dark);
+
+        }
+
+
+        .table-subtitle {
+
+            font-size:
+                11px;
+
+            color:
+                var(--muted);
+
+            margin-top:
+                4px;
+
+        }
+
+
+        .table-count {
+
+            background:
+                #f3f4f6;
+
+            color:
+                #727984;
+
+            border-radius:
+                20px;
+
+            padding:
+                5px 10px;
+
+            font-size:
+                10px;
+
+            font-weight:
+                650;
+
+        }
+
+
+        .table-wrapper {
+
+            overflow-x:
+                auto;
+
+        }
+
+
+        table {
+
+            width:
+                100%;
+
+            min-width:
+                820px;
+
+            border-collapse:
+                collapse;
+
+        }
+
+
+        th {
+
+            background:
+                #fafbfc;
+
+            color:
+                #858c95;
+
+            padding:
+                12px 14px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.45px;
+
+            text-align:
+                center;
+
+        }
+
+
+        td {
+
+            padding:
+                12px 14px;
+
+            border-bottom:
+                1px solid #f0f1f3;
+
+            font-size:
+                12px;
+
+            text-align:
+                center;
+
+            color:
+                #525861;
+
+        }
+
+
+        tbody tr {
+
+            transition:
+                background 0.15s ease;
+
+        }
+
+
+        tbody tr:hover {
+
+            background:
+                #fffaf6;
+
+        }
+
+
+        tbody tr:last-child td {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        th:nth-child(2),
+        td:nth-child(2) {
+
+            text-align:
+                left;
+
+        }
+
+
+        .student-name {
+
+            font-weight:
+                650;
+
+            color:
+                #363b42;
+
+        }
+
+
+        .student-id {
+
+            font-size:
+                9px;
+
+            color:
+                #9aa0a8;
+
+            margin-top:
+                3px;
+
+        }
+
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+
+            display:
+                inline-flex;
+
+            min-width:
+                31px;
+
+            height:
+                25px;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                0 8px;
+
+            border-radius:
+                6px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .badge-hadir {
+
+            color:
+                var(--green);
+
+            background:
+                var(--green-soft);
+
+        }
+
+
+        .badge-sakit {
+
+            color:
+                var(--yellow);
+
+            background:
+                var(--yellow-soft);
+
+        }
+
+
+        .badge-izin {
+
+            color:
+                var(--blue);
+
+            background:
+                var(--blue-soft);
+
+        }
+
+
+        .badge-tk {
+
+            color:
+                var(--red);
+
+            background:
+                var(--red-soft);
+
+        }
+
+
+        .badge-total {
+
+            color:
+                #555d67;
+
+            background:
+                #f0f2f4;
+
+        }
+
+
+        .attendance-rate {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+        }
+
+
+        .rate-bar {
+
+            width:
+                70px;
+
+            height:
+                6px;
+
+            border-radius:
+                10px;
+
+            background:
+                #eceef1;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .rate-fill {
+
+            height:
+                100%;
+
+            border-radius:
+                10px;
+
+            background:
+                var(--green);
+
+        }
+
+
+        .rate-text {
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            color:
+                #5f6670;
+
+            min-width:
+                34px;
+
+        }
+
+
+        /* =====================================================
+           EMPTY / LOADING
+        ===================================================== */
+
+        .empty-state {
+
+            padding:
+                58px 20px;
+
+            text-align:
+                center;
+
+        }
+
+
+        .empty-icon {
+
+            width:
+                54px;
+
+            height:
+                54px;
+
+            margin:
+                0 auto 13px;
+
+            border-radius:
+                14px;
+
+            background:
+                #f4f5f7;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                24px;
+
+        }
+
+
+        .empty-state h3 {
+
+            font-size:
+                13px;
+
+            color:
+                #555c65;
+
+            margin-bottom:
+                5px;
+
+        }
+
+
+        .empty-state p {
+
+            font-size:
+                11px;
+
+            color:
+                #9a9fa7;
+
+        }
+
+
+        .loading {
+
+            padding:
+                55px;
+
+            text-align:
+                center;
+
+            color:
+                #888f98;
+
+            font-size:
+                12px;
+
+        }
+
+
+        .spinner {
+
+            width:
+                27px;
+
+            height:
+                27px;
+
+            border:
+                3px solid #ececec;
+
+            border-top-color:
+                var(--primary);
+
+            border-radius:
+                50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            margin:
+                0 auto 12px;
+
+        }
+
+
+        @keyframes spin {
+
+            to {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1150px) {
+
+            .filter-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .filter-grid .btn-primary {
+
+                width:
+                    100%;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+
+                width:
+                    70px;
+
+            }
+
+
+            .brand {
+
+                justify-content:
+                    center;
+
+                padding:
+                    15px 8px;
+
+            }
+
+
+            .brand-text,
+            .menu-label,
+            .menu-item-text {
+
+                display:
+                    none;
+
+            }
+
+
+            .menu-item {
+
+                justify-content:
+                    center;
+
+                padding:
+                    12px 5px;
+
+            }
+
+
+            .sidebar-footer {
+
+                padding:
+                    8px;
+
+            }
+
+
+            .main {
+
+                margin-left:
+                    70px;
+
+            }
+
+
+            .topbar {
+
+                padding:
+                    0 18px;
+
+            }
+
+
+            .content {
+
+                padding:
+                    18px;
+
+            }
+
+
+            .user-info {
+
+                display:
+                    none;
+
+            }
+
+
+            .filter-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .page-heading h1 {
+
+                font-size:
+                    18px;
+
+            }
+
+
+            .page-heading p {
+
+                font-size:
+                    10px;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+                gap:
+                    9px;
+
+            }
+
+
+            .summary-card {
+
+                padding:
+                    14px;
+
+            }
+
+
+            .summary-value {
+
+                font-size:
+                    21px;
+
+            }
+
+
+            .class-info {
+
+                gap:
+                    17px;
+
+            }
+
+        }
+/* =========================================================
+   MOBILE UI/UX WALI KELAS
+   REDESIGN MOBILE 360-430 PX
+   JS / API / BACKEND TIDAK DIUBAH
+========================================================= */
+
+@media (max-width: 600px) {
+
+    /* ================================
+       BASIC
+    ================================= */
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background: #fffaf6;
+    }
+
+    body {
+        font-size: 13px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+
+    /* ================================
+       DESKTOP SIDEBAR
+       HILANG DI MOBILE
+    ================================= */
+
+    .sidebar {
+        display: none !important;
+    }
+
+
+    /* ================================
+       MAIN
+    ================================= */
+
+    .main {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+
+    /* ================================
+       MOBILE HEADER
+    ================================= */
+
+    .topbar {
+        position: sticky !important;
+        top: 0;
+        z-index: 1000;
+
+        width: 100% !important;
+        height: 64px !important;
+
+        padding: 8px 14px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+
+        background: rgba(255,255,255,.97) !important;
+
+        border-bottom: 1px solid #eadfd7 !important;
+
+        box-shadow: 0 2px 10px rgba(30,40,50,.05);
+    }
+
+
+    /* judul halaman */
+
+    .page-heading {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .page-heading h1 {
+        font-size: 17px !important;
+        line-height: 1.2 !important;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .page-heading p {
+        margin-top: 3px !important;
+
+        font-size: 9px !important;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        color: #9298a0 !important;
+    }
+
+
+    /* ================================
+       USER
+    ================================= */
+
+    .user-area {
+        flex-shrink: 0;
+        margin-left: 10px;
+
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .user-info {
+        display: none !important;
+    }
+
+    .avatar {
+        width: 38px !important;
+        height: 38px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    /* ================================
+       CONTENT
+    ================================= */
+
+    .content {
+        width: 100% !important;
+        max-width: none !important;
+
+        margin: 0 !important;
+
+        padding:
+            14px 14px 30px !important;
+    }
+
+
+    /* ================================
+       FILTER CARD
+    ================================= */
+
+    .filter-card {
+        width: 100% !important;
+
+        padding: 15px !important;
+
+        margin-bottom: 12px !important;
+
+        border-radius: 14px !important;
+
+        box-shadow:
+            0 4px 16px rgba(30,40,50,.05) !important;
+    }
+
+
+    .section-heading {
+        margin-bottom: 14px !important;
+    }
+
+    .section-title {
+        font-size: 15px !important;
+    }
+
+    .section-description {
+        font-size: 10px !important;
+        line-height: 1.4;
+    }
+
+
+    /* ================================
+       FILTER
+    ================================= */
+
+    .filter-grid {
+        display: grid !important;
+
+        grid-template-columns: 1fr !important;
+
+        gap: 10px !important;
+    }
+
+    .form-group {
+        width: 100% !important;
+    }
+
+    .form-group label {
+        font-size: 9px !important;
+
+        margin-bottom: 5px !important;
+    }
+
+    .form-control {
+        width: 100% !important;
+
+        height: 42px !important;
+
+        border-radius: 10px !important;
+
+        font-size: 12px !important;
+    }
+
+
+    /* ================================
+       BUTTON
+    ================================= */
+
+    .btn-primary {
+        width: 100% !important;
+
+        height: 44px !important;
+
+        border-radius: 10px !important;
+
+        font-size: 12px !important;
+    }
+
+
+    /* ================================
+       CLASS INFORMATION
+    ================================= */
+
+    .class-info {
+        width: 100% !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 13px 15px !important;
+
+        margin-top: 13px !important;
+
+        padding: 14px !important;
+
+        border-radius: 12px !important;
+    }
+
+    .class-info-item {
+        min-width: 0 !important;
+    }
+
+    .class-info-item span {
+        font-size: 8px !important;
+
+        margin-bottom: 4px !important;
+    }
+
+    .class-info-item strong {
+        font-size: 11px !important;
+
+        word-break: break-word;
+    }
+
+
+    /* ================================
+       SUMMARY
+    ================================= */
+
+    .summary-grid {
+        display: grid !important;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 9px !important;
+
+        margin-bottom: 13px !important;
+    }
+
+
+    .summary-card {
+        width: 100% !important;
+
+        min-height: 78px !important;
+
+        padding: 13px !important;
+
+        border-radius: 12px !important;
+    }
+
+
+    .summary-label {
+        font-size: 9px !important;
+
+        margin-bottom: 8px !important;
+    }
+
+
+    .summary-value {
+        font-size: 22px !important;
+    }
+
+
+    /* kartu terakhir full width */
+
+    .summary-card.tk {
+        grid-column: span 2;
+    }
+
+
+    /* ================================
+       TABLE CARD
+    ================================= */
+
+    .table-card {
+        width: 100% !important;
+
+        border-radius: 14px !important;
+
+        box-shadow:
+            0 4px 16px rgba(30,40,50,.05) !important;
+    }
+
+
+    .table-header {
+        padding: 15px !important;
+
+        gap: 8px;
+    }
+
+
+    .table-title {
+        font-size: 14px !important;
+    }
+
+
+    .table-subtitle {
+        font-size: 9px !important;
+
+        line-height: 1.4;
+    }
+
+
+    .table-count {
+        flex-shrink: 0;
+
+        font-size: 9px !important;
+
+        padding: 5px 8px !important;
+    }
+
+
+    /* ================================
+       TABLE SCROLL
+    ================================= */
+
+    .table-wrapper {
+        width: 100% !important;
+
+        overflow-x: auto !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px !important;
+    }
+
+
+    /* ================================
+       EMPTY STATE
+    ================================= */
+
+    .empty-state {
+        padding: 55px 20px !important;
+    }
+
+    .empty-icon {
+        width: 52px !important;
+        height: 52px !important;
+
+        margin-bottom: 12px !important;
+    }
+
+    .empty-state h3 {
+        font-size: 13px !important;
+    }
+
+    .empty-state p {
+        font-size: 10px !important;
+
+        line-height: 1.5;
+    }
+
+
+    /* ================================
+       LOADING
+    ================================= */
+
+    .loading {
+        padding: 50px 20px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* ================================
+       ERROR
+    ================================= */
+
+    .error-message {
+        font-size: 11px !important;
+
+        padding: 11px !important;
+
+        border-radius: 10px !important;
+    }
+
+
+    /* ================================
+       TOUCH
+    ================================= */
+
+    button,
+    input,
+    select {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* ================================
+       SMALL PHONE 360PX
+    ================================= */
+
+    @media (max-width: 380px) {
+
+        .content {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .topbar {
+            padding-left: 11px !important;
+            padding-right: 11px !important;
+        }
+
+        .summary-grid {
+            gap: 7px !important;
+        }
+
+        .summary-card {
+            padding: 11px !important;
+        }
+
+        .summary-value {
+            font-size: 20px !important;
+        }
+
+        .class-info {
+            gap: 11px !important;
+        }
+    }
+
+}
+
+/* =========================================================
+   MOBILE APP - WALI KELAS
+   Page-based mobile UI
+   Existing API / PostgreSQL logic is preserved.
+========================================================= */
+
+#mobileApp {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    body {
+        background: #fffaf6 !important;
+        overflow-x: hidden;
+        padding-bottom: 76px !important;
+    }
+
+    .main {
+        display: none !important;
+    }
+
+    #mobileApp {
+        display: block;
+        width: 100%;
+        min-height: 100vh;
+        background: #fffaf6;
+    }
+
+    .mobile-page {
+        display: none;
+        width: 100%;
+        min-height: calc(100vh - 76px);
+        padding: 0 14px 94px;
+        animation: mobilePageIn .18s ease-out;
+    }
+
+    .mobile-page.active {
+        display: block;
+    }
+
+    @keyframes mobilePageIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-topbar {
+        height: 58px;
+        margin: 0 -14px 12px;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        border-bottom: 1px solid #eee5df;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+    }
+
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+    }
+
+    .mobile-brand img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .mobile-brand-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #20242b;
+        line-height: 1.15;
+    }
+
+    .mobile-brand-subtitle {
+        margin-top: 2px;
+        font-size: 8px;
+        color: #9a9190;
+    }
+
+    .mobile-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #f47b20;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+    }
+
+    .mobile-welcome {
+        border-radius: 16px;
+        padding: 16px;
+        min-height: 112px;
+        background: linear-gradient(135deg, #f47b20, #ff8a27);
+        color: #fff;
+        box-shadow: 0 8px 22px rgba(244,123,32,.16);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .mobile-eyebrow {
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: .7px;
+        opacity: .82;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .mobile-welcome h1 {
+        font-size: 19px;
+        line-height: 1.08;
+        margin: 0 0 5px;
+        font-weight: 850;
+    }
+
+    .mobile-welcome p {
+        font-size: 9px;
+        opacity: .9;
+        margin: 0;
+    }
+
+    .mobile-welcome-logo {
+        width: 55px;
+        height: 55px;
+        border-radius: 13px;
+        background: rgba(255,255,255,.96);
+        padding: 5px;
+        object-fit: contain;
+        flex: 0 0 auto;
+    }
+
+    .mobile-section {
+        margin-top: 18px;
+    }
+
+    .mobile-section-title {
+        font-size: 11px;
+        font-weight: 850;
+        color: #363a40;
+        margin-bottom: 8px;
+    }
+
+    .mobile-section-subtitle {
+        color: #999;
+        font-size: 8px;
+        margin-top: -4px;
+        margin-bottom: 10px;
+    }
+
+    .mobile-summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .mobile-summary-card {
+        min-height: 72px;
+        background: #fff;
+        border: 1px solid #eee6e0;
+        border-radius: 11px;
+        padding: 11px;
+        box-shadow: 0 4px 12px rgba(50,40,30,.035);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mobile-summary-card::after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        right: -8px;
+        top: -8px;
+        background: #f7f7f7;
+    }
+
+    .mobile-summary-card.green::after { background: #edf9f1; }
+    .mobile-summary-card.yellow::after { background: #fff7df; }
+    .mobile-summary-card.blue::after { background: #edf5ff; }
+    .mobile-summary-card.red::after { background: #fff0f0; }
+
+    .mobile-summary-label {
+        font-size: 8px;
+        color: #8d8d8d;
+        position: relative;
+        z-index: 1;
+    }
+
+    .mobile-summary-value {
+        margin-top: 5px;
+        font-size: 21px;
+        line-height: 1;
+        font-weight: 850;
+        color: #24282e;
+        position: relative;
+        z-index: 1;
+    }
+
+    .mobile-summary-card.green .mobile-summary-value { color: #16a34a; }
+    .mobile-summary-card.yellow .mobile-summary-value { color: #d99a00; }
+    .mobile-summary-card.blue .mobile-summary-value { color: #2878d0; }
+    .mobile-summary-card.red .mobile-summary-value { color: #dc4c4c; }
+
+    .mobile-summary-card.wide {
+        grid-column: 1 / -1;
+    }
+
+    .mobile-action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .mobile-action {
+        border: 1px solid #eee5df;
+        border-radius: 12px;
+        background: #fff;
+        padding: 12px;
+        text-align: left;
+        min-height: 74px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(50,40,30,.035);
+        color: #333;
+    }
+
+    .mobile-action:active {
+        transform: scale(.98);
+    }
+
+    .mobile-action-icon {
+        width: 25px;
+        height: 25px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff3e8;
+        color: #f47b20;
+        margin-bottom: 7px;
+        font-size: 12px;
+    }
+
+    .mobile-action strong {
+        display: block;
+        font-size: 10px;
+        margin-bottom: 3px;
+    }
+
+    .mobile-action span {
+        display: block;
+        font-size: 7px;
+        color: #999;
+    }
+
+    .mobile-class-card {
+        background: #fff;
+        border: 1px solid #eee5df;
+        border-radius: 13px;
+        padding: 13px;
+        box-shadow: 0 4px 12px rgba(50,40,30,.035);
+    }
+
+    .mobile-class-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .mobile-class-name {
+        font-size: 14px;
+        font-weight: 850;
+        color: #25282d;
+    }
+
+    .mobile-class-year {
+        font-size: 8px;
+        color: #999;
+        margin-top: 3px;
+    }
+
+    .mobile-detail-link {
+        border: 0;
+        background: transparent;
+        color: #f47b20;
+        font-size: 8px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .mobile-class-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .mobile-info-box {
+        background: #faf9f8;
+        border-radius: 9px;
+        padding: 9px;
+    }
+
+    .mobile-info-label {
+        font-size: 7px;
+        color: #aaa;
+        text-transform: uppercase;
+    }
+
+    .mobile-info-value {
+        margin-top: 3px;
+        font-size: 9px;
+        font-weight: 750;
+        color: #4a4e54;
+    }
+
+    .mobile-card {
+        background: #fff;
+        border: 1px solid #eee5df;
+        border-radius: 14px;
+        padding: 13px;
+        box-shadow: 0 4px 14px rgba(50,40,30,.035);
+    }
+
+    .mobile-page-title {
+        font-size: 19px;
+        font-weight: 850;
+        color: #25282d;
+    }
+
+    .mobile-page-desc {
+        margin-top: 3px;
+        color: #969696;
+        font-size: 8px;
+    }
+
+    .mobile-form-group {
+        margin-top: 12px;
+    }
+
+    .mobile-form-label {
+        display: block;
+        font-size: 7px;
+        font-weight: 800;
+        color: #8b8b8b;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .mobile-form-control {
+        width: 100%;
+        height: 39px;
+        border: 1px solid #e8e3df;
+        border-radius: 9px;
+        background: #fff;
+        padding: 0 10px;
+        color: #4a4e54;
+        font-size: 9px;
+        outline: none;
+    }
+
+    .mobile-form-control:focus {
+        border-color: #f47b20;
+        box-shadow: 0 0 0 3px rgba(244,123,32,.08);
+    }
+
+    .mobile-date-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .mobile-primary-btn {
+        width: 100%;
+        height: 40px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 9px;
+        background: #ff7b22;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 5px 14px rgba(244,123,32,.16);
+    }
+
+    .mobile-primary-btn:disabled {
+        opacity: .6;
+    }
+
+    .mobile-rekap-summary {
+        margin-top: 12px;
+    }
+
+    .mobile-result {
+        margin-top: 12px;
+        background: #fff;
+        border: 1px solid #eee5df;
+        border-radius: 13px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px rgba(50,40,30,.035);
+    }
+
+    .mobile-result-head {
+        padding: 12px;
+        border-bottom: 1px solid #f0ece8;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .mobile-result-title {
+        font-size: 10px;
+        font-weight: 850;
+    }
+
+    .mobile-result-count {
+        font-size: 8px;
+        color: #999;
+    }
+
+    .mobile-result-body {
+        padding: 8px;
+    }
+
+    .mobile-student-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 7px;
+        border-bottom: 1px solid #f2efec;
+    }
+
+    .mobile-student-item:last-child {
+        border-bottom: 0;
+    }
+
+    .mobile-student-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: #fff3e8;
+        color: #f47b20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 850;
+        font-size: 10px;
+        flex: 0 0 auto;
+    }
+
+    .mobile-student-name {
+        font-size: 9px;
+        font-weight: 800;
+        color: #3b3f45;
+    }
+
+    .mobile-student-meta {
+        margin-top: 2px;
+        font-size: 7px;
+        color: #999;
+    }
+
+    .mobile-empty {
+        padding: 30px 15px;
+        text-align: center;
+        color: #aaa;
+        font-size: 8px;
+    }
+
+    .mobile-profile {
+        text-align: center;
+    }
+
+    .mobile-profile-avatar {
+        width: 68px;
+        height: 68px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        background: #fff0e5;
+        color: #f47b20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        font-weight: 850;
+    }
+
+    .mobile-profile-name {
+        font-size: 16px;
+        font-weight: 850;
+        color: #2d3137;
+    }
+
+    .mobile-profile-role {
+        margin-top: 3px;
+        color: #999;
+        font-size: 8px;
+    }
+
+    .mobile-profile-list {
+        margin-top: 18px;
+        text-align: left;
+    }
+
+    .mobile-profile-row {
+        padding: 11px 0;
+        border-bottom: 1px solid #f0ece8;
+    }
+
+    .mobile-profile-row:last-child {
+        border-bottom: 0;
+    }
+
+    .mobile-profile-label {
+        font-size: 7px;
+        color: #aaa;
+        text-transform: uppercase;
+    }
+
+    .mobile-profile-value {
+        margin-top: 4px;
+        font-size: 10px;
+        color: #44484e;
+        font-weight: 750;
+    }
+
+    .mobile-logout {
+        width: 100%;
+        height: 42px;
+        margin-top: 18px;
+        border: 1px solid #f3cccc;
+        border-radius: 10px;
+        background: #fff5f5;
+        color: #dc4c4c;
+        font-size: 9px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .mobile-bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 72px;
+        background: rgba(255,255,255,.97);
+        border-top: 1px solid #ebe5e0;
+        box-shadow: 0 -5px 20px rgba(40,30,20,.06);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        z-index: 1000;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-nav-item {
+        border: 0;
+        background: transparent;
+        color: #a0a0a0;
+        font-size: 7px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .mobile-nav-icon {
+        width: 27px;
+        height: 27px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    .mobile-nav-item.active {
+        color: #f47b20;
+    }
+
+    .mobile-nav-item.active .mobile-nav-icon {
+        background: #fff1e7;
+    }
+
+    .mobile-toast {
+        position: fixed;
+        left: 14px;
+        right: 14px;
+        bottom: 84px;
+        z-index: 1100;
+        background: #2d3137;
+        color: #fff;
+        padding: 10px 12px;
+        border-radius: 9px;
+        font-size: 8px;
+        text-align: center;
+        display: none;
+        box-shadow: 0 7px 20px rgba(0,0,0,.16);
+    }
+
+    .mobile-toast.show {
+        display: block;
+    }
+
+    .mobile-desktop-error {
+        display: none !important;
+    }
+}
+
+    </style>
+
+    <!-- Library Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .export-actions { display:flex; gap:8px; align-items:center; }
+        .export-btn { border:1px solid #e8ebef; background:#fff; color:#3d434c; padding:9px 13px; border-radius:10px; cursor:pointer; font-weight:600; }
+        .export-btn:hover { background:#fff3e8; }
+        .export-btn:disabled { opacity:.5; cursor:not-allowed; }
+        @media(max-width:700px){ .export-actions{width:100%;margin-top:8px;} .export-btn{flex:1;} }
+    </style>
+
+<style id="guru-ui-theme">
+/* =========================================================
+   GURU UI THEME
+   Visual-only. API / database / Excel / PDF / logic untouched.
+========================================================= */
+
+:root{
+    --primary:#ff6b00 !important;
+    --primary-dark:#e85d00 !important;
+    --primary-soft:#fff3e9 !important;
+    --navy:#172235 !important;
+    --navy-2:#223047 !important;
+    --background:#f4f6fa !important;
+    --border:#e4e8ef !important;
+    --text:#172033 !important;
+    --muted:#667085 !important;
+    --green:#12a150 !important;
+    --green-soft:#e9fbf1 !important;
+    --yellow:#d88a00 !important;
+    --yellow-soft:#fff7df !important;
+    --blue:#2764e8 !important;
+    --blue-soft:#edf3ff !important;
+    --red:#d92d20 !important;
+    --red-soft:#fff0ee !important;
+    --purple:#7048c8 !important;
+    --purple-soft:#f3efff !important;
+    --shadow:0 10px 30px rgba(24,38,63,.07) !important;
+    --radius:16px !important;
+}
+
+body{
+    background:#f4f6fa !important;
+    color:#172033 !important;
+}
+
+.sidebar{
+    background:linear-gradient(
+        180deg,
+        #172235 0%,
+        #101a2a 100%
+    ) !important;
+}
+
+.nav button.active{
+    background:#ff6b00 !important;
+    color:#fff !important;
+    box-shadow:0 8px 20px rgba(255,107,0,.25) !important;
+}
+
+.nav button:hover{
+    background:rgba(255,255,255,.06) !important;
+    color:#fff !important;
+}
+
+.topbar{
+    background:#fff !important;
+    border-bottom:1px solid #e4e8ef !important;
+}
+
+.avatar{
+    background:#ff6b00 !important;
+}
+
+.content{
+    background:#f4f6fa !important;
+}
+
+.filter-card,
+.table-card,
+.summary-card,
+.wali-info,
+.mobile-card{
+    border-color:#e4e8ef !important;
+    box-shadow:0 10px 30px rgba(24,38,63,.07) !important;
+    border-radius:16px !important;
+}
+
+.btn-primary,
+#btnTampilkan{
+    background:#ff6b00 !important;
+    border-color:#ff6b00 !important;
+    box-shadow:0 5px 14px rgba(249,115,22,.18) !important;
+}
+
+.btn-primary:hover,
+#btnTampilkan:hover{
+    background:#e85d00 !important;
+    border-color:#e85d00 !important;
+    transform:translateY(-1px);
+    box-shadow:0 8px 18px rgba(249,115,22,.24) !important;
+}
+
+.form-control:focus{
+    border-color:#ff6b00 !important;
+    box-shadow:0 0 0 3px rgba(255,107,0,.10) !important;
+}
+
+.table-card th{
+    background:#f8fafc !important;
+}
+
+.hero{
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(255,255,255,.2),
+            transparent 24%
+        ),
+        linear-gradient(
+            135deg,
+            #f25d00,
+            #ff8125
+        ) !important;
+    box-shadow:0 15px 35px rgba(255,107,0,.18) !important;
+}
+
+.badge-hadir{
+    color:#12a150 !important;
+    background:#e9fbf1 !important;
+}
+
+.badge-sakit{
+    color:#d88a00 !important;
+    background:#fff7df !important;
+}
+
+.badge-izin{
+    color:#2764e8 !important;
+    background:#edf3ff !important;
+}
+
+.badge-tk{
+    color:#d92d20 !important;
+    background:#fff0ee !important;
+}
+
+.mobile-bottom-nav{
+    border-top-color:#e4e8ef !important;
+}
+
+.mobile-nav-item.active{
+    color:#ff6b00 !important;
+}
+
+.mobile-toast{
+    background:#172235 !important;
+}
+</style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <img
+                class="brand-logo"
+                src="/sman6/logosman6m.png"
+                alt="Logo SMAN 6"
+            >
+
+
+            <div class="brand-text">
+
+                <div class="brand-name">
+                    SMAN 6
+                </div>
+
+                <div class="brand-subtitle">
+                    Sistem Presensi
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-content">
+
+            <div class="menu-label">
+                Menu Utama
+            </div>
+
+
+            <button
+                class="menu-item active"
+                type="button"
+            >
+
+                <span class="menu-icon">
+                    ▦
+                </span>
+
+                <span class="menu-item-text">
+                    Rekap Kehadiran
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-footer">
+
+            <button
+                class="menu-item logout-button"
+                type="button"
+                onclick="logout()"
+            >
+
+                <span class="menu-icon">
+                    ↪
+                </span>
+
+                <span class="menu-item-text">
+                    Keluar
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+
+            <div class="page-heading">
+
+                <h1>
+                    Rekap Kehadiran
+                </h1>
+
+                <p>
+                    Monitoring kehadiran siswa oleh Wali Kelas
+                </p>
+
+            </div>
+
+
+            <div class="user-area">
+
+
+                <div class="user-info">
+
+                    <div
+                        class="user-name"
+                        id="userName"
+                    >
+                        Wali Kelas
+                    </div>
+
+                    <div
+                        class="user-role"
+                        id="userRole"
+                    >
+                        Wali Kelas
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    W
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- ERROR -->
+
+            <div
+                id="errorMessage"
+                class="error-message"
+            ></div>
+
+
+
+            <!-- =================================================
+                 FILTER
+            ================================================== -->
+
+            <div class="filter-card">
+
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <div class="section-title">
+                            Filter Rekap Kehadiran
+                        </div>
+
+                        <div class="section-description">
+                            Pilih kelas, mata pelajaran, dan periode presensi
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="filter-grid">
+
+
+                    <!-- KELAS -->
+
+                    <div class="form-group">
+
+                        <label for="kelasSelect">
+                            KELAS
+                        </label>
+
+                        <select
+                            id="kelasSelect"
+                            class="form-control"
+                            onchange="onKelasChange()"
+                        >
+
+                            <option value="">
+                                Memuat kelas...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- MAPEL -->
+
+                    <div class="form-group">
+
+                        <label for="mapelSelect">
+                            MATA PELAJARAN
+                        </label>
+
+                        <select
+                            id="mapelSelect"
+                            class="form-control"
+                        >
+
+                            <option value="">
+                                Semua Mata Pelajaran
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- TANGGAL MULAI -->
+
+                    <div class="form-group">
+
+                        <label for="tanggalMulai">
+                            TANGGAL MULAI
+                        </label>
+
+                        <input
+                            type="date"
+                            id="tanggalMulai"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+
+                    <!-- TANGGAL SELESAI -->
+
+                    <div class="form-group">
+
+                        <label for="tanggalSelesai">
+                            TANGGAL SELESAI
+                        </label>
+
+                        <input
+                            type="date"
+                            id="tanggalSelesai"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+
+                    <!-- BUTTON -->
+
+                    <button
+                        id="btnTampilkan"
+                        class="btn-primary"
+                        type="button"
+                        onclick="loadRekap()"
+                    >
+
+                        Tampilkan Rekap
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- CLASS INFO -->
+
+                <div
+                    id="classInfo"
+                    class="class-info"
+                >
+
+
+                    <div class="class-info-item">
+
+                        <span>
+                            Wali Kelas
+                        </span>
+
+                        <strong id="waliNama">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="class-info-item">
+
+                        <span>
+                            Kelas
+                        </span>
+
+                        <strong id="className">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="class-info-item">
+
+                        <span>
+                            Tingkat
+                        </span>
+
+                        <strong id="classTingkat">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="class-info-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="classJurusan">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="class-info-item">
+
+                        <span>
+                            Tahun Ajaran
+                        </span>
+
+                        <strong id="classTahun">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SUMMARY
+            ================================================== -->
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card total">
+
+                    <div class="summary-label">
+                        Jumlah Siswa
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="summarySiswa"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card hadir">
+
+                    <div class="summary-label">
+                        Hadir
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="summaryHadir"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card sakit">
+
+                    <div class="summary-label">
+                        Sakit
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="summarySakit"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card izin">
+
+                    <div class="summary-label">
+                        Izin
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="summaryIzin"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card tk">
+
+                    <div class="summary-label">
+                        Tanpa Keterangan
+                    </div>
+
+                    <div
+                        class="summary-value"
+                        id="summaryTK"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TABLE
+            ================================================== -->
+
+            <div class="table-card">
+
+
+                <div class="table-header">
+
+
+                    <div>
+
+                        <div
+                            class="table-title"
+                            id="tableTitle"
+                        >
+                            Rekap Kehadiran Siswa
+                        </div>
+
+                        <div
+                            class="table-subtitle"
+                            id="tableSubtitle"
+                        >
+                            Pilih kelas dan periode untuk menampilkan data
+                        </div>
+
+                    </div>
+
+
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+                        <div class="table-count" id="tableCount">0 siswa</div>
+                        <div class="export-actions">
+                            <button id="btnExportExcel" class="export-btn" type="button" onclick="exportExcel()" disabled>↓ Excel</button>
+                            <button id="btnExportPdf" class="export-btn" type="button" onclick="exportPdf()" disabled>↓ PDF</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+                <div id="tableContent">
+
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            📊
+                        </div>
+
+                        <h3>
+                            Belum ada rekap
+                        </h3>
+
+                        <p>
+                            Pilih kelas dan filter yang diinginkan.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+
+<!-- =========================================================
+     MOBILE APP
+     Desktop dashboard remains intact above.
+========================================================= -->
+<div id="mobileApp">
+
+    <!-- HOME -->
+    <section class="mobile-page active" id="mobileHome">
+
+        <div class="mobile-topbar">
+            <div class="mobile-brand">
+                <img src="/sman6/logosman6m.png" alt="SMAN 6">
+                <div>
+                    <div class="mobile-brand-title">Rekapin</div>
+                    <div class="mobile-brand-subtitle">Sistem Presensi • Wali Kelas</div>
+                </div>
+            </div>
+            <div class="mobile-avatar" id="mobileTopAvatar">W</div>
+        </div>
+
+        <div class="mobile-welcome">
+            <div>
+                <div class="mobile-eyebrow">Hari Ini</div>
+                <h1>Selamat datang,<br><span id="mobileWelcomeName">Wali Kelas</span> 👋</h1>
+                <p>Sistem Presensi Siswa</p>
+            </div>
+            <img class="mobile-welcome-logo" src="/sman6/logosman6m.png" alt="Logo">
+        </div>
+
+        <div class="mobile-section">
+            <div class="mobile-section-title">Ringkasan</div>
+            <div class="mobile-section-subtitle">Kehadiran kelas berdasarkan rekap terakhir.</div>
+
+            <div class="mobile-summary-grid">
+
+                <div class="mobile-summary-card">
+                    <div class="mobile-summary-label">Siswa</div>
+                    <div class="mobile-summary-value" id="mobileSummarySiswa">0</div>
+                </div>
+
+                <div class="mobile-summary-card green">
+                    <div class="mobile-summary-label">Hadir</div>
+                    <div class="mobile-summary-value" id="mobileSummaryHadir">0</div>
+                </div>
+
+                <div class="mobile-summary-card yellow">
+                    <div class="mobile-summary-label">Sakit</div>
+                    <div class="mobile-summary-value" id="mobileSummarySakit">0</div>
+                </div>
+
+                <div class="mobile-summary-card blue">
+                    <div class="mobile-summary-label">Izin</div>
+                    <div class="mobile-summary-value" id="mobileSummaryIzin">0</div>
+                </div>
+
+                <div class="mobile-summary-card red wide">
+                    <div class="mobile-summary-label">Tanpa Keterangan</div>
+                    <div class="mobile-summary-value" id="mobileSummaryTK">0</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mobile-section">
+            <div class="mobile-section-title">Menu</div>
+            <div class="mobile-action-grid">
+
+                <button class="mobile-action" type="button" onclick="showMobilePage('Siswa')">
+                    <div class="mobile-action-icon">👥</div>
+                    <strong>Siswa Saya</strong>
+                    <span>Lihat daftar siswa kelas</span>
+                </button>
+
+                <button class="mobile-action" type="button" onclick="showMobilePage('Rekap')">
+                    <div class="mobile-action-icon">📊</div>
+                    <strong>Lihat Rekap</strong>
+                    <span>Pantau kehadiran siswa</span>
+                </button>
+
+            </div>
+        </div>
+
+        <div class="mobile-section">
+            <div class="mobile-class-head">
+                <div>
+                    <div class="mobile-section-title" style="margin:0;">Kelas Aktif</div>
+                </div>
+                <button class="mobile-detail-link" type="button" onclick="showMobilePage('Profil')">
+                    Detail →
+                </button>
+            </div>
+
+            <div class="mobile-class-card">
+                <div class="mobile-class-name" id="mobileClassName">-</div>
+                <div class="mobile-class-year" id="mobileClassYear">-</div>
+
+                <div class="mobile-class-info-grid" style="margin-top:11px;">
+                    <div class="mobile-info-box">
+                        <div class="mobile-info-label">Tingkat</div>
+                        <div class="mobile-info-value" id="mobileClassTingkat">-</div>
+                    </div>
+
+                    <div class="mobile-info-box">
+                        <div class="mobile-info-label">Jurusan</div>
+                        <div class="mobile-info-value" id="mobileClassJurusan">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- SISWA -->
+    <section class="mobile-page" id="mobileSiswa">
+
+        <div class="mobile-topbar">
+            <div class="mobile-brand">
+                <img src="/sman6/logosman6m.png" alt="SMAN 6">
+                <div>
+                    <div class="mobile-brand-title">Siswa Saya</div>
+                    <div class="mobile-brand-subtitle" id="mobileStudentClass">Kelas aktif</div>
+                </div>
+            </div>
+            <div class="mobile-avatar" id="mobileStudentAvatar">W</div>
+        </div>
+
+        <div class="mobile-section" style="margin-top:6px;">
+            <div class="mobile-page-title">Daftar Siswa</div>
+            <div class="mobile-page-desc">Siswa yang terdaftar pada kelas Wali Kelas.</div>
+        </div>
+
+        <div class="mobile-result" style="margin-top:14px;">
+            <div class="mobile-result-head">
+                <div>
+                    <div class="mobile-result-title">Siswa Kelas</div>
+                    <div class="mobile-page-desc" style="margin-top:2px;">Data siswa dari sistem.</div>
+                </div>
+                <div class="mobile-result-count" id="mobileStudentCount">0 siswa</div>
+            </div>
+
+            <div class="mobile-result-body" id="mobileStudentList">
+                <div class="mobile-empty">
+                    Memuat data siswa...
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- REKAP -->
+    <section class="mobile-page" id="mobileRekap">
+
+        <div class="mobile-topbar">
+            <div class="mobile-brand">
+                <img src="/sman6/logosman6m.png" alt="SMAN 6">
+                <div>
+                    <div class="mobile-brand-title">Rekap Kehadiran</div>
+                    <div class="mobile-brand-subtitle">Monitoring kehadiran siswa</div>
+                </div>
+            </div>
+            <div class="mobile-avatar" id="mobileRekapAvatar">W</div>
+        </div>
+
+        <div class="mobile-section" style="margin-top:6px;">
+            <div class="mobile-page-title">Filter Rekap</div>
+            <div class="mobile-page-desc">Pilih kelas, mata pelajaran, dan periode presensi.</div>
+        </div>
+
+        <div class="mobile-card" style="margin-top:14px;">
+
+            <div class="mobile-form-group" style="margin-top:0;">
+                <label class="mobile-form-label" for="mobileKelasSelect">Kelas</label>
+                <select id="mobileKelasSelect" class="mobile-form-control"></select>
+            </div>
+
+            <div class="mobile-form-group">
+                <label class="mobile-form-label" for="mobileMapelSelect">Mata Pelajaran</label>
+                <select id="mobileMapelSelect" class="mobile-form-control"></select>
+            </div>
+
+            <div class="mobile-date-grid">
+
+                <div class="mobile-form-group">
+                    <label class="mobile-form-label" for="mobileTanggalMulai">Tanggal Mulai</label>
+                    <input id="mobileTanggalMulai" class="mobile-form-control" type="date">
+                </div>
+
+                <div class="mobile-form-group">
+                    <label class="mobile-form-label" for="mobileTanggalSelesai">Tanggal Selesai</label>
+                    <input id="mobileTanggalSelesai" class="mobile-form-control" type="date">
+                </div>
+
+            </div>
+
+            <button
+                class="mobile-primary-btn"
+                id="mobileBtnTampilkan"
+                type="button"
+                onclick="submitMobileRekap()"
+            >
+                Tampilkan Rekap
+            </button>
+
+        </div>
+
+        <div class="mobile-summary-grid mobile-rekap-summary">
+
+            <div class="mobile-summary-card">
+                <div class="mobile-summary-label">Jumlah Siswa</div>
+                <div class="mobile-summary-value" id="mobileRekapSiswa">0</div>
+            </div>
+
+            <div class="mobile-summary-card green">
+                <div class="mobile-summary-label">Hadir</div>
+                <div class="mobile-summary-value" id="mobileRekapHadir">0</div>
+            </div>
+
+            <div class="mobile-summary-card yellow">
+                <div class="mobile-summary-label">Sakit</div>
+                <div class="mobile-summary-value" id="mobileRekapSakit">0</div>
+            </div>
+
+            <div class="mobile-summary-card blue">
+                <div class="mobile-summary-label">Izin</div>
+                <div class="mobile-summary-value" id="mobileRekapIzin">0</div>
+            </div>
+
+            <div class="mobile-summary-card red wide">
+                <div class="mobile-summary-label">Tanpa Keterangan</div>
+                <div class="mobile-summary-value" id="mobileRekapTK">0</div>
+            </div>
+
+        </div>
+
+        <div class="mobile-result">
+            <div class="mobile-result-head">
+                <div>
+                    <div class="mobile-result-title">Rekap Kehadiran Siswa</div>
+                    <div class="mobile-page-desc" id="mobileRekapSubtitle" style="margin-top:2px;">
+                        Pilih filter lalu tampilkan rekap.
+                    </div>
+                </div>
+                <div class="mobile-result-count" id="mobileRekapCount">0 siswa</div>
+            </div>
+
+            <div class="mobile-result-body" id="mobileRekapList">
+                <div class="mobile-empty">
+                    Belum ada rekap.<br>
+                    Pilih filter dan tekan "Tampilkan Rekap".
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- PROFIL -->
+    <section class="mobile-page" id="mobileProfil">
+
+        <div class="mobile-topbar">
+            <div class="mobile-brand">
+                <img src="/sman6/logosman6m.png" alt="SMAN 6">
+                <div>
+                    <div class="mobile-brand-title">Profil</div>
+                    <div class="mobile-brand-subtitle">Akun Wali Kelas</div>
+                </div>
+            </div>
+            <div class="mobile-avatar" id="mobileProfileTopAvatar">W</div>
+        </div>
+
+        <div class="mobile-card mobile-profile" style="margin-top:6px;">
+
+            <div class="mobile-profile-avatar" id="mobileProfileAvatar">W</div>
+
+            <div class="mobile-profile-name" id="mobileProfileName">Wali Kelas</div>
+            <div class="mobile-profile-role">Wali Kelas</div>
+
+            <div class="mobile-profile-list">
+
+                <div class="mobile-profile-row">
+                    <div class="mobile-profile-label">Kelas</div>
+                    <div class="mobile-profile-value" id="mobileProfileClass">-</div>
+                </div>
+
+                <div class="mobile-profile-row">
+                    <div class="mobile-profile-label">Tingkat</div>
+                    <div class="mobile-profile-value" id="mobileProfileTingkat">-</div>
+                </div>
+
+                <div class="mobile-profile-row">
+                    <div class="mobile-profile-label">Jurusan</div>
+                    <div class="mobile-profile-value" id="mobileProfileJurusan">-</div>
+                </div>
+
+                <div class="mobile-profile-row">
+                    <div class="mobile-profile-label">Tahun Ajaran</div>
+                    <div class="mobile-profile-value" id="mobileProfileTahun">-</div>
+                </div>
+
+            </div>
+
+            <button class="mobile-logout" type="button" onclick="logout()">
+                Keluar
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="mobile-bottom-nav" id="mobileBottomNav">
+
+        <button
+            type="button"
+            class="mobile-nav-item active"
+            data-page="Home"
+            onclick="showMobilePage('Home')"
+        >
+            <span class="mobile-nav-icon">⌂</span>
+            <span>Beranda</span>
+        </button>
+
+        <button
+            type="button"
+            class="mobile-nav-item"
+            data-page="Siswa"
+            onclick="showMobilePage('Siswa')"
+        >
+            <span class="mobile-nav-icon">♟</span>
+            <span>Siswa</span>
+        </button>
+
+        <button
+            type="button"
+            class="mobile-nav-item"
+            data-page="Rekap"
+            onclick="showMobilePage('Rekap')"
+        >
+            <span class="mobile-nav-icon">▥</span>
+            <span>Rekap</span>
+        </button>
+
+        <button
+            type="button"
+            class="mobile-nav-item"
+            data-page="Profil"
+            onclick="showMobilePage('Profil')"
+        >
+            <span class="mobile-nav-icon">●</span>
+            <span>Profil</span>
+        </button>
+
+    </nav>
+
+    <div class="mobile-toast" id="mobileToast"></div>
+
+</div>
+
+
+<script>
+
+
+    /* =========================================================
+       GLOBAL VARIABLE
+    ========================================================= */
+
+    let currentUser = null;
+
+    let waliKelasData = [];
+
+    let selectedWaliKelas = null;
+
+    let currentData = [];
+
+
+
+    /* =========================================================
+       PAGE INITIALIZATION
+    ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function () {
+
+            /*
+             * 1. Periksa session login
+             */
+
+            const loginValid =
+                await loadCurrentUser();
+
+
+            if (!loginValid) {
+
+                return;
+
+            }
+
+
+            /*
+             * 2. Set tanggal default
+             */
+
+            setDefaultDate();
+
+
+            /*
+             * 3. Ambil kelas Wali Kelas
+             */
+
+            await loadWaliKelas();
+
+
+            /*
+             * 4. Ambil mata pelajaran
+             */
+
+            await loadMapel();
+
+        }
+    );
+
+
+
+    /* =========================================================
+       LOAD CURRENT USER
+    ========================================================= */
+
+    async function loadCurrentUser() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/sman6/api/session",
+                    {
+                        method: "GET",
+                        credentials: "same-origin"
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Session:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success ||
+                !result.data
+            ) {
+
+                window.location.href =
+                    "/sman6/login.html";
+
+                return false;
+
+            }
+
+
+            currentUser =
+                result.data;
+
+
+            /*
+             * Pastikan role memang Wali Kelas.
+             */
+
+            if (
+                currentUser.role !== "wali_kelas"
+            ) {
+
+                alert(
+                    "Akun ini bukan akun Wali Kelas."
+                );
+
+
+                window.location.href =
+                    "/sman6/login.html";
+
+
+                return false;
+
+            }
+
+
+            /*
+             * Nama user.
+             */
+
+            const nama =
+                currentUser.nama_lengkap ||
+                currentUser.username ||
+                "Wali Kelas";
+
+
+            document.getElementById(
+                "userName"
+            ).textContent =
+                nama;
+
+
+            document.getElementById(
+                "userRole"
+            ).textContent =
+                "Wali Kelas";
+
+
+            document.getElementById(
+                "userAvatar"
+            ).textContent =
+                nama
+                    .charAt(0)
+                    .toUpperCase();
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Gagal memeriksa session:",
+                error
+            );
+
+
+            window.location.href =
+                "/sman6/login.html";
+
+
+            return false;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       DEFAULT DATE
+    ========================================================= */
+
+    function setDefaultDate() {
+
+        const today =
+            new Date();
+
+
+        const firstDay =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+
+        document.getElementById(
+            "tanggalMulai"
+        ).value =
+            formatDateInput(
+                firstDay
+            );
+
+
+        document.getElementById(
+            "tanggalSelesai"
+        ).value =
+            formatDateInput(
+                today
+            );
+
+    }
+
+
+
+    function formatDateInput(date) {
+
+        const year =
+            date.getFullYear();
+
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+
+    /* =========================================================
+       LOAD WALI KELAS
+    ========================================================= */
+
+    async function loadWaliKelas() {
+
+        const kelasSelect =
+            document.getElementById(
+                "kelasSelect"
+            );
+
+
+        try {
+
+            console.log(
+                "Current User:",
+                currentUser
+            );
+
+
+            if (!currentUser) {
+
+                throw new Error(
+                    "Data user belum tersedia."
+                );
+
+            }
+
+
+            /*
+             * Ambil user_id dari session.
+             */
+
+            const userId =
+                currentUser.user_id;
+
+
+            console.log(
+                "User ID:",
+                userId
+            );
+
+
+            if (!userId) {
+
+                throw new Error(
+                    "user_id tidak ditemukan pada session."
+                );
+
+            }
+
+
+            /*
+             * Request API.
+             */
+
+            const url =
+                `/sman6/api/wali-kelas?user_id=${encodeURIComponent(userId)}`;
+
+
+            console.log(
+                "Request:",
+                url
+            );
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "GET",
+                        credentials: "same-origin"
+                    }
+                );
+
+
+            console.log(
+                "Status:",
+                response.status
+            );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Response:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Gagal mengambil data Wali Kelas."
+                );
+
+            }
+
+
+            /*
+             * Simpan data.
+             */
+
+            waliKelasData =
+                Array.isArray(
+                    result.data
+                )
+                    ? result.data
+                    : [];
+
+
+            console.log(
+                "Kelas Wali Kelas:",
+                waliKelasData
+            );
+
+
+            /*
+             * Reset dropdown.
+             */
+
+            kelasSelect.innerHTML =
+                "";
+
+
+            /*
+             * Tidak ada kelas.
+             */
+
+            if (
+                waliKelasData.length === 0
+            ) {
+
+                kelasSelect.innerHTML = `
+                    <option value="">
+                        Tidak ada kelas
+                    </option>
+                `;
+
+
+                showError(
+                    "Tidak ada kelas aktif yang ditugaskan kepada akun ini."
+                );
+
+
+                return;
+
+            }
+
+
+            /*
+             * Pilihan default.
+             */
+
+            const defaultOption =
+                document.createElement(
+                    "option"
+                );
+
+
+            defaultOption.value =
+                "";
+
+
+            defaultOption.textContent =
+                "Pilih Kelas";
+
+
+            kelasSelect.appendChild(
+                defaultOption
+            );
+
+
+            /*
+             * Masukkan semua kelas.
+             */
+
+            waliKelasData.forEach(
+                function (item) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        String(
+                            item.kelas_id
+                        );
+
+
+                    option.textContent =
+                        `${item.nama_kelas} • ${item.tahun_ajaran}`;
+
+
+                    kelasSelect.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+            console.log(
+                "Jumlah kelas:",
+                waliKelasData.length
+            );
+
+
+            /*
+             * Jika hanya satu kelas,
+             * langsung pilih.
+             */
+
+            if (
+                waliKelasData.length === 1
+            ) {
+
+                kelasSelect.value =
+                    String(
+                        waliKelasData[0].kelas_id
+                    );
+
+
+                onKelasChange();
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "loadWaliKelas ERROR:",
+                error
+            );
+
+
+            kelasSelect.innerHTML = `
+                <option value="">
+                    Gagal memuat kelas
+                </option>
+            `;
+
+
+            showError(
+                error.message ||
+                "Gagal mengambil data kelas."
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       LOAD MATA PELAJARAN
+    ========================================================= */
+
+    async function loadMapel() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/sman6/api/mapel",
+                    {
+                        method: "GET",
+                        credentials: "same-origin"
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            /*
+             * Endpoint /api/mapel saat ini
+             * mengembalikan array langsung.
+             */
+
+            const data =
+                Array.isArray(result)
+                    ? result
+                    : (
+                        Array.isArray(result.data)
+                            ? result.data
+                            : []
+                    );
+
+
+            const mapelSelect =
+                document.getElementById(
+                    "mapelSelect"
+                );
+
+
+            mapelSelect.innerHTML = `
+                <option value="">
+                    Semua Mata Pelajaran
+                </option>
+            `;
+
+
+            data.forEach(
+                function (mapel) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        String(
+                            mapel.id
+                        );
+
+
+                    option.textContent =
+                        `${mapel.kode_mapel} • ${mapel.nama_mapel}`;
+
+
+                    mapelSelect.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "loadMapel ERROR:",
+                error
+            );
+
+
+            showError(
+                "Gagal mengambil data mata pelajaran."
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       CLASS CHANGE
+    ========================================================= */
+
+    function onKelasChange() {
+
+        const kelasId =
+            document.getElementById(
+                "kelasSelect"
+            ).value;
+
+
+        selectedWaliKelas =
+            waliKelasData.find(
+                function (item) {
+
+                    return String(
+                        item.kelas_id
+                    ) === String(
+                        kelasId
+                    );
+
+                }
+            );
+
+
+        if (!selectedWaliKelas) {
+
+            document.getElementById(
+                "classInfo"
+            ).classList.remove(
+                "show"
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Tampilkan informasi kelas.
+         */
+
+        document.getElementById(
+            "classInfo"
+        ).classList.add(
+            "show"
+        );
+
+
+        document.getElementById(
+            "waliNama"
+        ).textContent =
+            selectedWaliKelas.nama_guru ||
+            "-";
+
+
+        document.getElementById(
+            "className"
+        ).textContent =
+            selectedWaliKelas.nama_kelas ||
+            "-";
+
+
+        document.getElementById(
+            "classTingkat"
+        ).textContent =
+            selectedWaliKelas.tingkat
+                ? `Kelas ${selectedWaliKelas.tingkat}`
+                : "-";
+
+
+        document.getElementById(
+            "classJurusan"
+        ).textContent =
+            selectedWaliKelas.jurusan ||
+            "-";
+
+
+        document.getElementById(
+            "classTahun"
+        ).textContent =
+            selectedWaliKelas.tahun_ajaran ||
+            "-";
+
+    }
+
+
+
+    /* =========================================================
+       LOAD REKAP
+    ========================================================= */
+
+    async function loadRekap() {
+
+        hideError();
+
+
+        const kelasId =
+            document.getElementById(
+                "kelasSelect"
+            ).value;
+
+
+        const mapelId =
+            document.getElementById(
+                "mapelSelect"
+            ).value;
+
+
+        const tanggalMulai =
+            document.getElementById(
+                "tanggalMulai"
+            ).value;
+
+
+        const tanggalSelesai =
+            document.getElementById(
+                "tanggalSelesai"
+            ).value;
+
+
+        /*
+         * Validasi kelas.
+         */
+
+        if (!kelasId) {
+
+            showError(
+                "Silakan pilih kelas terlebih dahulu."
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Validasi tanggal.
+         */
+
+        if (
+            tanggalMulai &&
+            tanggalSelesai &&
+            tanggalMulai > tanggalSelesai
+        ) {
+
+            showError(
+                "Tanggal mulai tidak boleh lebih besar dari tanggal selesai."
+            );
+
+
+            return;
+
+        }
+
+
+        const button =
+            document.getElementById(
+                "btnTampilkan"
+            );
+
+
+        button.disabled =
+            true;
+
+
+        button.textContent =
+            "Memuat...";
+
+
+        showLoading();
+
+
+        try {
+
+            /*
+             * Bentuk parameter API.
+             */
+
+            const params =
+                new URLSearchParams();
+
+
+            params.set(
+                "kelas_id",
+                kelasId
+            );
+
+
+            if (mapelId) {
+
+                params.set(
+                    "mata_pelajaran_id",
+                    mapelId
+                );
+
+            }
+
+
+            if (tanggalMulai) {
+
+                params.set(
+                    "tanggal_mulai",
+                    tanggalMulai
+                );
+
+            }
+
+
+            if (tanggalSelesai) {
+
+                params.set(
+                    "tanggal_selesai",
+                    tanggalSelesai
+                );
+
+            }
+
+
+            const url =
+                `/sman6/api/wali-kelas/rekap?${params.toString()}`;
+
+
+            console.log(
+                "Request Rekap:",
+                url
+            );
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "GET",
+                        credentials: "same-origin"
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "Response Rekap:",
+                result
+            );
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    "Gagal mengambil rekap."
+                );
+
+            }
+
+
+            const data =
+                Array.isArray(result.data)
+                    ? result.data
+                    : [];
+
+
+            renderRekap(
+                data
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "loadRekap ERROR:",
+                error
+            );
+
+
+            showError(
+                error.message ||
+                "Gagal mengambil data rekap."
+            );
+
+
+            showEmpty(
+                "Gagal memuat rekap."
+            );
+
+
+        } finally {
+
+            button.disabled =
+                false;
+
+
+            button.textContent =
+                "Tampilkan Rekap";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       RENDER REKAP
+    ========================================================= */
+
+    function renderRekap(data) {
+
+        currentData = Array.isArray(data) ? data : [];
+        setExportButtons(currentData.length > 0);
+
+        updateSummary(
+            data
+        );
+
+
+        document.getElementById(
+            "tableCount"
+        ).textContent =
+            `${data.length} siswa`;
+
+
+        /*
+         * Nama mapel.
+         */
+
+        const mapelSelect =
+            document.getElementById(
+                "mapelSelect"
+            );
+
+
+        const mapelId =
+            mapelSelect.value;
+
+
+        const selectedMapelText =
+            mapelId
+                ? mapelSelect.options[
+                    mapelSelect.selectedIndex
+                  ].text
+                : "Semua Mata Pelajaran";
+
+
+        document.getElementById(
+            "tableTitle"
+        ).textContent =
+            "Rekap Kehadiran Siswa";
+
+
+        document.getElementById(
+            "tableSubtitle"
+        ).textContent =
+            selectedMapelText;
+
+
+        /*
+         * Tidak ada data.
+         */
+
+        if (
+            data.length === 0
+        ) {
+
+            showEmpty(
+                "Belum ada data presensi pada filter yang dipilih."
+            );
+
+
+            return;
+
+        }
+
+
+        let html = `
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width:55px;">
+                                No
+                            </th>
+
+                            <th>
+                                Siswa
+                            </th>
+
+                            <th>
+                                Hadir
+                            </th>
+
+                            <th>
+                                Sakit
+                            </th>
+
+                            <th>
+                                Izin
+                            </th>
+
+                            <th>
+                                Tanpa Keterangan
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Kehadiran
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+        `;
+
+
+        data.forEach(
+            function (student, index) {
+
+                const hadir =
+                    Number(
+                        student.jumlah_hadir || 0
+                    );
+
+
+                const sakit =
+                    Number(
+                        student.jumlah_sakit || 0
+                    );
+
+
+                const izin =
+                    Number(
+                        student.jumlah_izin || 0
+                    );
+
+
+                const tanpaKeterangan =
+                    Number(
+                        student.jumlah_tanpa_keterangan || 0
+                    );
+
+
+                const total =
+                    Number(
+                        student.jumlah_presensi || 0
+                    );
+
+
+                /*
+                 * Persentase hadir.
+                 */
+
+                const percentage =
+                    total > 0
+                        ? Math.round(
+                            (
+                                hadir /
+                                total
+                            ) * 100
+                        )
+                        : 0;
+
+
+                html += `
+
+                    <tr>
+
+                        <td>
+                            ${index + 1}
+                        </td>
+
+
+                        <td>
+
+                            <div class="student-name">
+                                ${escapeHtml(
+                                    student.nama_lengkap
+                                )}
+                            </div>
+
+                            <div class="student-id">
+
+                                NIS:
+                                ${escapeHtml(
+                                    student.nis || "-"
+                                )}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-hadir">
+                                ${hadir}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-sakit">
+                                ${sakit}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-izin">
+                                ${izin}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-tk">
+                                ${tanpaKeterangan}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-total">
+                                ${total}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="attendance-rate">
+
+                                <div class="rate-bar">
+
+                                    <div
+                                        class="rate-fill"
+                                        style="width:${percentage}%"
+                                    ></div>
+
+                                </div>
+
+                                <span class="rate-text">
+                                    ${percentage}%
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        html += `
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "tableContent"
+        ).innerHTML =
+            html;
+
+    }
+
+
+
+    /* =========================================================
+       SUMMARY
+    ========================================================= */
+
+    function updateSummary(data) {
+
+        let hadir = 0;
+
+        let sakit = 0;
+
+        let izin = 0;
+
+        let tanpaKeterangan = 0;
+
+
+        data.forEach(
+            function (student) {
+
+                hadir +=
+                    Number(
+                        student.jumlah_hadir || 0
+                    );
+
+
+                sakit +=
+                    Number(
+                        student.jumlah_sakit || 0
+                    );
+
+
+                izin +=
+                    Number(
+                        student.jumlah_izin || 0
+                    );
+
+
+                tanpaKeterangan +=
+                    Number(
+                        student.jumlah_tanpa_keterangan || 0
+                    );
+
+            }
+        );
+
+
+        document.getElementById(
+            "summarySiswa"
+        ).textContent =
+            data.length;
+
+
+        document.getElementById(
+            "summaryHadir"
+        ).textContent =
+            hadir;
+
+
+        document.getElementById(
+            "summarySakit"
+        ).textContent =
+            sakit;
+
+
+        document.getElementById(
+            "summaryIzin"
+        ).textContent =
+            izin;
+
+
+        document.getElementById(
+            "summaryTK"
+        ).textContent =
+            tanpaKeterangan;
+
+    }
+
+
+
+    /* =========================================================
+       LOADING
+    ========================================================= */
+
+    function showLoading() {
+
+        document.getElementById(
+            "tableContent"
+        ).innerHTML = `
+
+            <div class="loading">
+
+                <div class="spinner"></div>
+
+                Memuat data rekap...
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* =========================================================
+       EMPTY
+    ========================================================= */
+
+    function showEmpty(message) {
+
+        document.getElementById(
+            "tableContent"
+        ).innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📊
+                </div>
+
+                <h3>
+                    ${escapeHtml(message)}
+                </h3>
+
+                <p>
+                    Coba ubah kelas, mata pelajaran,
+                    atau periode presensi.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* =========================================================
+       EXPORT EXCEL / PDF
+    ========================================================= */
+
+    function setExportButtons(enabled) {
+
+        const excel = document.getElementById("btnExportExcel");
+        const pdf = document.getElementById("btnExportPdf");
+
+        if (excel) excel.disabled = !enabled;
+        if (pdf) pdf.disabled = !enabled;
+    }
+
+
+    function exportExcel() {
+
+        if (!currentData.length) {
+            showError("Belum ada data rekap untuk diekspor.");
+            return;
+        }
+
+        if (typeof XLSX === "undefined") {
+            showError("Library Excel belum berhasil dimuat. Pastikan komputer terhubung ke internet.");
+            return;
+        }
+
+        const kelas = document.getElementById("kelasSelect");
+        const mapel = document.getElementById("mapelSelect");
+        const mulai = document.getElementById("tanggalMulai").value || "";
+        const selesai = document.getElementById("tanggalSelesai").value || "";
+
+        const rows = currentData.map(function (item, index) {
+            const total = Number(item.jumlah_presensi || 0);
+            const hadir = Number(item.jumlah_hadir || 0);
+
+            return {
+                "No": index + 1,
+                "NISN": item.nisn || "",
+                "NIS": item.nis || "",
+                "Nama Siswa": item.nama_lengkap || "",
+                "Jenis Kelamin": item.jenis_kelamin || "",
+                "Hadir": hadir,
+                "Sakit": Number(item.jumlah_sakit || 0),
+                "Izin": Number(item.jumlah_izin || 0),
+                "Tanpa Keterangan": Number(item.jumlah_tanpa_keterangan || 0),
+                "Total Presensi": total,
+                "Kehadiran (%)": total > 0 ? Math.round(hadir / total * 100) : 0
+            };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws["!cols"] = [
+            {wch:6},{wch:18},{wch:16},{wch:30},{wch:18},
+            {wch:12},{wch:12},{wch:12},{wch:20},{wch:18},{wch:18}
+        ];
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Rekap Presensi");
+
+        const kelasText = kelas && kelas.value
+            ? kelas.options[kelas.selectedIndex].text.split(" • ")[0]
+            : "kelas";
+        const mapelText = mapel && mapel.value
+            ? mapel.options[mapel.selectedIndex].text.split(" • ").pop()
+            : "Semua_Mapel";
+
+        const safe = function(value) {
+            return String(value || "data").replace(/[^a-zA-Z0-9_-]+/g, "_");
+        };
+
+        const filename = `Rekap_Presensi_${safe(kelasText)}_${safe(mapelText)}_${safe(mulai)}_${safe(selesai)}.xlsx`;
+        XLSX.writeFile(wb, filename);
+    }
+
+
+    function exportPdf() {
+
+        if (!currentData.length) {
+            showError("Belum ada data rekap untuk diekspor.");
+            return;
+        }
+
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            showError("Library PDF belum berhasil dimuat. Pastikan komputer terhubung ke internet.");
+            return;
+        }
+
+        const kelas = document.getElementById("kelasSelect");
+        const mapel = document.getElementById("mapelSelect");
+        const mulai = document.getElementById("tanggalMulai").value || "-";
+        const selesai = document.getElementById("tanggalSelesai").value || "-";
+
+        const kelasText = kelas && kelas.value
+            ? kelas.options[kelas.selectedIndex].text
+            : "-";
+        const mapelText = mapel && mapel.value
+            ? mapel.options[mapel.selectedIndex].text
+            : "Semua Mata Pelajaran";
+
+        const JsPDF = window.jspdf.jsPDF;
+        const doc = new JsPDF({orientation:"landscape", unit:"mm", format:"a4"});
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("SMAN 6", 14, 15);
+        doc.setFontSize(12);
+        doc.text("Rekap Kehadiran Siswa", 14, 22);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text(`Kelas: ${kelasText}`, 14, 29);
+        doc.text(`Mata Pelajaran: ${mapelText}`, 14, 35);
+        doc.text(`Periode: ${mulai} s/d ${selesai}`, 14, 41);
+
+        const body = currentData.map(function(item, index) {
+            const total = Number(item.jumlah_presensi || 0);
+            const hadir = Number(item.jumlah_hadir || 0);
+            const persen = total > 0 ? Math.round(hadir / total * 100) : 0;
+            return [
+                index + 1,
+                item.nisn || "-",
+                item.nis || "-",
+                item.nama_lengkap || "-",
+                Number(item.jumlah_hadir || 0),
+                Number(item.jumlah_sakit || 0),
+                Number(item.jumlah_izin || 0),
+                Number(item.jumlah_tanpa_keterangan || 0),
+                total,
+                persen + "%"
+            ];
+        });
+
+        if (typeof doc.autoTable !== "function") {
+            showError("Plugin tabel PDF belum berhasil dimuat. Pastikan komputer terhubung ke internet.");
+            return;
+        }
+
+        doc.autoTable({
+            startY: 47,
+            head: [["No","NISN","NIS","Nama Siswa","Hadir","Sakit","Izin","Tanpa Ket.","Total","Kehadiran"]],
+            body: body,
+            styles: {fontSize: 8, cellPadding: 2},
+            headStyles: {fontStyle: "bold"},
+            margin: {left:14,right:14}
+        });
+
+        const safe = function(value) {
+            return String(value || "data").replace(/[^a-zA-Z0-9_-]+/g, "_");
+        };
+
+        doc.save(`Rekap_Presensi_${safe(kelasText)}_${safe(mulai)}_${safe(selesai)}.pdf`);
+    }
+
+
+
+    /* =========================================================
+       ERROR
+    ========================================================= */
+
+    function showError(message) {
+
+        const element =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        element.textContent =
+            message;
+
+
+        element.classList.add(
+            "show"
+        );
+
+    }
+
+
+
+    function hideError() {
+
+        document.getElementById(
+            "errorMessage"
+        ).classList.remove(
+            "show"
+        );
+
+    }
+
+
+
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================= */
+
+    function escapeHtml(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+
+        }
+
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    async function logout() {
+
+        try {
+
+            await fetch(
+                "/sman6/api/logout",
+                {
+                    method: "POST",
+                    credentials: "same-origin"
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Logout error:",
+                error
+            );
+
+        }
+
+
+        window.location.href =
+            "/sman6/login.html";
+
+    }
+// Inisialisasi halaman dilakukan SATU KALI melalui DOMContentLoaded di atas.
+// Jangan memanggil loadCurrentUser/loadWaliKelas/loadMapel/loadRekap di luar initializer.
+updateSummary();
+
+
+
+/* =========================================================
+   MOBILE PAGE CONTROLLER
+   Uses existing Wali Kelas API / logic.
+========================================================= */
+
+let mobileStudents = [];
+let mobileRekapData = [];
+let mobileStudentLoaded = false;
+let mobileSyncTimer = null;
+
+function showMobilePage(page) {
+
+    document.querySelectorAll(".mobile-page").forEach(function (element) {
+        element.classList.remove("active");
+    });
+
+    const target = document.getElementById("mobile" + page);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+    document.querySelectorAll(".mobile-nav-item").forEach(function (item) {
+        item.classList.toggle(
+            "active",
+            item.getAttribute("data-page") === page
+        );
+    });
+
+    syncMobileUI();
+
+    if (page === "Siswa") {
+        loadMobileStudents();
+    }
+
+    if (page === "Rekap") {
+        syncMobileRekapControls();
+    }
+}
+
+
+function mobileSetText(id, value) {
+
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent =
+            value === undefined ||
+            value === null ||
+            value === ""
+                ? "-"
+                : value;
+    }
+}
+
+
+function syncMobileUI() {
+
+    if (typeof currentUser !== "undefined" && currentUser) {
+
+        const nama =
+            currentUser.nama_lengkap ||
+            currentUser.username ||
+            "Wali Kelas";
+
+        const initial =
+            nama.charAt(0).toUpperCase();
+
+        mobileSetText(
+            "mobileWelcomeName",
+            nama
+        );
+
+        mobileSetText(
+            "mobileProfileName",
+            nama
+        );
+
+        document.querySelectorAll(
+            "#mobileTopAvatar,#mobileStudentAvatar,#mobileRekapAvatar,#mobileProfileTopAvatar,#mobileProfileAvatar"
+        ).forEach(function (element) {
+            element.textContent = initial;
+        });
+    }
+
+
+    if (typeof selectedWaliKelas !== "undefined" && selectedWaliKelas) {
+
+        const kelas =
+            selectedWaliKelas.nama_kelas || "-";
+
+        const tingkat =
+            selectedWaliKelas.tingkat
+                ? "Kelas " + selectedWaliKelas.tingkat
+                : "-";
+
+        const jurusan =
+            selectedWaliKelas.jurusan || "-";
+
+        const tahun =
+            selectedWaliKelas.tahun_ajaran || "-";
+
+        mobileSetText("mobileClassName", kelas);
+        mobileSetText("mobileClassYear", tahun);
+        mobileSetText("mobileClassTingkat", tingkat);
+        mobileSetText("mobileClassJurusan", jurusan);
+
+        mobileSetText("mobileStudentClass", kelas);
+        mobileSetText("mobileProfileClass", kelas);
+        mobileSetText("mobileProfileTingkat", tingkat);
+        mobileSetText("mobileProfileJurusan", jurusan);
+        mobileSetText("mobileProfileTahun", tahun);
+    }
+
+
+    const sourceMap = {
+        mobileSummarySiswa: "summarySiswa",
+        mobileSummaryHadir: "summaryHadir",
+        mobileSummarySakit: "summarySakit",
+        mobileSummaryIzin: "summaryIzin",
+        mobileSummaryTK: "summaryTK",
+        mobileRekapSiswa: "summarySiswa",
+        mobileRekapHadir: "summaryHadir",
+        mobileRekapSakit: "summarySakit",
+        mobileRekapIzin: "summaryIzin",
+        mobileRekapTK: "summaryTK"
+    };
+
+    Object.keys(sourceMap).forEach(function (mobileId) {
+
+        const source = document.getElementById(
+            sourceMap[mobileId]
+        );
+
+        const target = document.getElementById(
+            mobileId
+        );
+
+        if (source && target) {
+            target.textContent = source.textContent.trim();
+        }
+    });
+}
+
+
+function syncMobileRekapControls() {
+
+    const desktopKelas =
+        document.getElementById("kelasSelect");
+
+    const desktopMapel =
+        document.getElementById("mapelSelect");
+
+    const mobileKelas =
+        document.getElementById("mobileKelasSelect");
+
+    const mobileMapel =
+        document.getElementById("mobileMapelSelect");
+
+    const desktopMulai =
+        document.getElementById("tanggalMulai");
+
+    const desktopSelesai =
+        document.getElementById("tanggalSelesai");
+
+    const mobileMulai =
+        document.getElementById("mobileTanggalMulai");
+
+    const mobileSelesai =
+        document.getElementById("mobileTanggalSelesai");
+
+
+    if (
+        desktopKelas &&
+        mobileKelas &&
+        mobileKelas.options.length !== desktopKelas.options.length
+    ) {
+        mobileKelas.innerHTML = "";
+
+        Array.from(desktopKelas.options).forEach(function (option) {
+
+            const clone = document.createElement("option");
+
+            clone.value = option.value;
+            clone.textContent = option.textContent;
+
+            mobileKelas.appendChild(clone);
+        });
+    }
+
+
+    if (
+        desktopMapel &&
+        mobileMapel &&
+        mobileMapel.options.length !== desktopMapel.options.length
+    ) {
+        mobileMapel.innerHTML = "";
+
+        Array.from(desktopMapel.options).forEach(function (option) {
+
+            const clone = document.createElement("option");
+
+            clone.value = option.value;
+            clone.textContent = option.textContent;
+
+            mobileMapel.appendChild(clone);
+        });
+    }
+
+
+    if (desktopKelas && mobileKelas) {
+        mobileKelas.value = desktopKelas.value;
+    }
+
+    if (desktopMapel && mobileMapel) {
+        mobileMapel.value = desktopMapel.value;
+    }
+
+    if (desktopMulai && mobileMulai) {
+        mobileMulai.value = desktopMulai.value;
+    }
+
+    if (desktopSelesai && mobileSelesai) {
+        mobileSelesai.value = desktopSelesai.value;
+    }
+}
+
+
+async function submitMobileRekap() {
+
+    const mobileKelas =
+        document.getElementById("mobileKelasSelect");
+
+    const mobileMapel =
+        document.getElementById("mobileMapelSelect");
+
+    const mobileMulai =
+        document.getElementById("mobileTanggalMulai");
+
+    const mobileSelesai =
+        document.getElementById("mobileTanggalSelesai");
+
+    const desktopKelas =
+        document.getElementById("kelasSelect");
+
+    const desktopMapel =
+        document.getElementById("mapelSelect");
+
+    const desktopMulai =
+        document.getElementById("tanggalMulai");
+
+    const desktopSelesai =
+        document.getElementById("tanggalSelesai");
+
+    if (!mobileKelas || !desktopKelas) {
+        mobileShowToast("Kontrol rekap belum siap.");
+        return;
+    }
+
+
+    desktopKelas.value =
+        mobileKelas.value;
+
+    desktopMapel.value =
+        mobileMapel.value;
+
+    desktopMulai.value =
+        mobileMulai.value;
+
+    desktopSelesai.value =
+        mobileSelesai.value;
+
+
+    /*
+     * Jalankan logic existing.
+     * Tidak membuat API baru.
+     */
+    await loadRekap();
+
+    syncMobileUI();
+
+    renderMobileRekapFromExistingTable();
+
+    loadMobileStudents();
+
+    mobileShowToast("Rekap berhasil diperbarui.");
+}
+
+
+function renderMobileRekapFromExistingTable() {
+
+    const desktopTable =
+        document.getElementById("tableContent");
+
+    const mobileList =
+        document.getElementById("mobileRekapList");
+
+    const mobileCount =
+        document.getElementById("mobileRekapCount");
+
+    const mobileSubtitle =
+        document.getElementById("mobileRekapSubtitle");
+
+
+    if (!desktopTable || !mobileList) {
+        return;
+    }
+
+
+    const table =
+        desktopTable.querySelector("table");
+
+    if (!table) {
+
+        mobileList.innerHTML = `
+            <div class="mobile-empty">
+                Belum ada data presensi pada filter yang dipilih.
+            </div>
+        `;
+
+        mobileCount.textContent = "0 siswa";
+
+        return;
+    }
+
+
+    const rows =
+        Array.from(
+            table.querySelectorAll("tbody tr")
+        );
+
+
+    mobileCount.textContent =
+        rows.length + " siswa";
+
+
+    const selectedMapel =
+        document.getElementById("mapelSelect");
+
+    if (selectedMapel) {
+
+        const text =
+            selectedMapel.value
+                ? selectedMapel.options[
+                    selectedMapel.selectedIndex
+                  ].text
+                : "Semua Mata Pelajaran";
+
+        mobileSubtitle.textContent = text;
+    }
+
+
+    if (!rows.length) {
+
+        mobileList.innerHTML = `
+            <div class="mobile-empty">
+                Belum ada data presensi.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    let html = "";
+
+    rows.forEach(function (row, index) {
+
+        const cells =
+            Array.from(
+                row.querySelectorAll("td")
+            );
+
+        if (!cells.length) {
+            return;
+        }
+
+        const nama =
+            cells[1]
+                ? cells[1].textContent.trim()
+                : "Siswa";
+
+        const hadir =
+            cells[2]
+                ? cells[2].textContent.trim()
+                : "0";
+
+        const sakit =
+            cells[3]
+                ? cells[3].textContent.trim()
+                : "0";
+
+        const izin =
+            cells[4]
+                ? cells[4].textContent.trim()
+                : "0";
+
+        const initial =
+            nama.charAt(0).toUpperCase();
+
+        html += `
+            <div class="mobile-student-item">
+                <div class="mobile-student-avatar">
+                    ${escapeMobileHtml(initial)}
+                </div>
+
+                <div style="flex:1;min-width:0;">
+                    <div class="mobile-student-name">
+                        ${escapeMobileHtml(nama)}
+                    </div>
+
+                    <div class="mobile-student-meta">
+                        Hadir ${escapeMobileHtml(hadir)}
+                        • Sakit ${escapeMobileHtml(sakit)}
+                        • Izin ${escapeMobileHtml(izin)}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+
+    mobileList.innerHTML =
+        html ||
+        `
+            <div class="mobile-empty">
+                Belum ada data siswa.
+            </div>
+        `;
+}
+
+
+async function loadMobileStudents() {
+
+    if (
+        typeof selectedWaliKelas === "undefined" ||
+        !selectedWaliKelas
+    ) {
+        return;
+    }
+
+
+    const kelasId =
+        selectedWaliKelas.kelas_id;
+
+    if (!kelasId) {
+        return;
+    }
+
+
+    const list =
+        document.getElementById("mobileStudentList");
+
+    const count =
+        document.getElementById("mobileStudentCount");
+
+
+    if (!list) {
+        return;
+    }
+
+
+    /*
+     * Endpoint existing:
+     * GET /sman6/api/siswa
+     */
+    try {
+
+        list.innerHTML = `
+            <div class="mobile-empty">
+                Memuat data siswa...
+            </div>
+        `;
+
+
+        const response =
+            await fetch(
+                "/sman6/api/siswa",
+                {
+                    method: "GET",
+                    credentials: "same-origin"
+                }
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Gagal mengambil data siswa."
+            );
+        }
+
+
+        const result =
+            await response.json();
+
+
+        const allStudents =
+            Array.isArray(result)
+                ? result
+                : (
+                    Array.isArray(result.data)
+                        ? result.data
+                        : []
+                );
+
+
+        mobileStudents =
+            allStudents.filter(function (student) {
+
+                return String(
+                    student.kelas_id
+                ) === String(
+                    kelasId
+                );
+
+            });
+
+
+        count.textContent =
+            mobileStudents.length + " siswa";
+
+
+        if (!mobileStudents.length) {
+
+            list.innerHTML = `
+                <div class="mobile-empty">
+                    Belum ada siswa pada kelas aktif.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let html = "";
+
+
+        mobileStudents.forEach(function (student) {
+
+            const nama =
+                student.nama_lengkap ||
+                student.nama ||
+                "Siswa";
+
+            const nisn =
+                student.nisn ||
+                "-";
+
+            const nis =
+                student.nis ||
+                "-";
+
+            const initial =
+                nama.charAt(0).toUpperCase();
+
+
+            html += `
+                <div class="mobile-student-item">
+
+                    <div class="mobile-student-avatar">
+                        ${escapeMobileHtml(initial)}
+                    </div>
+
+                    <div style="flex:1;min-width:0;">
+
+                        <div class="mobile-student-name">
+                            ${escapeMobileHtml(nama)}
+                        </div>
+
+                        <div class="mobile-student-meta">
+                            NISN: ${escapeMobileHtml(nisn)}
+                            • NIS: ${escapeMobileHtml(nis)}
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+
+        list.innerHTML = html;
+
+        mobileStudentLoaded = true;
+
+    } catch (error) {
+
+        console.error(
+            "loadMobileStudents ERROR:",
+            error
+        );
+
+        list.innerHTML = `
+            <div class="mobile-empty">
+                Gagal memuat data siswa.<br>
+                Periksa koneksi Node-RED/API.
+            </div>
+        `;
+    }
+}
+
+
+function escapeMobileHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function mobileShowToast(message) {
+
+    const toast =
+        document.getElementById("mobileToast");
+
+    if (!toast) {
+        return;
+    }
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    window.clearTimeout(
+        mobileShowToast._timer
+    );
+
+    mobileShowToast._timer =
+        window.setTimeout(
+            function () {
+                toast.classList.remove("show");
+            },
+            2200
+        );
+}
+
+
+/*
+ * Sinkronisasi berkala hanya untuk menunggu
+ * existing initialization selesai.
+ */
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        syncMobileRekapControls();
+
+        syncMobileUI();
+
+        mobileSyncTimer =
+            window.setInterval(
+                function () {
+
+                    syncMobileUI();
+                    syncMobileRekapControls();
+
+                    const desktopKelasReady =
+                        document.getElementById("kelasSelect") &&
+                        document.getElementById("kelasSelect").options.length > 0;
+
+                    const desktopMapelReady =
+                        document.getElementById("mapelSelect") &&
+                        document.getElementById("mapelSelect").options.length > 0;
+
+                    if (
+                        typeof currentUser !== "undefined" &&
+                        currentUser &&
+                        typeof selectedWaliKelas !== "undefined" &&
+                        selectedWaliKelas &&
+                        desktopKelasReady &&
+                        desktopMapelReady
+                    ) {
+
+                        window.clearInterval(
+                            mobileSyncTimer
+                        );
+
+                        syncMobileUI();
+                        syncMobileRekapControls();
+
+                        loadMobileStudents();
+                    }
+
+                },
+                350
+            );
+
+    }
+);
+
+
+/*
+ * Ketika ukuran layar berubah, jangan membawa
+ * halaman desktop ke mobile secara aneh.
+ */
+window.addEventListener(
+    "resize",
+    function () {
+
+        if (
+            window.innerWidth <= 600 &&
+            !document.querySelector(
+                ".mobile-page.active"
+            )
+        ) {
+
+            showMobilePage("Home");
+        }
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html> 
